@@ -94,7 +94,7 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
   position:relative;flex:none;display:block;width:var(--cw);aspect-ratio:5/7;max-width:100%;container-type:inline-size;overflow:hidden;
   background:var(--stain,none) 0 0/100% 100% no-repeat,var(--grain,none),linear-gradient(140deg,#f3ead0 0,#e9dcb6 50%,#d6c492 100%);
   color:var(--ink);text-shadow:none;border-radius:7cqw;border-radius:5px;font-family:"Libre Baskerville",Georgia,"Times New Roman",serif;font-weight:700;
-  box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 10px rgba(120,80,30,.28),0 1px 0 #b9a777,0 2px 0 #8f7c4e,0 calc(var(--z,0)*1.5px + 4px) calc(var(--z,0)*2px + 7px) rgba(0,0,0,.6)}
+  box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 10px rgba(120,80,30,.28),0 1px 0 #b9a777,0 2px 0 #8f7c4e,var(--drop)}
 .card:not(.red){--c1:#1f3f7a;--c2:#a8281c}
 .slot .card{transform:translateZ(calc(var(--z,0)*3.5px + 1px));transition:transform .15s}
 .slot .card.tgt{transform:translateZ(calc(var(--z,0)*3.5px + 12px))}
@@ -118,19 +118,19 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .card .fx b{background:#fbf3d6;color:#1a1712;box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font:600 10px/1 Oswald,sans-serif;font-size:16cqw}
 .card .fx b.red{color:#9a2a1c}
 /* deck skins: 0 worn, 1 gloss, 2 scratched, 3 black and gold, 4 burnt, 5 hand-drawn */
-.card.sk1{--ink:#10151f;--blood:#c5161f;--c1:#c5161f;--c2:#14397d;--pp:#fff;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;background:linear-gradient(160deg,#fbfcfd 0,#eef1f4 55%,#d9dfe6 100%);box-shadow:inset 0 0 0 1px rgba(20,30,50,.3),0 1px 0 #cfd4da,0 2px 0 #9aa1aa,0 calc(var(--z,0)*1.5px + 4px) calc(var(--z,0)*2px + 7px) rgba(0,0,0,.6)}
+.card.sk1{--ink:#10151f;--blood:#c5161f;--c1:#c5161f;--c2:#14397d;--pp:#fff;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;background:linear-gradient(160deg,#fbfcfd 0,#eef1f4 55%,#d9dfe6 100%);box-shadow:inset 0 0 0 1px rgba(20,30,50,.3),0 1px 0 #cfd4da,0 2px 0 #9aa1aa,var(--drop)}
 .card.sk1:not(.red){--c1:#14397d;--c2:#c5161f}
 .card.sk1::after{background:linear-gradient(118deg,transparent 0 36%,rgba(255,255,255,.75) 37% 49%,transparent 50% 74%,rgba(255,255,255,.5) 75% 80%,transparent 81%)}
 .card.sk2{--ink:#27302a;--blood:#8f3024;background:var(--grain,none),linear-gradient(150deg,#e4e6d6 0,#cfd4be 60%,#b5bca2 100%)}
 .card.sk2::after{background:var(--scratch,none) 0 0/100% 100% no-repeat}
 .card.sk2 .ix,.card.sk2 .pips,.card.sk2 .court{opacity:.8}
-.card.sk3{--ink:#e2bd6a;--blood:#ec7a5e;--c1:#3a2e18;--c2:#1b150b;--gd:#e2bd6a;--sk:#2c2415;--ln:#e2bd6a;--pp:#15110b;font-family:Cinzel,Georgia,serif;background:linear-gradient(145deg,#2c2519 0,#15110b 55%,#0a0805 100%);box-shadow:inset 0 0 0 1px #e2bd6a,inset 0 0 0 3px #15110b,inset 0 0 0 4px rgba(226,189,106,.6),0 1px 0 #5a4a25,0 2px 0 #2a2212,0 calc(var(--z,0)*1.5px + 4px) calc(var(--z,0)*2px + 7px) rgba(0,0,0,.65)}
+.card.sk3{--ink:#e2bd6a;--blood:#ec7a5e;--c1:#3a2e18;--c2:#1b150b;--gd:#e2bd6a;--sk:#2c2415;--ln:#e2bd6a;--pp:#15110b;font-family:Cinzel,Georgia,serif;background:linear-gradient(145deg,#2c2519 0,#15110b 55%,#0a0805 100%);box-shadow:inset 0 0 0 1px #e2bd6a,inset 0 0 0 3px #15110b,inset 0 0 0 4px rgba(226,189,106,.6),0 1px 0 #5a4a25,0 2px 0 #2a2212,var(--drop)}
 .card.sk3.red{--c1:#5a1f14}
 .card.sk3::after{background:linear-gradient(125deg,rgba(255,235,180,.2) 0 24%,transparent 25%)}
 .card.sk4{--ink:#2a1a0e;--blood:#8c2a12;background:var(--grain,none),linear-gradient(150deg,#e6d29c 0,#d2b77e 55%,#aa8a50 100%);border-radius:6px 4px 8px 3px}
 .card.sk4::after{background:var(--burn,none) 0 0/100% 100% no-repeat}
 .card.sk5{--ink:#1c2f6b;--blood:#c22f25;font-family:"Permanent Marker","Comic Sans MS",cursive;font-weight:400;border:2px solid #1c2f6b;border-radius:13px 5px 15px 6px/6px 14px 5px 13px;
-  background:linear-gradient(90deg,transparent 0 11%,rgba(200,60,50,.45) 11% 12.5%,transparent 12.5%),repeating-linear-gradient(transparent 0 8px,rgba(60,110,170,.3) 8px 9px),#f6f3e6;box-shadow:0 calc(var(--z,0)*1.5px + 4px) calc(var(--z,0)*2px + 7px) rgba(0,0,0,.6)}
+  background:linear-gradient(90deg,transparent 0 11%,rgba(200,60,50,.45) 11% 12.5%,transparent 12.5%),repeating-linear-gradient(transparent 0 8px,rgba(60,110,170,.3) 8px 9px),#f6f3e6;box-shadow:var(--drop)}
 .card.sk5 .ix{rotate:-4deg}
 .card.sk5 .pips svg,.card.sk5 .ix svg{fill:none;stroke:currentColor;stroke-width:7;stroke-linejoin:round}
 .card.sk5 .pips svg:nth-child(odd){rotate:-11deg}
@@ -232,6 +232,15 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
   .acts .btn{padding:14px;font-size:16px}
   .btn.ic{width:44px;height:44px;font-size:19px}
 }
+
+/* ---- light: one warm source above the table, out of frame; shadows fall away from it ---- */
+.card{--drop:0 5px 9px rgba(0,0,0,.6)}
+.slot .card{--drop:0 0 1.5px rgba(0,0,0,.85),var(--sx,0px) var(--sy,3px) var(--sb,5px) rgba(0,0,0,.62),calc(var(--sx,0px)*2.6) calc(var(--sy,3px)*2.6) calc(var(--sb,5px)*2.8) rgba(0,0,0,.3)}
+.table{background:#040302}
+.plane::before{background:radial-gradient(ellipse 40% 17% at 50% 40%,rgba(255,226,170,.16) 0,rgba(255,210,150,.05) 55%,transparent 100%)}
+.lightcap{background:radial-gradient(ellipse 62% 66% at 50% 37%,rgba(255,178,98,.17) 0,rgba(255,160,72,.08) 20%,rgba(40,22,8,.2) 42%,rgba(10,6,3,.55) 66%,rgba(3,2,1,.86) 88%,rgba(1,1,0,.95) 100%)}
+.col:nth-child(1) .score{box-shadow:-10px 16px 18px rgba(0,0,0,.6)}
+.col:nth-child(3) .score{box-shadow:10px 16px 18px rgba(0,0,0,.6)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -290,7 +299,7 @@ let sel=null,mode=null,busy=false,overlay=null,builder=null,names={};
 let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
-let tblSel=(LS.get('caravan_table')|0)%6;
+let tblSel=1;
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
 let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
 const getNames=()=>LS.get('caravan_names')||{};
@@ -817,7 +826,7 @@ function faceHtml(c){
   /* table tops: six painted variants (wood fibres, knots, weathering, gaps with lit edges), each drawn once on a canvas and kept as a bitmap */
   const TP=[
     {N:6,base:[98,87,72],warm:16,tone:[.8,.34],pale:[.36,7],dark:[.44,6],rust:[.2,3],knots:.5,fib:1,gap:1},
-    {N:6,base:[66,46,30],warm:14,tone:[.85,.3],pale:[.12,3],dark:[.5,7],rust:[.25,4],knots:.6,fib:1.1,gap:1},
+    {N:6,base:[70,47,29],warm:16,tone:[.82,.32],pale:[.1,3],dark:[.5,7],rust:[.28,4],knots:.6,fib:1.05,gap:1,rich:1},
     {N:6,base:[72,62,50],warm:10,tone:[.8,.3],pale:[.8,15],dark:[.5,6],rust:[.15,2],knots:.3,fib:1.2,gap:1.1,paint:1},
     {N:6,base:[42,36,31],warm:6,tone:[.7,.4],pale:[.1,3],dark:[.7,10],rust:[.1,2],knots:.4,fib:1.3,gap:1.3},
     {N:5,base:[132,86,46],warm:20,tone:[.85,.25],pale:[.2,4],dark:[.35,5],rust:[.25,4],knots:1,fib:.9,gap:.8},
@@ -826,7 +835,7 @@ function faceHtml(c){
   window.paintTable=function(ti){
     if(tblUrl[ti])return R.setProperty('--planks',tblUrl[ti]);
     const P=TP[ti]||TP[0];let sd0=1234567+ti*7919;const rnd=()=>(sd0=(sd0*16807)%2147483647)/2147483647;
-    const W=2048,H=1536,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');if(!c)return;
+    const W=P.rich?2560:2048,H=P.rich?1920:1536,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');if(!c)return;
     const hash=n=>{const q=Math.sin(n*127.1)*43758.5453;return q-Math.floor(q)};
     const vn=(x,sd)=>{const k=Math.floor(x),f=x-k,w=f*f*(3-2*f);return hash(k+sd*57.3)*(1-w)+hash(k+1+sd*57.3)*w};
     const fbm=(x,sd)=>vn(x,sd)*.6+vn(x*2.3,sd+9)*.28+vn(x*5.1,sd+21)*.12;
@@ -844,7 +853,15 @@ function faceHtml(c){
         const yy=y0+rnd()*ph,x0=rnd()*W*1.2-W*.2,len=lmin+rnd()*(lmax-lmin),dark=rnd()<.6,a=(.035+rnd()*.11)*amul*P.fib;
         c.strokeStyle=dark?`rgba(20,14,9,${a})`:`rgba(228,216,192,${a*.8})`;c.lineWidth=.6+rnd()*wmax;c.beginPath();
         for(let x=x0;x<=x0+len;x+=22){const y=yy+flow(x,yy)+(vn(x/90,sd+k)-.5)*3;x===x0?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}};
-      fibres(Math.round(3300/N),180,1100,1,2.4);
+      if(P.rich){
+        for(let k=0;k<46;k++){const yy=y0+rnd()*ph,x0=rnd()*W-W*.2,len=500+rnd()*1600,a=.035+rnd()*.07;c.strokeStyle=rnd()<.55?`rgba(18,10,5,${a})`:`rgba(150,84,38,${a})`;c.lineWidth=5+rnd()*24;c.beginPath();for(let x=x0;x<=x0+len;x+=40){const y=yy+flow(x,yy);x===x0?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}
+        if(rnd()<.6){const cx=W*(.1+rnd()*.5),cy=y0+ph*(.4+rnd()*.2),m=9+(rnd()*6|0);for(let q=1;q<=m;q++){const r=ph*.42*q/m,a=.1+rnd()*.13;c.strokeStyle=`rgba(16,9,5,${a})`;c.lineWidth=1.2+rnd()*2.2;c.beginPath();c.ellipse(cx,cy,r*6.5,r,0,Math.PI*.5,Math.PI*1.5);c.stroke();
+          for(const sgn of [-1,1]){c.beginPath();for(let x=cx;x<=W+40;x+=40){const y=cy+sgn*r+flow(x,cy)*.6;x===cx?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}}}
+      }
+      fibres(Math.round((P.rich?5400:3300)/N),180,1100,1,2.4);
+      if(P.rich){
+        for(const [rgb,cnt,lw] of [['10,6,3,.42',5200,.9],['214,186,150,.13',1800,.7]]){c.strokeStyle=`rgba(${rgb})`;c.lineWidth=lw;c.beginPath();for(let k=0;k<cnt;k++){const x=rnd()*W,y=y0+rnd()*ph,l=3+rnd()*13;c.moveTo(x,y);c.lineTo(x+l,y+(rnd()-.5)*.8)}c.stroke()}
+      }
       for(const [kx,ky,kr] of knots){
         for(let r=kr;r>2;r-=3){c.strokeStyle=`rgba(18,12,8,${.1+(1-r/kr)*.26})`;c.lineWidth=1.5;c.beginPath();c.ellipse(kx,ky,r*1.5,r*.8,0,0,7);c.stroke()}
         const kg=c.createRadialGradient(kx,ky,0,kx,ky,kr);kg.addColorStop(0,'rgba(12,8,5,.78)');kg.addColorStop(1,'rgba(12,8,5,0)');c.fillStyle=kg;c.beginPath();c.ellipse(kx,ky,kr*1.5,kr*.8,0,0,7);c.fill()}
@@ -873,6 +890,14 @@ function faceHtml(c){
       c.beginPath();c.moveTo(0,top(0));for(let x=0;x<=W;x+=16)c.lineTo(x,top(x));for(let x=W;x>=0;x-=16)c.lineTo(x,bot(x));c.closePath();c.fillStyle='#030201';c.fill();
       c.strokeStyle='rgba(240,230,208,.34)';c.lineWidth=1.6;c.beginPath();for(let x=0;x<=W;x+=16){const yy=bot(x)+1.2;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke();
       const hg=c.createLinearGradient(0,y+9,0,y+32);hg.addColorStop(0,'rgba(255,245,225,.11)');hg.addColorStop(1,'rgba(255,245,225,0)');c.fillStyle=hg;c.fillRect(0,y+9,W,23);
+    }
+    if(P.rich){
+      for(let p=1;p<N;p++){const y=ys[p];c.strokeStyle='rgba(206,176,138,.22)';c.lineWidth=1.3;c.beginPath();for(let k=0;k<90;k++){const x=rnd()*W,yy=y+(rnd()<.5?-1:1)*(9+rnd()*9),l=6+rnd()*34;c.moveTo(x,yy);c.lineTo(x+l,yy+(rnd()-.5)*2)}c.stroke()}
+      for(let k=0;k<34;k++){const x=rnd()*W,y=rnd()*H,a=(rnd()-.5)*1.9,l=40+rnd()*300,dx=Math.cos(a)*l,dy=Math.sin(a)*l*.5,al=.1+rnd()*.16;
+        c.strokeStyle=`rgba(226,204,170,${al})`;c.lineWidth=.7+rnd()*.9;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+dx*.5,y+dy*.5+(rnd()-.5)*10,x+dx,y+dy);c.stroke();
+        c.strokeStyle=`rgba(6,4,2,${al*1.3})`;c.lineWidth=.6;c.beginPath();c.moveTo(x,y+1.4);c.quadraticCurveTo(x+dx*.5,y+dy*.5+1.4,x+dx,y+dy+1.4);c.stroke()}
+      for(let k=0;k<60;k++){const x=rnd()*W,y=rnd()*H,r=2+rnd()*5,dg=c.createRadialGradient(x,y,0,x,y,r);dg.addColorStop(0,'rgba(5,3,2,.55)');dg.addColorStop(1,'rgba(5,3,2,0)');c.fillStyle=dg;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.strokeStyle='rgba(230,205,170,.14)';c.lineWidth=.8;c.beginPath();c.arc(x,y+.6,r*.7,.4,2.7);c.stroke()}
+      for(let k=0;k<3;k++){const x=W*(.15+rnd()*.7),y=H*(.15+rnd()*.7),r=46+rnd()*26;c.strokeStyle=`rgba(8,5,3,${.16+rnd()*.12})`;c.lineWidth=5+rnd()*5;c.beginPath();c.arc(x,y,r,rnd()*2,rnd()*2+4.4);c.stroke();c.strokeStyle='rgba(210,180,140,.07)';c.lineWidth=2;c.beginPath();c.arc(x,y,r+5,0,7);c.stroke()}
     }
     const t=document.createElement('canvas');t.width=t.height=256;const tc=t.getContext('2d'),id=tc.createImageData(256,256);
     for(let k=0;k<id.data.length;k+=4){const v=rnd()*255|0;id.data[k]=id.data[k+1]=id.data[k+2]=v;id.data[k+3]=255}tc.putImageData(id,0,0);
@@ -906,7 +931,7 @@ function board(me){
     const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i};${shadow(k,i,n,isMine)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
     }).join('');
     return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
   };
@@ -927,8 +952,8 @@ function board(me){
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
-  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="tbl" aria-label="Сменить стол">▤</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  <div class="table"><div class="plane">${cols}</div><div class="lightcap"></div><div class="beam"></div><div class="bulb"><svg viewBox="0 0 40 70"><defs><radialGradient id="bg1" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#ffd27a"/><stop offset="1" stop-color="#e88a2a" stop-opacity=".55"/></radialGradient></defs><path d="M20 0v22" stroke="#0c0906" stroke-width="2.5"/><rect x="13" y="20" width="14" height="13" rx="2" fill="#2a231b"/><path d="M13 24h14M13 28h14" stroke="#0c0906" stroke-width="1"/><path d="M12 33h16c6 6 8 12 8 18a16 16 0 0 1-32 0c0-6 2-12 8-18z" fill="url(#bg1)"/><path d="M15 50q2.5-7 5 0t5 0" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div></div>
+  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+  <div class="table"><div class="plane">${cols}</div><div class="lightcap"></div></div>
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
   <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
@@ -936,6 +961,11 @@ function board(me){
   return h;
 }
 
+/* shadow of a table card: offset grows with its height in the stack and its distance from the light */
+function shadow(k,i,n,isMine){
+  const fx=(k%3-1)*.9,fy=isMine?.25+(n>1?i/(n-1):0)*.5:-Math.min(.7,.2+(n-1-i)*.1),h=5+i*3.5;
+  return `--sx:${(fx*h*.9).toFixed(1)}px;--sy:${(fy*h*1.6).toFixed(1)}px;--sb:${(3+h*.45).toFixed(1)}px`;
+}
 let drag=null,swallow=false;
 function clearMarks(){app.querySelectorAll('.tgt,.hov').forEach(x=>x.classList.remove('tgt','hov'))}
 function dropTarget(x,y){
