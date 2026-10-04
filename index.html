@@ -47,10 +47,31 @@ li::marker{content:"- "}
 .top{display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--panel);border-bottom:2px solid var(--amber);font-size:12px}
 .top .who{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top b{font:600 16px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.back{background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),repeating-linear-gradient(-45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),#7c2318;box-shadow:inset 0 0 0 2px var(--paper),0 1px 0 rgba(0,0,0,.7);border-radius:3px}
+.back{box-shadow:inset 0 0 0 2px var(--paper),0 1px 0 rgba(0,0,0,.7);border-radius:3px;background:#7c2318}
+.bk0{background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),repeating-linear-gradient(-45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),#7c2318}
+.bk1{background:repeating-linear-gradient(0deg,transparent 0 4px,rgba(255,255,255,.16) 4px 5px),repeating-linear-gradient(90deg,transparent 0 4px,rgba(255,255,255,.16) 4px 5px),#1f3f66}
+.bk2{background:repeating-linear-gradient(60deg,transparent 0 5px,rgba(0,0,0,.3) 5px 6px),repeating-linear-gradient(-60deg,transparent 0 5px,rgba(0,0,0,.3) 5px 6px),#24553d}
+.bk3{background:radial-gradient(circle at 50% 50%,#c9a24b 0 14%,transparent 15%),repeating-radial-gradient(circle at 50% 50%,transparent 0 4px,rgba(201,162,75,.4) 4px 5px),#17130c}
+.bk4{background:radial-gradient(circle at 50% 50%,#3a2410 0 16%,transparent 17%),repeating-conic-gradient(from 0deg at 50% 50%,#c08a3c 0 12deg,#8a5a24 12deg 24deg)}
+.bk5{background:radial-gradient(circle at 50% 50%,#e4d6ae 0 9%,transparent 10%),repeating-radial-gradient(ellipse 60% 30% at 50% 50%,transparent 0 5px,rgba(255,255,255,.22) 5px 6px),#1d5a5c}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatch{width:46px;height:64px;flex:none;border-radius:4px}
+.swatch.on{outline:3px solid var(--amber);outline-offset:3px;box-shadow:inset 0 0 0 2px var(--paper),0 0 14px var(--amber)}
+input[type=text]{background:rgba(255,182,66,.06);border:0;border-radius:0;box-shadow:inset 0 0 0 2px var(--line);color:var(--amber);font:inherit;font-size:16px;padding:11px 12px;width:100%;-webkit-user-select:text;user-select:text;text-shadow:inherit}
+input[type=text]::placeholder{color:var(--dim)}
+input[type=text]:focus{outline:0;box-shadow:inset 0 0 0 2px var(--amber)}
+input[type=range]{width:100%;accent-color:var(--amber);margin:6px 0 0}
+.rng{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rng b{font:600 22px Oswald,sans-serif}
+.box{border:1px solid var(--line);padding:12px;display:grid;gap:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;text-align:right}
+th,td{padding:6px 4px;border-bottom:1px solid var(--line)}
+th{color:var(--dim);font-weight:400}
+th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
+.btn.mute{text-decoration:line-through;opacity:.6}
 .ohand{display:flex;flex:0 1 auto;min-width:0;overflow:hidden;padding:2px 0 2px 9px}
 .ohand .back{flex:none;width:18px;height:26px;margin-left:-9px}
-.pile{position:relative;width:32px;height:44px;flex:none;box-shadow:inset 0 0 0 2px var(--paper),2px 2px 0 #3d120c,4px 4px 0 #2a0c08}
+.pile{position:relative;width:32px;height:44px;flex:none;box-shadow:inset 0 0 0 2px var(--paper),2px 2px 0 rgba(0,0,0,.75),4px 4px 0 rgba(0,0,0,.5)}
 .pile span{position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);font:600 15px Oswald,sans-serif;text-shadow:0 1px 2px #000}
 
 .table{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);padding:8px 4px;
@@ -65,12 +86,24 @@ li::marker{content:"- "}
 .car.hov{background:rgba(255,182,66,.3)}
 .slot{flex:0 1 var(--strip);min-height:10px;display:flex;justify-content:center;align-items:flex-start}
 .slot:last-child{flex:0 0 var(--ch)}
-.card{position:relative;flex:none;display:block;width:var(--cw);aspect-ratio:5/7;max-width:100%;background:linear-gradient(140deg,#f1e6c4 0,var(--paper) 45%,#c9b684 100%);color:var(--ink);text-shadow:none;border-radius:6px;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 -2px 5px rgba(0,0,0,.55)}
+.card{position:relative;flex:none;display:block;width:var(--cw);aspect-ratio:5/7;max-width:100%;container-type:inline-size;overflow:hidden;
+  background:radial-gradient(ellipse at var(--sx,20%) var(--sy,80%),rgba(110,70,25,.3) 0,transparent 42%),radial-gradient(ellipse at calc(100% - var(--sx,20%)) calc(100% - var(--sy,80%)),rgba(90,55,20,.2) 0,transparent 36%),linear-gradient(140deg,#f1e6c4 0,var(--paper) 45%,#c9b684 100%);
+  color:var(--ink);text-shadow:none;border-radius:6px;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 -2px 5px rgba(0,0,0,.55)}
 .card.red,.red{color:var(--blood)}
-.card .ix{position:absolute;top:3px;left:6px;font-size:var(--ix);line-height:1}
-.card .pip{position:absolute;left:0;right:0;bottom:14%;text-align:center;font-size:calc(var(--cw)*.56);line-height:1;opacity:.92}
+.card .ix{position:absolute;top:3px;left:5px;font-size:15px;font-size:24cqw;line-height:1;white-space:nowrap}
+.card .pips{position:absolute;top:27%;bottom:9%;left:17%;right:17%}
+.card .pips i{position:absolute;font-style:normal;font-size:14px;font-size:24cqw;line-height:1;transform:translate(-50%,-50%)}
+.card .pips i.fl{transform:translate(-50%,-50%) rotate(180deg)}
+.card .pips.ace i{font-size:30px;font-size:58cqw}
+.card .court{position:absolute;top:25%;bottom:9%;left:15%;right:15%;border:1.5px solid currentColor;outline:1px solid currentColor;outline-offset:2px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:2% 0;line-height:1;
+  background:repeating-linear-gradient(45deg,transparent 0 3px,color-mix(in srgb,currentColor 14%,transparent) 3px 4px),rgba(255,250,230,.35)}
+.card .court b{font-size:28px;font-size:50cqw;font-weight:400;line-height:.9}
+.card .court i{font-style:normal;font-size:10px;font-size:17cqw;align-self:flex-start;padding-left:6%}
+.card .court i.fl{align-self:flex-end;padding:0 6% 0 0;transform:rotate(180deg)}
+.card .court.jkr{justify-content:center;gap:6%}
+.card .court.jkr em{font-style:normal;font-size:8px;font-size:15cqw;letter-spacing:.08em}
 .card .fx{position:absolute;top:3px;right:4px;display:flex;gap:2px}
-.card .fx b{background:#fbf3d6;color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font-size:calc(var(--ix)*.66);line-height:1;font-weight:600}
+.card .fx b{background:#fbf3d6;color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font-size:10px;font-size:16cqw;line-height:1;font-weight:600}
 .card .fx b.red{color:var(--blood)}
 .card.tgt{box-shadow:0 0 0 2.5px var(--amber),0 0 14px var(--amber)}
 .card.hov{box-shadow:0 0 0 4px #fff,0 0 18px var(--amber)}
@@ -87,10 +120,10 @@ li::marker{content:"- "}
 .status b{font-size:14px;flex:1 1 auto;min-width:0}
 .status span{color:var(--dim);text-align:right;flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
 .hand{display:flex;padding:20px 14px 18px;justify-content:center;align-items:flex-start;overflow:hidden}
-.hc{flex:0 1 var(--hw);width:auto;height:auto;min-width:0;aspect-ratio:5/7;margin:0 1px;touch-action:none;cursor:grab;transform:translateY(calc(var(--y)*1px)) rotate(calc(var(--r)*1deg));transition:transform .12s;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 3px 6px rgba(0,0,0,.6)}
-.hc .pip{font-size:var(--hp);bottom:12%}
-.hc.jk .pip,.card.jk .pip{font-size:calc(var(--hw)*.2);letter-spacing:0;bottom:34%}
-.card.jk:not(.hc) .pip{font-size:calc(var(--cw)*.2)}
+.hc{overflow:hidden;flex:0 1 var(--hw);width:auto;height:auto;min-width:0;aspect-ratio:5/7;margin:0 1px;touch-action:none;cursor:grab;transform:translateY(calc(var(--y)*1px)) rotate(calc(var(--r)*1deg));transition:transform .12s;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 3px 6px rgba(0,0,0,.6)}
+
+
+
 .hc.sel{transform:translateY(-14px) rotate(calc(var(--r)*1deg));box-shadow:0 0 0 3px var(--amber),0 0 18px var(--amber)}
 .hc.lifted{opacity:.22}
 .dragghost{position:fixed;left:0;top:0;z-index:40;pointer-events:none;margin:0;flex:none;transition:none;box-shadow:0 0 0 2px var(--amber),0 18px 26px rgba(0,0,0,.7)}
@@ -146,7 +179,7 @@ li::marker{content:"- "}
 <div id="app"><div class="page"><p class="sub">Загрузка…</p></div></div>
 <div id="toast" role="status"></div>
 <script>
-const SU={S:'♠',H:'♥',D:'♦',C:'♣'},RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const SU={S:'♠\uFE0E',H:'♥\uFE0E',D:'♦\uFE0E',C:'♣\uFE0E'},RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const rk=c=>c==='JK'?'JK':c.slice(0,-1),st=c=>c==='JK'?'':c.slice(-1);
 const isNum=c=>!['J','Q','K','JK'].includes(rk(c));
 const nv=c=>rk(c)==='A'?1:+rk(c);
@@ -190,8 +223,60 @@ let screen='loading',tables=[],code=null,game=null,priv=null,privLoading=false,u
 let sel=null,mode=null,busy=false,overlay=null,builder=null,names={};
 let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
+let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
+const getNames=()=>LS.get('caravan_names')||{};
+const myName=()=>String(getNames().me||'').trim().slice(0,16);
+const pname=i=>{const n=game&&game.nm&&game.nm['p'+i];if(n)return n;if(local)return 'Игрок '+(i+1);return i===meIdx()?'Вы':(game&&names[game.pl['p'+i]])||'Соперник'};
+const bkOf=i=>'bk'+(((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length);
+
+/* sound: synthesized, no samples */
+let AC=null;
+function ac(){if(muted)return null;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+function noise(dur,freq,q,gain,when=0){
+  const a=ac();if(!a)return;const n=a.sampleRate*dur|0,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);
+  const src=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();src.buffer=b;f.type='bandpass';f.frequency.value=freq;f.Q.value=q;g.gain.value=gain;
+  src.connect(f);f.connect(g);g.connect(a.destination);src.start(a.currentTime+when);
+}
+function tone(freq,dur,type,gain,when=0,to){
+  const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+when;
+  o.type=type;o.frequency.setValueAtTime(freq,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
+  g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+dur+.02);
+}
+const SFX={
+  blip(){tone(920,.035,'square',.05)},
+  place(){noise(.09,1900,.8,.9);tone(150,.07,'sine',.3)},
+  deal(){noise(.14,3400,.6,.5);noise(.08,1500,1,.3,.05)},
+  remove(){noise(.2,800,.7,.8);tone(110,.2,'sawtooth',.14,0,45)},
+  shuffle(){for(let i=0;i<7;i++)noise(.05,2400+Math.random()*900,1,.4,i*.055)},
+  sold(){tone(1319,.45,'triangle',.22,.12);tone(1976,.7,'triangle',.18,.21)},
+  win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.32,'square',.08,i*.13))},
+  lose(){[392,330,262,196].forEach((f,i)=>tone(f,.42,'sawtooth',.06,i*.19))}
+};
+
+/* records, kept on this device */
+function recordResult(){
+  if(!game||!(game.winner>=0))return;
+  const key=(game.gid||code||'g')+':'+game.round,st=LS.get('caravan_stats')||{p:{},seen:[]};
+  if(st.seen.includes(key))return;
+  st.seen.push(key);st.seen=st.seen.slice(-300);
+  const w=game.winner,moves=Math.ceil((game.mv||0)/2);
+  [w,1-w].forEach((i,n)=>{
+    const nm=pname(i),r=st.p[nm]=st.p[nm]||{g:0,w:0,s:0,bs:0,f:0};
+    r.g++;if(!n){r.w++;r.s++;r.bs=Math.max(r.bs,r.s);if(moves&&(!r.f||moves<r.f))r.f=moves}else r.s=0;
+  });
+  LS.set('caravan_stats',st);
+  local||w===meIdx()?SFX.win():SFX.lose();
+}
+function recordsHtml(){
+  const st=LS.get('caravan_stats')||{p:{}},rows=Object.entries(st.p).sort((a,b)=>b[1].w-a[1].w||a[1].g-b[1].g);
+  return rows.length?`<table><tr><th>Игрок</th><th>Игр</th><th>Побед</th><th>Серия</th><th>Быстрая</th></tr>${rows.map(([n,r])=>`<tr><td>${esc(n)}</td><td>${r.g}</td><td>${r.w}</td><td>${r.bs}</td><td>${r.f?r.f+' х.':'—'}</td></tr>`).join('')}</table><p class="sub" style="text-align:left;font-size:12px">Серия — лучшая череда побед подряд. Быстрая — меньше всего своих ходов до победы.</p>`:'<p class="sub">Пока пусто. Сыграйте партию до конца.</p>';
+}
 const saveLocal=()=>LS.set('caravan_local',{game,privs,viewer});
-const newGame=(p0,p1)=>({pl:{p0,p1},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1,seq:0});
+const rid=()=>Math.random().toString(36).slice(2,10);
+const newGame=(p0,p1)=>({gid:rid(),mv:0,nm:{p0:'',p1:''},bk:{p0:0,p1:0},pl:{p0,p1},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1,seq:0});
 
 /* two-phone play outside Claude: state relayed through public MQTT brokers (plain WebSocket, no WebRTC) */
 const BROKERS=window.CARAVAN_BROKERS||['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt'];
@@ -221,10 +306,11 @@ function stopNet(){
 }
 function startP2P(role,c,saved){
   stopNet();
-  lastLens=null;local=false;screen='game';sel=mode=overlay=builder=null;handoff=false;
+  lastLens=lastSold=lastMv=null;local=false;screen='game';sel=mode=overlay=builder=null;handoff=false;
   c=c||Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join('');
   const me=p2p={role,code:c,clients:[],seen:0,lastOn:false,lastPub:0,timer:0,t0:Date.now()};
   game=saved?saved.game:role===0?newGame('H',null):null;priv=saved?saved.priv:null;
+  if(!saved&&game)game.nm.p0=myName();
   const tp='caravan-dd/v1/'+c,id='cv'+Math.random().toString(36).slice(2,12);
   BROKERS.forEach((url,n)=>{
     let cl;try{cl=mqtt.connect(url,{clientId:id+n,clean:true,keepalive:30,reconnectPeriod:4000,connectTimeout:10000})}catch(e){return}
@@ -261,7 +347,7 @@ function onMsg(m){
   const mine=game,g=m.game,before=mine&&JSON.stringify(mine),gs=JSON.stringify(g);
   if(!mine||newer(g,mine)){game=g;sel=null;mode=null}
   if(mine&&mine.round===g.round)for(const src of[mine,g])for(const pk of['p0','p1'])if(src.ready[pk]&&!game.ready[pk]){game.ready[pk]=true;game.dc[pk]=src.dc[pk];game.hc[pk]=src.hc[pk]}
-  if(p2p.role===1&&!game.pl.p1){game.pl.p1='G';game.seq++}
+  if(p2p.role===1&&!game.pl.p1){game.pl.p1='G';game.nm=game.nm||{p0:'',p1:''};game.nm.p1=myName();game.seq++}
   if(priv&&priv.round!==game.round)priv=null;
   const now=JSON.stringify(game);
   if(now!==gs&&Date.now()-p2p.lastPub>400)pubGame();
@@ -292,14 +378,14 @@ async function init(){
   screen='lobby';render();
 }
 function startLocal(resume){
-  lastLens=null;local=true;screen='game';sel=mode=overlay=builder=null;
+  lastLens=lastSold=lastMv=null;local=true;screen='game';sel=mode=overlay=builder=null;
   const s=resume&&LS.get('caravan_local');
   if(s){({game,privs,viewer}=s);handoff=game.ready.p0&&game.ready.p1&&game.winner<0}
-  else{game=newGame('L0','L1');privs=[null,null];viewer=0;handoff=false}
+  else{game=newGame('L0','L1');const n=getNames();game.nm={p0:myName()||'Игрок 1',p1:String(n.p2||'').trim().slice(0,16)||'Игрок 2'};if(game.nm.p0===game.nm.p1)game.nm.p1+=' 2';privs=[null,null];viewer=0;handoff=false}
   priv=privs[viewer];render();
 }
 function enter(c){
-  lastLens=null;local=false;code=c;game=null;priv=null;sel=mode=overlay=builder=null;screen='game';store.set(c);render();
+  lastLens=lastSold=lastMv=null;local=false;code=c;game=null;priv=null;sel=mode=overlay=builder=null;screen='game';store.set(c);render();
   unsub=gameRef().onSnapshot(s=>{
     if(!s.exists){if(!s.metadata.fromCache)leave();return}
     if(s.data().pl.p0!==uid&&s.data().pl.p1!==uid)return leave();
@@ -324,7 +410,7 @@ async function createTable(){
   const c=Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join('');
   code=c;
   try{
-    await gameRef().set({created:Date.now(),open:true,pl:{p0:uid,p1:null},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1});
+    await gameRef().set({created:Date.now(),open:true,gid:c,mv:0,nm:{p0:myName(),p1:''},bk:{p0:0,p1:0},pl:{p0:uid,p1:null},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1});
     enter(c);
   }catch(e){code=null;fail(e)}
   busy=false;
@@ -336,7 +422,7 @@ async function joinTable(c){
     if(!l.acquired)throw{code:'busy'};
     const s=await gameRef().get(),d=s.exists&&s.data();
     if(!d||d.pl.p1){toast('Стол уже занят');code=null}
-    else{await gameRef().update({pl:{p1:uid},open:false});enter(c)}
+    else{await gameRef().update({pl:{p1:uid},nm:{p1:myName()},open:false});enter(c)}
   }catch(e){code=null;e.code==='busy'?toast('Стол уже занят'):fail(e)}
   busy=false;
 }
@@ -346,10 +432,11 @@ async function chooseDeck(kind){
   if(busy)return;
   let deck;
   if(kind==='full')deck=fullDeck();
-  else if(kind==='rand'){do{deck=shuffle(fullDeck()).slice(0,30)}while(deck.filter(isNum).length<14)}
+  else if(kind==='rand'){const n=rnd[0]+Math.floor(Math.random()*(rnd[1]-rnd[0]+1)),pool=fullDeck().concat(fullDeck());do{deck=shuffle(pool).slice(0,n)}while(deck.filter(isNum).length<n*.45)}
   else{deck=[];for(const c in builder)for(let i=0;i<builder[c];i++)deck.push(c)}
-  shuffle(deck);
+  shuffle(deck);SFX.shuffle();LS.set('caravan_back',backSel);
   const hand=deck.splice(0,8),pk='p'+meIdx();
+  if(local||p2p){game.bk=game.bk||{p0:0,p1:0};game.bk[pk]=backSel}
   if(local){
     if(kind==='own')LS.set('caravan_deck',builder);
     builder=null;privs[viewer]={round:game.round,deck,hand};
@@ -368,7 +455,7 @@ async function chooseDeck(kind){
     if(kind==='own')await deckRef().set({counts:builder});
     priv={round:game.round,deck,hand};
     await privRef().set(priv);
-    await gameRef().update({ready:{[pk]:true},dc:{[pk]:deck.length},hc:{[pk]:hand.length}});
+    await gameRef().update({ready:{[pk]:true},bk:{[pk]:backSel},dc:{[pk]:deck.length},hc:{[pk]:hand.length}});
     builder=null;
   }catch(e){fail(e)}
   busy=false;render();
@@ -390,19 +477,19 @@ async function commit(cars,hand,deck,text,o={}){
   if(winner<0&&op[ok]>=3&&game.hc[ok]===0&&game.dc[ok]===0)winner=me;
   if(local){
     privs[me]={round:game.round,deck,hand};
-    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
+    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner,mv:(game.mv||0)+1});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
     if(winner<0){viewer=1-me;handoff=true}
     priv=privs[viewer];saveLocal();busy=false;sel=null;mode=null;return render();
   }
   if(p2p){
     priv={round:game.round,deck,hand};
-    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner,seq:game.seq+1});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
+    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner,seq:game.seq+1,mv:(game.mv||0)+1});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
     pubGame();saveP2P();busy=false;sel=null;mode=null;return render();
   }
   try{
     priv={round:game.round,deck,hand};
     await privRef().set(priv);
-    try{await gameRef().update({cars,turn:1-me,dc:{[pk]:deck.length},hc:{[pk]:hand.length},op:{[pk]:op[pk]},last:{by:me,t:text},winner})}
+    try{await gameRef().update({cars,turn:1-me,dc:{[pk]:deck.length},hc:{[pk]:hand.length},op:{[pk]:op[pk]},last:{by:me,t:text},winner,mv:(game.mv||0)+1})}
     catch(e){priv=old;await privRef().set(old).catch(()=>{});throw e}
   }catch(e){fail(e)}
   busy=false;sel=null;mode=null;render();
@@ -450,16 +537,16 @@ function discard(){
 async function rematch(){
   if(busy)return;
   if(local){
-    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1});
+    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,mv:0,turn:1-game.winner,round:game.round+1});
     privs=[null,null];viewer=0;priv=null;saveLocal();return render();
   }
   if(p2p){
     if(!netUp())return toast('Нет связи с сервером');
-    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1,seq:0});
+    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,mv:0,turn:1-game.winner,round:game.round+1,seq:0});
     priv=null;pubGame();saveP2P();return render();
   }
   busy=true;
-  try{await gameRef().update({ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1})}catch(e){fail(e)}
+  try{await gameRef().update({ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,mv:0,turn:1-game.winner,round:game.round+1})}catch(e){fail(e)}
   busy=false;
 }
 
@@ -477,12 +564,14 @@ const RULES=`<ul>
 
 function render(){
   if(drag&&drag.on)return;
+  recordResult();
   let h='';
   if(screen==='loading')h='<div class="page"><p class="sub">Загрузка…</p></div>';
   else if(screen==='nodb')h='<div class="page"><h1>Караван</h1><p class="sub">Чтобы играть вдвоём, откройте эту страницу в Claude под своим аккаунтом.</p></div>';
   else if(screen==='lobby')h=lobby();
   else h=gameView();
   if(overlay==='rules')h+=`<div class="over"><div><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn" data-act="closeOverlay">Понятно</button></div></div>`;
+  if(overlay==='records')h+=`<div class="over"><div><h2>Таблица рекордов</h2>${recordsHtml()}<button class="btn" data-act="closeOverlay">Закрыть</button><button class="btn ghost" data-act="clearStats">Очистить таблицу</button></div></div>`;
   app.innerHTML=h;
 }
 function lobby(){
@@ -493,7 +582,8 @@ function lobby(){
   :canP2P?`<button class="btn" data-act="p2pNew">Создать стол и получить ссылку</button>${(sp=>sp&&sp.code?`<button class="btn ghost" data-act="p2pResume">Вернуться за стол ${esc(sp.code)}</button>`:'')(LS.get('caravan_p2p'))}<p class="sub">Отправьте ссылку сопернику — он откроет её и сядет за стол. Аккаунты не нужны.</p>`
   :'<p class="sub">Сетевая игра сейчас недоступна: не загрузился модуль связи. Проверьте интернет и обновите страницу.</p>';
   return `<div class="page"><div><h1>Караван</h1><p class="sub">Карточная игра пустошей. Двое, три каравана, кто продаст два — тот и прав.</p></div>
-  <div class="sec"><h2>Один телефон</h2><button class="btn" data-act="local">Новая партия</button>${saved&&saved.game?'<button class="btn ghost" data-act="localResume">Продолжить партию</button>':''}</div>
+  <div class="sec"><input type="text" maxlength="16" data-nm="me" placeholder="Ваше имя" value="${esc(getNames().me||'')}" autocomplete="off"><div style="display:flex;gap:8px"><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost ic ${muted?'mute':''}" style="height:auto;width:52px" data-act="mute" aria-label="Звук">♪</button></div></div>
+  <div class="sec"><h2>Один телефон</h2><input type="text" maxlength="16" data-nm="p2" placeholder="Имя второго игрока" value="${esc(getNames().p2||'')}" autocomplete="off"><button class="btn" data-act="local">Новая партия</button>${saved&&saved.game?'<button class="btn ghost" data-act="localResume">Продолжить партию</button>':''}</div>
   <div class="sec"><h2>Два телефона</h2>${online}</div>
   <details><summary>Правила</summary>${RULES}</details></div>`;
 }
@@ -502,27 +592,28 @@ function gameView(){
   if(!game)return `<div class="page"><h2>Стол ${esc(p2p?p2p.code:code||'')}</h2><p class="sub">Подключаемся к столу…</p>${perr}<button class="btn ghost" data-act="leave">В лобби</button></div>`;
   const me=meIdx(),pk='p'+me,ok='p'+(1-me);
   const back='<button class="btn ghost" data-act="leave">В лобби</button>';
-  const pn=local?`Игрок ${me+1}: `:'';
-  if(p2p&&!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Отправьте сопернику эту ссылку. Игра начнётся, как только он её откроет.</p><p class="link">${esc(roomUrl())}</p>${perr}<button class="btn" data-act="share">Отправить ссылку</button><button class="btn ghost" data-act="copy">Скопировать ссылку</button>${back}</div>`;
+    if(p2p&&!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Отправьте сопернику эту ссылку. Игра начнётся, как только он её откроет.</p><p class="link">${esc(roomUrl())}</p>${perr}<button class="btn" data-act="share">Отправить ссылку</button><button class="btn ghost" data-act="copy">Скопировать ссылку</button>${back}</div>`;
   if(!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Соперник открывает эту же страницу и садится за стол с кодом:</p><div class="code">${esc(code)}</div><p class="sub">Игра начнётся, как только он подключится.</p><button class="btn ghost" data-act="close">Закрыть стол</button>${back}</div>`;
   if(!game.ready[pk]){
     if(builder)return builderView();
-    return `<div class="page"><h2>${pn}выберите колоду</h2>
+    return `<div class="page"><h2>${esc(pname(me))}: колода</h2>
+    <div class="box"><span>Рубашка: <b id="bkname">${BACKS[backSel]}</b></span><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
     <button class="btn" data-act="deck" data-kind="full">Полная колода, 54 карты</button>
-    <button class="btn" data-act="deck" data-kind="rand">Случайные 30 карт</button>
+    <div class="box"><div class="rng"><label>от <b id="ra">${rnd[0]}</b><input type="range" min="30" max="108" value="${rnd[0]}" data-rng="0"></label><label>до <b id="rb">${rnd[1]}</b><input type="range" min="30" max="108" value="${rnd[1]}" data-rng="1"></label></div>
+    <button class="btn" data-act="deck" data-kind="rand">Случайная колода</button><p class="sub" style="font-size:12px">Число карт выпадет случайно в этих пределах. По правилам в колоде не меньше 30 карт, набирать можно из двух комплектов.</p></div>
     <button class="btn ghost" data-act="builder">Собрать свою колоду</button>
     <p class="sub">${local?'Второй игрок пока не смотрит.':game.ready[ok]?'Соперник уже готов.':'Соперник тоже выбирает.'}</p>${back}</div>`;
   }
   if(!game.ready[ok])return `<div class="page"><h2>Колода готова</h2><p class="sub">${p2p&&!oppOnline()?'Соперник сейчас не в сети. Он увидит стол, когда вернётся.':'Ждём, пока соперник выберет свою.'}</p>${perr}${back}</div>`;
   if(!priv||priv.round!==game.round)return `<div class="page"><p class="sub">${p2p?'На этом устройстве нет ваших карт для этой партии. Вернитесь с того телефона, с которого начинали, или начните новую партию.':'Раздаём карты…'}</p>${p2p?back:''}</div>`;
-  if(local&&handoff)return `<div class="page"><h2>Ход игрока ${me+1}</h2><p class="sub">Передайте телефон игроку ${me+1}. Карты откроются по кнопке.</p>${game.last?`<p>Игрок ${game.last.by+1}: ${esc(game.last.t)}</p>`:''}<button class="btn" data-act="show">Я игрок ${me+1}, показать карты</button>${back}</div>`;
+  if(local&&handoff)return `<div class="page"><h2>Ходит ${esc(pname(me))}</h2><p class="sub">Передайте телефон. Карты откроются по кнопке.</p>${game.last?`<p>${esc(pname(game.last.by))}: ${esc(game.last.t)}</p>`:''}<button class="btn" data-act="show">Я ${esc(pname(me))}, показать карты</button>${back}</div>`;
   return board(me);
 }
 function builderView(){
   const total=Object.values(builder).reduce((a,b)=>a+b,0);
   let g='';
   for(const s in SU)g+=`<div class="grid">${RANKS.map(r=>chip(r+s)).join('')}${s==='C'?chip('JK'):''}</div>`;
-  return `<div class="page"><h2>${local?`Игрок ${viewer+1}: `:''}своя колода</h2><p class="sub">Нажимайте на карту: нет, одна, две. Нужно не меньше 30 карт.</p>${g}
+  return `<div class="page"><h2>${esc(pname(meIdx()))}: своя колода</h2><p class="sub">Нажимайте на карту: нет, одна, две. Нужно не меньше 30 карт.</p>${g}
   <p><b>Карт в колоде: ${total}</b></p>
   <button class="btn" data-act="deck" data-kind="own" ${total<30?'disabled':''}>Играть этой колодой</button>
   <button class="btn ghost" data-act="builderBack">Назад</button></div>`;
@@ -531,12 +622,29 @@ const chip=c=>`<button class="chip n${builder[c]||0} ${red(c)?'red':''}" data-ac
 
 let lastLens=null,fresh={},freshT;
 const mini=x=>`<b class="${red(x)?'red':''}">${x==='JK'?'★':rk(x)==='Q'?'Q'+SU[st(x)]:rk(x)}</b>`;
-const faceHtml=c=>`<span class="ix">${c==='JK'?'★':rk(c)+SU[st(c)]}</span><span class="pip">${c==='JK'?'JOKER':SU[st(c)]}</span>`;
+const PIPS={1:[[50,50]],2:[[50,12],[50,88]],3:[[50,12],[50,50],[50,88]],4:[[25,12],[75,12],[25,88],[75,88]],5:[[25,12],[75,12],[50,50],[25,88],[75,88]],6:[[25,12],[75,12],[25,50],[75,50],[25,88],[75,88]],7:[[25,12],[75,12],[50,31],[25,50],[75,50],[25,88],[75,88]],8:[[25,12],[75,12],[50,31],[25,50],[75,50],[50,69],[25,88],[75,88]],9:[[25,12],[75,12],[25,37],[75,37],[50,50],[25,63],[75,63],[25,88],[75,88]],10:[[25,12],[75,12],[50,25],[25,37],[75,37],[25,63],[75,63],[50,75],[25,88],[75,88]]};
+const COURT={J:'♞\uFE0E',Q:'♛\uFE0E',K:'♚\uFE0E'};
+function faceHtml(c){
+  if(c==='JK')return '<span class="ix">★</span><span class="court jkr"><b>✪</b><em>JOKER</em></span>';
+  const r=rk(c),su=SU[st(c)],ix=`<span class="ix">${r}${su}</span>`;
+  if(COURT[r])return ix+`<span class="court"><i>${su}</i><b>${COURT[r]}</b><i class="fl">${su}</i></span>`;
+  const n=nv(c);return ix+`<span class="pips ${n===1?'ace':''}">${PIPS[n].map(([x,y])=>`<i class="${y>50?'fl':''}" style="left:${x}%;top:${y}%">${su}</i>`).join('')}</span>`;
+}
+const stain=c=>{let h=7;for(const ch of c)h=(h*31+ch.charCodeAt(0))%997;return `--sx:${10+h%80}%;--sy:${10+(h*7)%80}%`};
+let lastSold=null,lastMv=null;
 function board(me){
   const op=1-me,pk='p'+me,ok='p'+op,turn=myTurn(),open=opening();
   const c=sel!=null?priv.hand[sel]:null;
   const cars=game.cars;
   const lens=cars.map(x=>x.cards.length);
+  const soldNow=cars.map(x=>sold(carVal(x))),mvNow=game.mv||0;
+  if(lastLens){
+    if(lens.some((n,k)=>n>lastLens[k]))SFX.place();
+    if(lens.some((n,k)=>n<lastLens[k]))SFX.remove();
+    else if(lastMv!==null&&mvNow!==lastMv&&!lens.some((n,k)=>n!==lastLens[k]))SFX.deal();
+    if(lastSold&&soldNow.some((v,k)=>v&&!lastSold[k]))SFX.sold();
+  }
+  lastSold=soldNow;lastMv=mvNow;
   if(lastLens&&lens.some((n,k)=>n!==lastLens[k])){fresh={};lens.forEach((n,k)=>{if(n>lastLens[k])fresh[k]=lastLens[k]});clearTimeout(freshT);freshT=setTimeout(()=>fresh={},450)}
   lastLens=lens;
   const carHtml=(k,isMine)=>{
@@ -544,7 +652,7 @@ function board(me){
     const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="${stain(t.c)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
     }).join('');
     return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
   };
@@ -559,18 +667,18 @@ function board(me){
   }
   const noNums=!priv.hand.some(isNum);
   let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
-  const last=game.last?`${game.last.by===me?'Вы':'Соперник'}: ${esc(game.last.t)}`:'';
+  const last=game.last?`${game.last.by===me?'Вы':esc(pname(op))}: ${esc(game.last.t)}`:'';
   const hl=priv.hand.length,mid=(hl-1)/2;
-  const hand=priv.hand.map((x,i)=>`<button class="card hc ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const hand=priv.hand.map((x,i)=>`<button class="card hc ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};${stain(x)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
   const oh=game.hc[ok],omid=(oh-1)/2;
-  const ohand=Array.from({length:oh},(_,i)=>`<i class="back" style="--r:${(i-omid)*5}"></i>`).join('');
+  const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
-  let h=`<div class="game"><div class="top"><div class="who"><b>${local?'Игрок '+(op+1):esc(names[game.pl[ok]]||'Соперник')}</b>${p2p&&!oppOnline()?'не в сети':'карт в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
   <div class="table">${cols}</div>
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
-  <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
-  if(game.winner>=0&&overlay!=='rules')h+=`<div class="over"><div><h1>${local?'Игрок '+(game.winner+1):game.winner===me?'Победа':'Поражение'}</h1><p class="sub">${local?'Караваны дошли. Победа за ним.':game.winner===me?'Ваши караваны дошли первыми.':'Соперник продал больше караванов.'}</p><button class="btn" data-act="rematch">Реванш</button><button class="btn ghost" data-act="leave">В лобби</button></div></div>`;
+  <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
+  if(game.winner>=0&&!overlay)h+=`<div class="over"><div><h1>${local?esc(pname(game.winner)):game.winner===me?'Победа':'Поражение'}</h1><p class="sub">${local?'Караваны дошли. Победа.':game.winner===me?'Ваши караваны дошли первыми.':'Соперник продал больше караванов.'}</p><button class="btn" data-act="rematch">Реванш</button><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost" data-act="leave">В лобби</button></div></div>`;
   return h;
 }
 
@@ -629,7 +737,7 @@ app.addEventListener('pointercancel',e=>endDrag(e,true));
 app.addEventListener('click',e=>{
   const a=e.target.closest('[data-act]');
   if(a){
-    const d=a.dataset;
+    const d=a.dataset;if(d.act!=='mute')SFX.blip();
     switch(d.act){
       case 'create':return createTable();
       case 'local':return startLocal(false);
@@ -652,13 +760,28 @@ app.addEventListener('click',e=>{
       case 'discard':return discard();
       case 'disband':mode=mode==='disband'?null:'disband';sel=null;return render();
       case 'rematch':return rematch();
+      case 'records':overlay='records';return render();
+      case 'clearStats':LS.set('caravan_stats',{p:{},seen:(LS.get('caravan_stats')||{seen:[]}).seen});return render();
+      case 'mute':muted=!muted;LS.set('caravan_mute',muted);if(!muted)SFX.blip();return render();
+      case 'back':backSel=+d.b;return render();
     }
     return;
   }
   const h=e.target.closest('[data-h]');
-  if(h){if(swallow)return;sel=sel===+h.dataset.h?null:+h.dataset.h;mode=null;return render()}
+  if(h){if(swallow)return;SFX.blip();sel=sel===+h.dataset.h?null:+h.dataset.h;mode=null;return render()}
   const z=e.target.closest('[data-car]');
   if(z){const c=e.target.closest('[data-ci]');tapTable(+z.dataset.car,c?+c.dataset.ci:null)}
+});
+app.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.nm){const n=getNames();n[t.dataset.nm]=t.value;LS.set('caravan_names',n)}
+  else if(t.dataset.rng){
+    const i=+t.dataset.rng;rnd[i]=+t.value;
+    if(rnd[0]>rnd[1])rnd[1-i]=rnd[i];
+    LS.set('caravan_rnd',rnd);
+    document.getElementById('ra').textContent=rnd[0];document.getElementById('rb').textContent=rnd[1];
+    app.querySelectorAll('[data-rng]').forEach(x=>{if(x!==t)x.value=rnd[+x.dataset.rng]});
+  }
 });
 init();
 </script>
