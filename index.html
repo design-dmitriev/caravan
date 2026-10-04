@@ -257,6 +257,7 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .flick{position:absolute;inset:0;pointer-events:none;background:#000;opacity:0;transform:translateZ(76px);animation:lamp 11s linear infinite}
 @keyframes lamp{0%,11%{opacity:0}11.8%{opacity:.075}12.6%{opacity:.02}13.6%{opacity:.06}15.5%,47%{opacity:0}47.700%{opacity:.045}49.500%,74%{opacity:0}74.600%{opacity:.085}75.400%{opacity:.03}76.200%{opacity:.055}78.500%,100%{opacity:0}}
 .table.t3d .lightcap{background:radial-gradient(ellipse 66% 70% at 50% 40%,rgba(255,178,98,.1) 0,rgba(255,160,72,.04) 22%,rgba(30,16,6,.16) 46%,rgba(10,6,3,.5) 70%,rgba(3,2,1,.84) 90%,rgba(1,1,0,.94) 100%)}
+.card.sk0{background:var(--grain,none),linear-gradient(140deg,#f3ead0 0,#e9dcb6 50%,#d6c492 100%)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -317,16 +318,56 @@ const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return 
 const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
 let tblSel=1;
 const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
+const h32=t=>{let h=2166136261;for(const ch of t)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0};
+const rng=seed=>{let a=seed||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
+/* six original back designs, one per deck */
 function backArt(b){
-  const c=BKC[b],p=b===3?'#c9a24b':'#e9dfc2';
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="bp" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0h7M0 0v7" stroke="${p}" stroke-opacity=".34" stroke-width=".7"/><circle cx="3.5" cy="3.5" r=".8" fill="${p}" fill-opacity=".3"/></pattern><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="14"/><feColorMatrix values="0 0 0 0 .1 0 0 0 0 .07 0 0 0 0 .04 0 0 0 2.4 -1.45"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
-<rect width="100" height="140" fill="${b===3?'#1b1610':'#e6dbbc'}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="${c}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="url(#bp)"/>
-<rect x="8" y="8" width="84" height="124" rx="2" fill="none" stroke="${p}" stroke-width="1.1"/><rect x="10.4" y="10.4" width="79.2" height="119.200" rx="1.4" fill="none" stroke="${p}" stroke-width=".45"/>
-<g fill="none" stroke="${p}" stroke-width=".8"><path d="M12 24q11 0 12-12M88 24q-11 0-12-12M12 116q11 0 12 12M88 116q-11 0-12 12"/><path d="M12 30q16-1 18-18M88 30q-16-1-18-18M12 110q16 1 18 18M88 110q-16 1-18 18" stroke-width=".4"/></g>
-<ellipse cx="50" cy="70" rx="17" ry="24" fill="${c}" stroke="${p}" stroke-width="1.2"/><ellipse cx="50" cy="70" rx="13.500" ry="20" fill="none" stroke="${p}" stroke-width=".45"/>
-<path d="M50 54l3.600 12.400L66 70l-12.400 3.600L50 86l-3.600-12.400L34 70l12.400-3.600z" fill="${p}" opacity=".92"/><circle cx="50" cy="70" r="2.600" fill="${c}"/>
-<path d="M50 40v8M50 92v8M30 70h-6M70 70h6" stroke="${p}" stroke-width=".6"/><circle cx="50" cy="37.500" r="1.300" fill="${p}"/><circle cx="50" cy="102.500" r="1.300" fill="${p}"/>
+  const c=BKC[b],p=b===3?'#c9a24b':'#e9dfc2',S=`stroke="${p}"`,F=`fill="${p}"`;
+  const pat=[`<path d="M0 0h7M0 0v7" ${S} stroke-opacity=".34" stroke-width=".7"/><circle cx="3.5" cy="3.5" r=".8" ${F} fill-opacity=".3"/>`,
+    `<path d="M0 2.500h7M0 6h7" ${S} stroke-opacity=".26" stroke-width=".6"/>`,
+    `<path d="M0 7a3.500 3.500 0 0 1 7 0M-3.500 3.500a3.500 3.500 0 0 1 7 0M3.500 3.500a3.500 3.500 0 0 1 7 0" fill="none" ${S} stroke-opacity=".36" stroke-width=".6"/>`,
+    '',
+    `<path d="M0 3.500q1.750-2 3.500 0t3.500 0" fill="none" stroke="#3a1606" stroke-opacity=".3" stroke-width=".6"/>`,
+    `<circle cx="3.500" cy="3.500" r=".7" ${F} fill-opacity=".34"/>`][b];
+  let rays='';if(b===3)for(let k=0;k<28;k++){const a=k*Math.PI/14;rays+=`<path d="M50 70L${(50+120*Math.cos(a)).toFixed(0)} ${(70+120*Math.sin(a)).toFixed(0)}" ${S} stroke-width=".5" stroke-opacity=".5"/>`}
+  let sun='';if(b===4)for(const y of [8,132]){let q='';for(let k=1;k<12;k++){const a=k*Math.PI/12*(y<70?1:-1);q+=`<path d="M${(50+17*Math.cos(a)).toFixed(1)} ${(y+17*Math.sin(a)).toFixed(1)}L${(50+34*Math.cos(a)).toFixed(1)} ${(y+34*Math.sin(a)).toFixed(1)}"/>`}sun+=`<circle cx="50" cy="${y}" r="13" ${F} opacity=".9"/><g ${S} stroke-width="1.100" stroke-linecap="round" opacity=".85">${q}</g>`}
+  const med=[`<ellipse cx="50" cy="70" rx="17" ry="24" fill="${c}" ${S} stroke-width="1.200"/><ellipse cx="50" cy="70" rx="13.500" ry="20" fill="none" ${S} stroke-width=".450"/><path d="M50 54l3.600 12.400L66 70l-12.400 3.600L50 86l-3.600-12.400L34 70l12.400-3.600z" ${F} opacity=".92"/><circle cx="50" cy="70" r="2.600" fill="${c}"/><g fill="none" ${S} stroke-width=".800"><path d="M12 24q11 0 12-12M88 24q-11 0-12-12M12 116q11 0 12 12M88 116q-11 0-12 12"/></g>`,
+    `<circle cx="50" cy="70" r="19" fill="${c}" ${S} stroke-width="1.400"/><circle cx="50" cy="70" r="15.500" fill="none" ${S} stroke-width=".500"/><path d="M50 56.500l3.300 9.600 10.100.200-8.100 6.100 3 9.700-8.300-5.800-8.300 5.800 3-9.700-8.100-6.100 10.100-.200z" ${F}/><g fill="none" ${S} stroke-width="1.600" stroke-linecap="round"><path d="M36 26l14 9 14-9M36 33l14 9 14-9M36 114l14-9 14 9M36 107l14-9 14 9"/></g><path d="M14 14h72M14 126h72" ${S} stroke-width="2.200"/>`,
+    `<circle cx="50" cy="70" r="20" fill="${c}" ${S} stroke-width="1"/><circle cx="50" cy="70" r="14" fill="none" ${S} stroke-width="5" stroke-dasharray="4.400 2.930"/><circle cx="50" cy="70" r="10.500" fill="none" ${S} stroke-width="1"/><circle cx="50" cy="70" r="3.200" ${F}/><path d="M50 60v20M41.340 65l17.320 10M41.340 75l17.320-10" ${S} stroke-width="1.100"/><g ${F}><circle cx="50" cy="26" r="2.200"/><circle cx="50" cy="114" r="2.200"/><circle cx="20" cy="70" r="2.200"/><circle cx="80" cy="70" r="2.200"/></g>`,
+    `${rays}<path d="M50 40L72 70 50 100 28 70z" fill="${c}" ${S} stroke-width="1.200"/><path d="M50 45L68 70 50 95 32 70z" fill="none" ${S} stroke-width=".450"/><path transform="translate(39.500 58.500) scale(.21)" d="M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4z" ${F}/><rect x="13.500" y="13.500" width="73" height="113" fill="none" ${S} stroke-width=".450"/>`,
+    `${sun}<path d="M12 58h76M12 64h76M12 76h76M12 82h76" ${S} stroke-width=".600" opacity=".7"/><path d="M50 60l8 10-8 10-8-10z" ${F}/><path d="M22 70h14M64 70h14" ${S} stroke-width="1.400" stroke-linecap="round"/>`,
+    `<circle cx="50" cy="70" r="24" fill="${c}" ${S} stroke-width=".800"/><g fill="none" ${S} stroke-width="1.100"><ellipse cx="50" cy="70" rx="21" ry="7.500"/><ellipse cx="50" cy="70" rx="21" ry="7.500" transform="rotate(60 50 70)"/><ellipse cx="50" cy="70" rx="21" ry="7.500" transform="rotate(120 50 70)"/></g><circle cx="50" cy="70" r="3.600" ${F}/><g ${F}><circle cx="71" cy="70" r="1.700"/><circle cx="39.500" cy="51.800" r="1.700"/><circle cx="39.500" cy="88.200" r="1.700"/></g><path d="M16 20h10M16 20v10M84 20h-10M84 20v10M16 120h10M16 120v-10M84 120h-10M84 120v-10" ${S} stroke-width="1.200" fill="none"/>`][b];
+  const field=b===4?'url(#bg4)':c;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="bp" width="7" height="7" patternUnits="userSpaceOnUse" ${b===0?'patternTransform="rotate(45)"':''}>${pat}</pattern><linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9772c"/><stop offset=".5" stop-color="#8a3c18"/><stop offset="1" stop-color="#c9772c"/></linearGradient><clipPath id="cf"><rect x="5" y="5" width="90" height="130" rx="3"/></clipPath><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="${14+b*3}"/><feColorMatrix values="0 0 0 0 .1 0 0 0 0 .07 0 0 0 0 .04 0 0 0 2.400 -1.450"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="100" height="140" fill="${b===3?'#1b1610':'#e6dbbc'}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="${field}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="url(#bp)"/>
+<rect x="8" y="8" width="84" height="124" rx="2" fill="none" ${S} stroke-width="1.100"/><rect x="10.400" y="10.400" width="79.200" height="119.200" rx="1.400" fill="none" ${S} stroke-width=".450"/>
+<g clip-path="url(#cf)">${med}</g>
 <rect width="100" height="140" filter="url(#bd)"/><rect width="100" height="140" fill="none" stroke="#2a1806" stroke-width="7" opacity=".4" filter="url(#bb)"/></svg>`;
+}
+/* damage that is different on every single card: seeded by the card and its deck */
+function wearInner(c,sk){
+  const r=rng(h32(c+':'+sk)),R=(a,b)=>a+r()*(b-a),id='w'+h32(c+sk).toString(36),n1=x=>x.toFixed(1);
+  let o=`<defs><filter id="${id}w" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${R(.03,.055).toFixed(3)}" numOctaves="3" seed="${(r()*90|0)+1}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${R(22,36).toFixed(0)}"/></filter><filter id="${id}b"><feGaussianBlur stdDeviation="${n1(R(2.5,4))}"/></filter></defs>`;
+  const scr=(n,lightP,wmax)=>{let q='';for(let k=0;k<n;k++){const x=R(0,100),y=R(0,140),a=R(0,Math.PI),l=R(6,48),lt=r()<lightP;q+=`<path d="M${n1(x)} ${n1(y)}l${n1(Math.cos(a)*l)} ${n1(Math.sin(a)*l)}" stroke="${lt?'#fff':'#231c12'}" stroke-width="${R(.25,wmax).toFixed(2)}" opacity="${R(lt?.35:.2,lt?.8:.5).toFixed(2)}"/>`}return `<g fill="none" stroke-linecap="round">${q}</g>`};
+  const stain=(n,col,amax)=>{let q='';for(let k=0;k<n;k++)q+=`<ellipse cx="${n1(R(-5,105))}" cy="${n1(R(-5,145))}" rx="${n1(R(8,26))}" ry="${n1(R(6,20))}" opacity="${R(.06,amax).toFixed(2)}"/>`;return `<g fill="${col}" filter="url(#${id}b)">${q}</g>`};
+  const crease=()=>{const y=R(30,110),t=R(-12,12),m=R(30,70);return `<path d="M0 ${n1(y)} ${n1(m)} ${n1(y+t*.6)} 100 ${n1(y+t)}" fill="none" stroke="#fff" stroke-width=".7" opacity=".4"/><path d="M0 ${n1(y+1)} ${n1(m)} ${n1(y+t*.6+1)} 100 ${n1(y+t+1)}" fill="none" stroke="#3a240c" stroke-width=".5" opacity=".4"/>`};
+  const ring=()=>`<circle cx="${n1(R(20,80))}" cy="${n1(R(25,115))}" r="${n1(R(10,17))}" fill="none" stroke="#6a3c10" stroke-width="${n1(R(1.2,2.4))}" opacity="${R(.15,.35).toFixed(2)}" stroke-dasharray="${n1(R(30,70))} ${n1(R(4,16))}" filter="url(#${id}w)"/>`;
+  const burn=big=>{const left=r()<.5,top=!left&&r()<.5,edge=r()<.35,cx=left?R(-8,2):R(98,108),cy=edge?R(left?70:35,115):top?R(-8,4):R(136,148),q=big?R(.65,1.1):R(.35,.65),e=(a,b2,f,op)=>`<ellipse cx="${n1(cx)}" cy="${n1(cy)}" rx="${n1(a*q)}" ry="${n1(b2*q)}" fill="${f}" opacity="${op}"/>`;
+    return `<g filter="url(#${id}w)">${e(46,50,'#7a4212',.42)}${e(33,36,'#3a1c08',.8)}${e(22,25,'#080402',1)}</g>`};
+  const ding=()=>{const x=r()<.5?0:100,y=r()<.5?0:140,d=R(5,11);return `<path d="M${x} ${y}h${x?-d:d}L${x} ${y+(y?-d:d)}z" fill="#000" opacity="${R(.12,.28).toFixed(2)}"/>`};
+  if(sk===0)o+=stain(2+(r()*3|0),'#6b4416',.2)+(r()<.6?crease():'')+scr(3+(r()*4|0),.3,.6)+(r()<.3?ring():'')+(r()<.5?ding():'');
+  else if(sk===1){const gx=R(15,62),gw=R(8,16),tl=R(22,46);o+=`<polygon points="${n1(gx)},0 ${n1(gx+gw)},0 ${n1(gx+gw-tl)},140 ${n1(gx-tl)},140" fill="#fff" opacity="${R(.35,.6).toFixed(2)}"/><polygon points="${n1(gx+gw+18)},0 ${n1(gx+gw+22)},0 ${n1(gx+gw+22-tl)},140 ${n1(gx+gw+18-tl)},140" fill="#fff" opacity="${R(.2,.4).toFixed(2)}"/>`+scr(1+(r()*3|0),.2,.4)+(r()<.6?ding():'')}
+  else if(sk===2){const a=R(5,40),b2=R(60,95);o+=stain(1,'#3a4030',.14)+scr(9+(r()*10|0),.7,1)+`<path d="M${n1(a)} ${n1(R(5,40))}Q${n1(R(30,70))} ${n1(R(50,90))} ${n1(b2)} ${n1(R(100,135))}" fill="none" stroke="#fff" stroke-width="${n1(R(1,1.9))}" opacity=".7"/>`+(r()<.4?crease():'')}
+  else if(sk===3){let chips='';for(let k=0,m=2+(r()*4|0);k<m;k++){const ed=r()*4|0,t=R(8,92);chips+=`<circle cx="${n1(ed===0?1:ed===1?99:t)}" cy="${n1(ed===2?1:ed===3?139:t*1.4)}" r="${n1(R(1,3.2))}" fill="#7a6c4c" opacity=".7"/>`}o+=scr(3+(r()*5|0),1,.45).replace(/#fff/g,'#cbbf9a')+chips+stain(1,'#c9a24b',.1)}
+  else if(sk===4)o+=burn(true)+(r()<.45?burn(false):'')+stain(1+(r()*2|0),'#1a0e05',.22)+(r()<.4?ring():'')+(r()<.4?crease():'');
+  else o+=stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.4?ding():'');
+  return o;
+}
+const wearSheet=document.createElement('style');document.head.appendChild(wearSheet);const wearDone={};
+function wearCls(c,sk){
+  const k='w'+sk+c;
+  if(!wearDone[k]){wearDone[k]=1;try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
+  return k;
 }
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
 let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
@@ -779,7 +820,7 @@ function gameView(){
   if(!game.ready[pk]){
     if(builder)return builderView();
     return `<div class="page"><h2>${esc(pname(me))}: колода</h2>
-    <div class="box"><span>Колода: <b>${BACKS[backSel]}</b>, ${BACK_NOTE[backSel]}</span><div class="preview"><div class="card back bk${backSel}" style="aspect-ratio:5/7"></div>${['7S','KH','QS','JD'].map(c=>`<div class="card sk${backSel} ${red(c)?'red':''}">${faceHtml(c)}</div>`).join('')}</div><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
+    <div class="box"><span>Колода: <b>${BACKS[backSel]}</b>, ${BACK_NOTE[backSel]}</span><div class="preview"><div class="card back bk${backSel}" style="aspect-ratio:5/7"></div>${['7S','KH','QS','JD'].map(c=>`<div class="card sk${backSel} ${wearCls(c,backSel)} ${red(c)?'red':''}">${faceHtml(c)}</div>`).join('')}</div><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
     <button class="btn" data-act="deck" data-kind="full">Полная колода, 54 карты</button>
     <div class="box"><div class="rng"><label>от <b id="ra">${rnd[0]}</b><input type="range" min="30" max="108" value="${rnd[0]}" data-rng="0"></label><label>до <b id="rb">${rnd[1]}</b><input type="range" min="30" max="108" value="${rnd[1]}" data-rng="1"></label></div>
     <button class="btn" data-act="deck" data-kind="rand">Случайная колода</button><p class="sub" style="font-size:12px">Число карт выпадет случайно в этих пределах. По правилам в колоде не меньше 30 карт, набирать можно из двух комплектов.</p></div>
@@ -983,7 +1024,7 @@ function board(me){
     const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i};${shadow(k,i,n,isMine)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${wearCls(t.c,skOf(k/3|0))} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i};${shadow(k,i,n,isMine)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
     }).join('');
     return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
   };
@@ -1000,7 +1041,7 @@ function board(me){
   let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
   const last=game.last?`${game.last.by===me?'Вы':esc(pname(op))}: ${esc(game.last.t)}`:'';
   const hl=priv.hand.length,mid=(hl-1)/2;
-  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${wearCls(x,skOf(me))} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
@@ -1048,12 +1089,7 @@ const GL=(function(){
         body+=PIPS[n].map(([x,y])=>{const px=21+x*.58,py=15.4+y*1.092;return `<use href="#s${st(c)}" x="${(px-w/2).toFixed(1)}" y="${(py-w/2).toFixed(1)}" width="${w}" height="${w}" ${sk===5?`fill="none" stroke="${col}" stroke-width="7"`:`fill="${col}"`} ${y>50?`transform="rotate(180 ${px.toFixed(1)} ${py.toFixed(1)})"`:''}/>`}).join('');
       }
     }
-    const over=[`<g fill="#6b4416" filter="url(#bl)"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".14"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/></g>`,
-      `<polygon points="37,0 50,0 15,140 2,140" fill="#fff" opacity=".55"/><polygon points="76,0 81,0 46,140 41,140" fill="#fff" opacity=".4"/>`,
-      `<g fill="none" stroke-linecap="round"><path d="M8 20Q40 60 92 118" stroke="#fff" stroke-width="1.5" opacity=".7"/><path d="M70 8l-44 52M12 96l60 30M30 4l14 40M88 60l-30 62" stroke="#fff" stroke-width=".6" opacity=".6"/><path d="M4 70l50 -14M60 132l32 -40" stroke="#2a2418" stroke-width=".5" opacity=".4"/></g>`,
-      `<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>`,
-      `<g filter="url(#wp)"><ellipse cx="-2" cy="142" rx="60" ry="64" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="44" ry="48" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="30" ry="34" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="42" ry="38" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="28" ry="25" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="17" ry="15" fill="#0a0503"/></g>`,
-      `<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,i)=>`<path d="M0 ${9+i*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`][sk];
+    const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
     return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/></svg>`;
   }
   const backSVG=b=>backArt(b);
@@ -1186,7 +1222,7 @@ app.addEventListener('pointermove',e=>{
     if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8)return;
     drag.on=true;sel=drag.i;mode=null;
     const r=drag.el.getBoundingClientRect(),g=drag.el.cloneNode(true);
-    g.className='card hc dragghost sk'+skOf(meIdx())+' '+(red(priv.hand[sel])?'red ':'')+(priv.hand[sel]==='JK'?'jk':'');
+    g.className='card hc dragghost sk'+skOf(meIdx())+' '+wearCls(priv.hand[sel],skOf(meIdx()))+' '+(red(priv.hand[sel])?'red ':'')+(priv.hand[sel]==='JK'?'jk':'');
     g.removeAttribute('data-h');g.style.width=r.width+'px';g.style.height=r.height+'px';
     drag.g=g;drag.w=r.width;drag.h=r.height;document.body.appendChild(g);
     clearMarks();app.querySelectorAll('.hc.sel').forEach(x=>x.classList.remove('sel'));drag.el.classList.add('lifted');
