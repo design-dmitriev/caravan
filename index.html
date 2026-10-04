@@ -461,11 +461,21 @@ const SFX={
   shuffle(){for(let i=0;i<16;i++)nz(.016,{type:'bandpass',f0:2400+Math.random()*900,q:.9,gain:.5,when:i*.024+i*i*.0009});nz(.2,{type:'bandpass',f0:1300,f1:3000,q:.7,gain:.5,when:.62,attack:.07});nz(.06,{type:'lowpass',f0:380,f1:150,gain:1.1,when:.84})},
   sold(){nz(.06,{type:'lowpass',f0:520,f1:200,gain:1.5});nz(.06,{type:'lowpass',f0:640,f1:240,gain:1.5,when:.13});for(let i=0;i<3;i++)nz(.018,{type:'bandpass',f0:5200+i*500,q:6,gain:.5,when:.02+i*.05})},
   win(){for(let i=0;i<10;i++)nz(.016,{type:'bandpass',f0:2500+Math.random()*900,q:.9,gain:.5,when:i*.03});nz(.09,{type:'lowpass',f0:520,f1:170,gain:1.7,when:.36});nz(.09,{type:'lowpass',f0:640,f1:200,gain:1.7,when:.52})},
-  lose(){nz(.2,{type:'bandpass',f0:2600,f1:900,q:.7,gain:.7,attack:.04});nz(.14,{type:'lowpass',f0:260,f1:90,gain:1.8,when:.2})}
+  lose(){nz(.2,{type:'bandpass',f0:2600,f1:900,q:.7,gain:.7,attack:.04});nz(.14,{type:'lowpass',f0:260,f1:90,gain:1.8,when:.2})},
+  select(){nz(.03,{type:'bandpass',f0:2600,q:.9,gain:.4})},
+  hover(){nz(.012,{type:'bandpass',f0:3200,q:1.4,gain:.1})},
+  miss(){nz(.05,{type:'lowpass',f0:240,f1:120,gain:.8})},
+  turn(){nz(.05,{type:'lowpass',f0:560,f1:220,gain:1.1});nz(.05,{type:'lowpass',f0:700,f1:260,gain:1.1,when:.11})},
+  oppturn(){nz(.05,{type:'lowpass',f0:420,f1:170,gain:.8})}
 };
 /* optional own recordings: sounds/<name>.mp3 next to the page replaces the built-in sound */
 const customSnd={};
-if(location.protocol.startsWith('http')&&!(window.claude&&window.claude.use))fetch('sounds/list.json').then(r=>r.ok?r.json():[]).then(l=>{for(const f of Array.isArray(l)?l:[]){const k=String(f).replace(/\.[^.]+$/,'');if(SFX[k])fetch('sounds/'+f).then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(b)customSnd[k]={raw:b}}).catch(()=>{})}}).catch(()=>{});
+/* sounds/list.json is either a list of file names (place.mp3 …) or a map {event: file}, e.g. {"turn":"my_turn.wav"} */
+if(location.protocol.startsWith('http')&&!(window.claude&&window.claude.use))fetch('sounds/list.json').then(r=>r.ok?r.json():[]).then(l=>{
+  const ent=Array.isArray(l)?l.map(f=>[String(f).replace(/\.[^.]+$/,''),f]):Object.entries(l||{}),files={};
+  for(const [k,f] of ent){if(!SFX[k]||typeof f!=='string')continue;(files[f]=files[f]||[]).push(k)}
+  for(const f in files)fetch('sounds/'+f).then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(b)for(const k of files[f])customSnd[k]={raw:b.slice(0)}}).catch(()=>{});
+}).catch(()=>{});
 for(const k of Object.keys(SFX)){
   const syn=SFX[k];
   SFX[k]=()=>{
@@ -547,7 +557,7 @@ function stopNet(){
 }
 function startP2P(role,c,saved){
   stopNet();
-  lastLens=lastSold=lastMv=null;local=false;screen='game';sel=mode=overlay=builder=null;handoff=false;
+  lastLens=lastSold=lastMv=lastTurnKey=null;local=false;screen='game';sel=mode=overlay=builder=null;handoff=false;
   c=c||Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join('');
   const me=p2p={role,code:c,clients:[],seen:0,lastOn:false,lastPub:0,timer:0,t0:Date.now()};
   game=saved?saved.game:role===0?newGame('H',null):null;priv=saved?saved.priv:null;
@@ -620,14 +630,14 @@ async function init(){
   screen='lobby';render();
 }
 function startLocal(resume){
-  lastLens=lastSold=lastMv=null;local=true;screen='game';sel=mode=overlay=builder=null;
+  lastLens=lastSold=lastMv=lastTurnKey=null;local=true;screen='game';sel=mode=overlay=builder=null;
   const s=resume&&LS.get('caravan_local');
   if(s){({game,privs,viewer}=s);handoff=game.ready.p0&&game.ready.p1&&game.winner<0}
   else{game=newGame('L0','L1');const n=getNames();game.nm={p0:myName()||'Игрок 1',p1:String(n.p2||'').trim().slice(0,16)||'Игрок 2'};if(game.nm.p0===game.nm.p1)game.nm.p1+=' 2';privs=[null,null];viewer=0;handoff=false}
   priv=privs[viewer];render();
 }
 function enter(c){
-  lastLens=lastSold=lastMv=null;local=false;code=c;game=null;priv=null;sel=mode=overlay=builder=null;screen='game';store.set(c);render();
+  lastLens=lastSold=lastMv=lastTurnKey=null;local=false;code=c;game=null;priv=null;sel=mode=overlay=builder=null;screen='game';store.set(c);render();
   unsub=gameRef().onSnapshot(s=>{
     if(!s.exists){if(!s.metadata.fromCache)leave();return}
     if(s.data().pl.p0!==uid&&s.data().pl.p1!==uid)return leave();
@@ -752,12 +762,12 @@ function tapTable(k,ci){
   if(sel==null)return;
   const c=priv.hand[sel],hand=[...priv.hand],deck=[...priv.deck],cars=cloneCars();
   if(isNum(c)){
-    if(!legalNum(c,k))return toast(opening()?'Сначала положите по карте на каждый свой пустой караван':'Эту карту сюда нельзя');
+    if(!legalNum(c,k))return SFX.miss(),toast(opening()?'Сначала положите по карте на каждый свой пустой караван':'Эту карту сюда нельзя');
     hand.splice(sel,1);cars[k].cards.push({c,f:[]});
     return commit(cars,hand,deck,lab(c)+' → караван '+(k%3+1),{opening:opening()});
   }
   if(ci==null)return;
-  if(!legalFace(c,k,ci))return toast(opening()?'Картинки — после начальной раскладки':'Дама кладётся только на последнюю карту каравана');
+  if(!legalFace(c,k,ci))return SFX.miss(),toast(opening()?'Картинки — после начальной раскладки':'Дама кладётся только на последнюю карту каравана');
   hand.splice(sel,1);
   const t=cars[k].cards[ci];let text=lab(c)+' на '+lab(t.c);
   if(rk(c)==='J')cars[k].cards.splice(ci,1);
@@ -1045,7 +1055,7 @@ function faceHtml(c){
   R.setProperty('--scratch',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none" fill="none" stroke-linecap="round">${sc}<path d="M8 20Q40 60 92 118" stroke="#fff" stroke-width="1.6" opacity=".7"/><path d="M9 21Q41 61 93 119" stroke="#2a2418" stroke-width=".5" opacity=".5"/></svg>`));
 })();
 const stain=c=>{let h=7;for(const ch of c)h=(h*31+ch.charCodeAt(0))%997;return `--sx:${10+h%80}%;--sy:${10+(h*7)%80}%`};
-let lastSold=null,lastMv=null;
+let lastSold=null,lastMv=null,lastTurnKey=null,hovKey='',hovT=0;
 function board(me){
   const op=1-me,pk='p'+me,ok='p'+op,turn=myTurn(),open=opening();
   const c=sel!=null?priv.hand[sel]:null;
@@ -1058,6 +1068,9 @@ function board(me){
     else if(lastMv!==null&&mvNow!==lastMv&&!lens.some((n,k)=>n!==lastLens[k]))SFX.deal();
     if(lastSold&&soldNow.some((v,k)=>v&&!lastSold[k]))SFX.sold();
   }
+  const tk=game.turn+':'+mvNow+':'+game.round;
+  if(lastTurnKey!==null&&tk!==lastTurnKey&&game.winner<0){const mineNow=game.turn===me;setTimeout(()=>(mineNow?SFX.turn:SFX.oppturn)(),380)}
+  lastTurnKey=tk;
   lastSold=soldNow;lastMv=mvNow;
   if(lastLens&&lens.some((n,k)=>n!==lastLens[k])){fresh={};lens.forEach((n,k)=>{if(n>lastLens[k])fresh[k]=lastLens[k]});clearTimeout(freshT);freshT=setTimeout(()=>fresh={},450)}
   lastLens=lens;
@@ -1332,10 +1345,11 @@ app.addEventListener('click',e=>{
     return;
   }
   const h=e.target.closest('[data-h]');
-  if(h){if(swallow)return;SFX.blip();sel=sel===+h.dataset.h?null:+h.dataset.h;mode=null;return render()}
-  if(use3d&&e.target.closest('.t3d')){const r=GL.pick(e.clientX,e.clientY);if(r)tapTable(r.k,r.ci);return}
+  if(h){if(swallow)return;SFX.select();sel=sel===+h.dataset.h?null:+h.dataset.h;mode=null;return render()}
+  if(use3d&&e.target.closest('.t3d')){const r=GL.pick(e.clientX,e.clientY);if(r)tapTable(r.k,r.ci);else SFX.miss();return}
   const z=e.target.closest('[data-car]');
   if(z){const c=e.target.closest('[data-ci]');tapTable(+z.dataset.car,c?+c.dataset.ci:null)}
+  else if(screen==='game'&&game&&app.querySelector('.table')&&!e.target.closest('.over,input,button'))SFX.miss();
 });
 app.addEventListener('input',e=>{
   const t=e.target;
@@ -1347,6 +1361,12 @@ app.addEventListener('input',e=>{
     document.getElementById('ra').textContent=rnd[0];document.getElementById('rb').textContent=rnd[1];
     app.querySelectorAll('[data-rng]').forEach(x=>{if(x!==t)x.value=rnd[+x.dataset.rng]});
   }
+});
+app.addEventListener('pointerover',e=>{
+  if(e.pointerType!=='mouse')return;const b=e.target.closest('button[data-act]');
+  if(!b||b.disabled){hovKey='';return}
+  const k=b.dataset.act+'|'+(b.dataset.code||b.dataset.kind||b.dataset.b||b.dataset.c||''),now=Date.now();
+  if(k===hovKey||now-hovT<90)return;hovKey=k;hovT=now;SFX.hover();
 });
 load3d();
 init();
