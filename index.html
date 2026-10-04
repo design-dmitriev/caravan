@@ -355,18 +355,39 @@ function wearInner(c,sk){
   const burn=big=>{const left=r()<.5,top=!left&&r()<.5,edge=r()<.35,cx=left?R(-8,2):R(98,108),cy=edge?R(left?70:35,115):top?R(-8,4):R(136,148),q=big?R(.65,1.1):R(.35,.65),e=(a,b2,f,op)=>`<ellipse cx="${n1(cx)}" cy="${n1(cy)}" rx="${n1(a*q)}" ry="${n1(b2*q)}" fill="${f}" opacity="${op}"/>`;
     return `<g filter="url(#${id}w)">${e(46,50,'#7a4212',.42)}${e(33,36,'#3a1c08',.8)}${e(22,25,'#080402',1)}</g>`};
   const ding=()=>{const x=r()<.5?0:100,y=r()<.5?0:140,d=R(5,11);return `<path d="M${x} ${y}h${x?-d:d}L${x} ${y+(y?-d:d)}z" fill="#000" opacity="${R(.12,.28).toFixed(2)}"/>`};
-  if(sk===0)o+=stain(2+(r()*3|0),'#6b4416',.2)+(r()<.6?crease():'')+scr(3+(r()*4|0),.3,.6)+(r()<.3?ring():'')+(r()<.5?ding():'');
-  else if(sk===1){const gx=R(15,62),gw=R(8,16),tl=R(22,46);o+=`<polygon points="${n1(gx)},0 ${n1(gx+gw)},0 ${n1(gx+gw-tl)},140 ${n1(gx-tl)},140" fill="#fff" opacity="${R(.35,.6).toFixed(2)}"/><polygon points="${n1(gx+gw+18)},0 ${n1(gx+gw+22)},0 ${n1(gx+gw+22-tl)},140 ${n1(gx+gw+18-tl)},140" fill="#fff" opacity="${R(.2,.4).toFixed(2)}"/>`+scr(1+(r()*3|0),.2,.4)+(r()<.6?ding():'')}
-  else if(sk===2){const a=R(5,40),b2=R(60,95);o+=stain(1,'#3a4030',.14)+scr(9+(r()*10|0),.7,1)+`<path d="M${n1(a)} ${n1(R(5,40))}Q${n1(R(30,70))} ${n1(R(50,90))} ${n1(b2)} ${n1(R(100,135))}" fill="none" stroke="#fff" stroke-width="${n1(R(1,1.9))}" opacity=".7"/>`+(r()<.4?crease():'')}
-  else if(sk===3){let chips='';for(let k=0,m=2+(r()*4|0);k<m;k++){const ed=r()*4|0,t=R(8,92);chips+=`<circle cx="${n1(ed===0?1:ed===1?99:t)}" cy="${n1(ed===2?1:ed===3?139:t*1.4)}" r="${n1(R(1,3.2))}" fill="#7a6c4c" opacity=".7"/>`}o+=scr(3+(r()*5|0),1,.45).replace(/#fff/g,'#cbbf9a')+chips+stain(1,'#c9a24b',.1)}
-  else if(sk===4)o+=burn(true)+(r()<.45?burn(false):'')+stain(1+(r()*2|0),'#1a0e05',.22)+(r()<.4?ring():'')+(r()<.4?crease():'');
-  else o+=stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.4?ding():'');
+  /* every deck is dirty: grime specks and liquid stains with a darker tide line, placed differently on each card */
+  const dust=sk===3?'.55 0 0 0 0 .47 0 0 0 0 .33':'.2 0 0 0 0 .12 0 0 0 0 .05';
+  o+=`<defs><filter id="${id}s" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${R(.07,.12).toFixed(3)} ${R(.06,.1).toFixed(3)}" numOctaves="4" seed="${(r()*200|0)+1}"/><feColorMatrix values="0 0 0 0 ${dust.split(' ')[0]} 0 0 0 0 ${dust.split(' ')[5]} 0 0 0 0 ${dust.split(' ')[10]} 0 0 0 ${n1(R(2.2,2.8))} ${R(sk===1?-1.8:-1.62,sk===1?-1.66:-1.42).toFixed(2)}"/></filter><filter id="${id}g" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="${(r()*90|0)+1}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></defs><rect width="100" height="140" filter="url(#${id}s)"/>`;
+  const spill=(n,col,a0,a1)=>{let q='';for(let k=0;k<n;k++){const cx=n1(R(5,95)),cy=n1(R(30,135)),rx=n1(R(13,40)),ry=n1(R(11,34)),a=R(a0,a1);q+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${col}" opacity="${a.toFixed(2)}"/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${col}" stroke-width="${n1(R(.9,2))}" opacity="${Math.min(.6,a*2.1).toFixed(2)}"/>`}return `<g filter="url(#${id}w)">${q}</g>`};
+  const blood=()=>{let q='';for(let k=0,m=1+(r()*2|0);k<m;k++){const cx=R(18,90),cy=R(cx<34?46:30,126),rx=R(5,14),ry=R(4,11);q+=`<ellipse cx="${n1(cx)}" cy="${n1(cy)}" rx="${n1(rx)}" ry="${n1(ry)}" fill="#4c0f0b" opacity="${R(.6,.82).toFixed(2)}"/><ellipse cx="${n1(cx+R(-2,2))}" cy="${n1(cy+R(-2,2))}" rx="${n1(rx*.6)}" ry="${n1(ry*.58)}" fill="#2a0604" opacity=".55"/>`;for(let d=0,dn=4+(r()*7|0);d<dn;d++)q+=`<circle cx="${n1(cx+R(-26,26))}" cy="${n1(cy+R(-24,24))}" r="${n1(R(.5,2))}" fill="#4c0f0b" opacity="${R(.5,.8).toFixed(2)}"/>`}return `<g filter="url(#${id}g)">${q}</g>`};
+  if(sk===0)o+=spill(2+(r()*3|0),'#6b4416',.1,.22)+stain(1+(r()*2|0),'#6b4416',.2)+(r()<.6?crease():'')+scr(3+(r()*4|0),.3,.6)+(r()<.3?ring():'')+(r()<.5?ding():'');
+  else if(sk===1){const gx=R(15,62),gw=R(8,16),tl=R(22,46);o+=spill(1+(r()*2|0),'#7a6a52',.06,.14)+`<polygon points="${n1(gx)},0 ${n1(gx+gw)},0 ${n1(gx+gw-tl)},140 ${n1(gx-tl)},140" fill="#fff" opacity="${R(.3,.5).toFixed(2)}"/><polygon points="${n1(gx+gw+18)},0 ${n1(gx+gw+22)},0 ${n1(gx+gw+22-tl)},140 ${n1(gx+gw+18-tl)},140" fill="#fff" opacity="${R(.18,.34).toFixed(2)}"/>`+scr(2+(r()*4|0),.2,.45)+(r()<.6?ding():'')}
+  else if(sk===2){const a=R(5,40),b2=R(60,95);o+=spill(1+(r()*3|0),'#4a4a30',.1,.2)+scr(9+(r()*10|0),.7,1)+`<path d="M${n1(a)} ${n1(R(5,40))}Q${n1(R(30,70))} ${n1(R(50,90))} ${n1(b2)} ${n1(R(100,135))}" fill="none" stroke="#fff" stroke-width="${n1(R(1,1.9))}" opacity=".7"/>`+(r()<.4?crease():'')}
+  else if(sk===3){let chips='';for(let k=0,m=2+(r()*4|0);k<m;k++){const ed=r()*4|0,t=R(8,92);chips+=`<circle cx="${n1(ed===0?1:ed===1?99:t)}" cy="${n1(ed===2?1:ed===3?139:t*1.4)}" r="${n1(R(1,3.2))}" fill="#7a6c4c" opacity=".7"/>`}o+=spill(1+(r()*3|0),'#8a7654',.1,.24)+scr(3+(r()*5|0),1,.45).replace(/#fff/g,'#cbbf9a')+chips+stain(1+(r()*2|0),'#9a8660',.16)}
+  else if(sk===4)o+=spill(1+(r()*2|0),'#5a3410',.1,.2)+burn(true)+(r()<.45?burn(false):'')+stain(1+(r()*2|0),'#1a0e05',.22)+(r()<.4?ring():'')+(r()<.4?crease():'');
+  else o+=spill(2+(r()*3|0),'#6b5a34',.1,.22)+stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.45?blood():'')+tearPolys(c).map(t=>`<path d="M${t}Z" fill="none" stroke="#fffdf2" stroke-width="1.700" opacity=".85" stroke-linejoin="round"/>`).join('');
   return o;
 }
+/* the hand-drawn deck is torn: each card loses its own corners and bites out of the edges (never the corner with the rank) */
+function tearPolys(c){
+  const r=rng(h32('tear:'+c)),R=(a,b)=>a+r()*(b-a),out=[],f=v=>v.toFixed(1);
+  for(const [cx,cy,sx,sy,pr] of [[100,0,-1,1,.45],[100,140,-1,-1,.55],[0,140,1,-1,.5]]){
+    if(r()>pr)continue;const a=R(11,30),b=R(13,34),m=5+(r()*3|0);let q=`${cx+sx*-4} ${cy+sy*-4} ${f(cx+sx*a)} ${cy+sy*-4} ${f(cx+sx*a)} ${cy}`;
+    for(let k=1;k<m;k++){const t=k/m;q+=` ${f(cx+sx*a*(1-t)+R(-3,3))} ${f(cy+sy*b*t+R(-3,3))}`}
+    out.push(q+` ${cx} ${f(cy+sy*b)} ${cx+sx*-4} ${f(cy+sy*b)}`);
+  }
+  if(r()<.55){const side=r()*3|0,rad=R(6,13),t=side===0?R(45,105):side===1?R(30,70):R(60,110),bx=side===0?100:side===1?t:0,by=side===0?t:side===1?140:t;let q='';
+    for(let k=0;k<=9;k++){const an=Math.PI*k/9,dx=Math.cos(an)*rad,dy=Math.sin(an)*rad*R(.7,1.2);q+=(k?' ':'')+(side===0?`${f(100-dy)} ${f(by+dx)}`:side===1?`${f(bx+dx)} ${f(140-dy)}`:`${f(dy)} ${f(by+dx)}`)}
+    out.push(q+(side===0?` 106 ${f(by-rad)} 106 ${f(by+rad)}`:side===1?` ${f(bx-rad)} 146 ${f(bx+rad)} 146`:` -6 ${f(by-rad)} -6 ${f(by+rad)}`));
+  }
+  return out;
+}
+const tearPath=c=>'M-9-9H109V149H-9Z'+tearPolys(c).map(t=>'M'+t+'Z').join('');
 const wearSheet=document.createElement('style');document.head.appendChild(wearSheet);const wearDone={};
 function wearCls(c,sk){
   const k='w'+sk+c;
-  if(!wearDone[k]){wearDone[k]=1;try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
+  if(!wearDone[k]){wearDone[k]=1;if(sk===5)try{const mk=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none"><path fill-rule="evenodd" d="${tearPath(c)}"/></svg>`)}") 0 0/100% 100% no-repeat`;wearSheet.sheet.insertRule(`.card.${k}{-webkit-mask:${mk};mask:${mk}}`,wearSheet.sheet.cssRules.length)}catch(e){}
+    try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
   return k;
 }
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
@@ -1111,14 +1132,15 @@ const GL=(function(){
       }
     }
     const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
-    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/></svg>`;
+    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>${sk===5?`<clipPath id="tc"><path clip-rule="evenodd" d="${tearPath(c)}"/></clipPath>`:''}<g ${sk===5?'clip-path="url(#tc)"':''}><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/></g></svg>`;
   }
   const backSVG=b=>backArt(b);
   const backSVGold=b=>`<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v7M0 0h7" stroke="#000" stroke-opacity=".3" stroke-width="1.2"/></pattern></defs><rect width="100" height="140" fill="${BK[b]}"/><rect width="100" height="140" fill="url(#h)"/><rect x="4" y="4" width="92" height="132" fill="none" stroke="#e4d6ae" stroke-width="3"/><circle cx="50" cy="70" r="14" fill="none" stroke="#e4d6ae" stroke-width="2.5" opacity=".8"/></svg>`;
   function mat(key,svg){
     if(mats[key])return mats[key];
-    const m=mats[key]=new T.MeshStandardMaterial({color:0xddd2b4,roughness:.78,metalness:0,side:T.DoubleSide}),img=new Image();
-    img.onload=()=>{const t=new T.Texture(img);t.encoding=T.sRGBEncoding;t.anisotropy=ren.capabilities.getMaxAnisotropy();t.needsUpdate=true;m.map=t;m.color.set(0xffffff);m.needsUpdate=true;draw()};
+    const torn=key[0]==='5',m=mats[key]=new T.MeshStandardMaterial({color:0xddd2b4,roughness:.78,metalness:0,side:T.DoubleSide,alphaTest:torn?.5:0}),img=new Image();
+    if(torn)m.userData.dm=new T.MeshDepthMaterial({depthPacking:T.RGBADepthPacking,alphaTest:.5});
+    img.onload=()=>{const t=new T.Texture(img);t.encoding=T.sRGBEncoding;t.anisotropy=ren.capabilities.getMaxAnisotropy();t.needsUpdate=true;m.map=t;m.color.set(0xffffff);m.needsUpdate=true;if(m.userData.dm){m.userData.dm.map=t;m.userData.dm.needsUpdate=true}draw()};
     img.src='data:image/svg+xml,'+encodeURIComponent(svg);return m;
   }
   function init(){
@@ -1189,8 +1211,8 @@ const GL=(function(){
       zoneMarks[k].visible=!!(turn&&((mode==='disband'&&mine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k))));
       car.cards.forEach((t,i)=>{
         const L=layout(k,i,n,mine),g=new T.Group(),m=new T.Mesh(geo,mat(sk+':'+t.c,faceSVG(t.c,sk)));
-        m.castShadow=m.receiveShadow=true;m.userData={k,i};g.add(m);
-        t.f.forEach((f,j)=>{const fm=new T.Mesh(geo,mat(sk+':'+f,faceSVG(f,sk)));fm.castShadow=fm.receiveShadow=true;fm.userData={k,i};fm.position.set(.36*(j+1),-.006-j*.002,-.1);fm.rotation.y=-.12-j*.05;g.add(fm)});
+        m.castShadow=m.receiveShadow=true;m.userData={k,i};if(m.material.userData.dm)m.customDepthMaterial=m.material.userData.dm;g.add(m);
+        t.f.forEach((f,j)=>{const fm=new T.Mesh(geo,mat(sk+':'+f,faceSVG(f,sk)));fm.castShadow=fm.receiveShadow=true;fm.userData={k,i};if(fm.material.userData.dm)fm.customDepthMaterial=fm.material.userData.dm;fm.position.set(.36*(j+1),-.006-j*.002,-.1);fm.rotation.y=-.12-j*.05;g.add(fm)});
         if(turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i)){const fr=new T.Mesh(frameGeo,new T.MeshBasicMaterial({color:0xffb642}));fr.position.y=TH+.004;g.add(fr)}
         g.position.set(L.x,L.y,L.z);g.rotation.y=L.ry;root.add(g);cards.push(g);
         if(prevLens&&i>=prevLens[k]&&n>prevLens[k])anims.push({g,t0:performance.now(),d:460,f:{x:L.x*.5,y:.2,z:mine?7.5:-7.5,ry:mine?.9:-2.4},to:L});
