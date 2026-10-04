@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Караван</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&family=Libre+Baskerville:wght@700&family=Cinzel:wght@700&family=Permanent+Marker&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&family=Libre+Baskerville:wght@700&family=Cinzel:wght@700&family=Permanent+Marker&family=Rubik+Dirt&family=Rubik+Spray+Paint&display=swap">
 <style>
 :root{
   --bg:#120e08;--panel:#1d170c;--amber:#ffb642;--dim:rgba(255,182,66,.66);--line:rgba(255,182,66,.34);--paper:#e4d6ae;--ink:#1a1712;--blood:#9a2a1c;--warn:#ff7a5c;
@@ -262,6 +262,75 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .cbtn.on{background:var(--amber);color:var(--bg);text-shadow:none}
 .stg .ctl .pile{width:62px;height:86px;flex:none}
 .stg .ctl .pile span{font-size:28px}
+
+/* ---- wasteland theme: scrap metal, sun-bleached wood, stencil paint ---- */
+:root{--bg:#14100b;--panel:#2a231a;--amber:#e8a93a;--sand:#d9c8a0;--dim:rgba(217,200,160,.72);--line:rgba(217,200,160,.26);--warn:#e2553a;--paper:#dccb9c}
+html{background:#14100b}
+body{color:var(--sand);text-shadow:none;background:var(--dust,none),#14100b}
+h1{font-family:"Rubik Dirt",Oswald,"Arial Narrow",sans-serif;font-weight:400;color:var(--sand);letter-spacing:.03em;border-bottom:0;box-shadow:none;padding-bottom:10px;background:linear-gradient(92deg,var(--amber) 0 62%,transparent 62% 66%,var(--amber) 66% 91%,transparent 91%) 0 100%/100% 6px no-repeat;text-shadow:0 3px 0 #000}
+h2{color:var(--amber);letter-spacing:.09em}
+h2::before{content:"// ";opacity:.6}
+.page{padding-top:150px;background:var(--skyline,none) 50% 22px/820px 110px repeat-x,linear-gradient(#c8702c 0,#7d4220 70px,#2a1a0f 132px,transparent 133px) 0 0/100% 133px no-repeat}
+.btn{position:relative;color:#1b140a;border-radius:3px;background:var(--rustTex,none),linear-gradient(#e2a73c,#b8781e);box-shadow:inset 0 0 0 2px rgba(0,0,0,.6),inset 0 3px 0 rgba(255,236,180,.35),0 3px 0 #070504;text-shadow:0 1px 0 rgba(255,232,170,.4)}
+.btn.ghost{color:var(--sand);background:var(--rustTex,none),linear-gradient(#4d463a,#2b2620);box-shadow:inset 0 0 0 2px rgba(0,0,0,.65),inset 0 3px 0 rgba(255,255,255,.08),0 3px 0 #070504;text-shadow:0 -1px 0 #000}
+.btn::before,.btn::after{content:"";position:absolute;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c9bca2,#3b3329 70%);box-shadow:0 1px 0 rgba(0,0,0,.6)}
+.btn::before{left:8px}.btn::after{right:8px}
+.btn.sm::before,.btn.sm::after,.btn.ic::before,.btn.ic::after{display:none}
+.btn.mute{opacity:.6}
+.box,.over>div{border:2px solid #0b0806;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 12px 30px #000;
+  background:radial-gradient(circle at 10px 10px,#b5a88e 0 2.5px,#16100a 3px 4.5px,transparent 5px),radial-gradient(circle at calc(100% - 10px) 10px,#b5a88e 0 2.5px,#16100a 3px 4.5px,transparent 5px),radial-gradient(circle at 10px calc(100% - 10px),#b5a88e 0 2.5px,#16100a 3px 4.5px,transparent 5px),radial-gradient(circle at calc(100% - 10px) calc(100% - 10px),#b5a88e 0 2.5px,#16100a 3px 4.5px,transparent 5px),var(--rustTex,none),linear-gradient(#3a3127,#221c15)}
+.box{padding:18px 16px}
+.over{background:rgba(6,4,3,.86)}
+.over>div{padding:26px 22px}
+input[type=text]{background:#16120d;color:var(--sand);box-shadow:inset 0 0 0 2px #000,inset 0 3px 6px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.08);border-radius:2px}
+input[type=text]:focus{box-shadow:inset 0 0 0 2px var(--amber)}
+.row,details{border-top-color:var(--line)}
+.code{font-family:"Rubik Spray Paint","Rubik Dirt",Oswald,sans-serif;font-weight:400;color:var(--amber)}
+.link{background:#16120d;border:1px dashed var(--line)}
+#toast{background:var(--rustTex,none),linear-gradient(#e2a73c,#b8781e);color:#1b140a;box-shadow:inset 0 0 0 2px rgba(0,0,0,.6),0 6px 16px #000;font-weight:700}
+.swatch.on{outline-color:var(--amber);box-shadow:inset 0 0 0 2px var(--paper),0 0 0 6px rgba(0,0,0,.5)}
+/* card backs with emblems */
+.back{background-color:#7c2a1a;box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3px rgba(0,0,0,.5),0 1px 0 rgba(0,0,0,.7)}
+.bk0{background:var(--em0,none) 50% 50%/64% auto no-repeat,var(--dirt,none) 0 0/100% 100%,repeating-linear-gradient(45deg,transparent 0 4px,rgba(0,0,0,.24) 4px 5px),repeating-linear-gradient(-45deg,transparent 0 4px,rgba(0,0,0,.24) 4px 5px),#7c2a1a}
+.bk1{background:var(--em1,none) 50% 50%/64% auto no-repeat,var(--dirt,none) 0 0/100% 100%,repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,255,255,.1) 5px 6px),#27405c}
+.bk2{background:var(--em2,none) 50% 50%/64% auto no-repeat,var(--dirt,none) 0 0/100% 100%,repeating-linear-gradient(60deg,transparent 0 5px,rgba(0,0,0,.25) 5px 6px),repeating-linear-gradient(-60deg,transparent 0 5px,rgba(0,0,0,.25) 5px 6px),#4a5332}
+.bk3{background:var(--em3,none) 50% 50%/56% auto no-repeat,repeating-radial-gradient(circle at 50% 50%,transparent 0 5px,rgba(201,162,75,.28) 5px 6px),#15110b}
+.bk4{background:var(--em4,none) 50% 50%/70% auto no-repeat,var(--dirt,none) 0 0/100% 100%,linear-gradient(#b8642a,#7d3c18)}
+.bk5{background:var(--em5,none) 50% 50%/70% auto no-repeat,var(--dirt,none) 0 0/100% 100%,repeating-linear-gradient(90deg,transparent 0 6px,rgba(0,0,0,.18) 6px 7px),#2c5a57}
+/* cards: grime on every deck */
+.card{border-radius:6px 9px 5px 10px/8px 5px 10px 6px;background:var(--stain,none) 0 0/100% 100% no-repeat,var(--grain,none),linear-gradient(140deg,#ecdcae 0,#dcc88f 50%,#bfa568 100%)}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:var(--dirt,none) 0 0/100% 100% no-repeat}
+.card.red::before{transform:scaleX(-1)}
+.card.sk1::before{opacity:.55}
+.card.sk3::before{opacity:.5;filter:invert(1)}
+/* stage */
+.stg{background:var(--skyline,none) 50% 34px/1500px 200px repeat-x,linear-gradient(#d07a30 0,#8a4a22 120px,#2e1c10 232px,#0e0906 420px,#060403 100%)}
+.stg.pt{background-size:1200px 160px,auto;background-position:50% 150px,0 0;background-image:var(--skyline,none),linear-gradient(#d07a30 0,#8a4a22 190px,#2e1c10 308px,#0e0906 520px,#060403 100%)}
+.pl{border-radius:6px;
+  background:radial-gradient(circle,#b9ab90 0 3px,#1a120a 3.5px 5px,transparent 5.5px) 0 5px/120px 12px repeat-x,radial-gradient(circle,#b9ab90 0 3px,#1a120a 3.5px 5px,transparent 5.5px) 0 calc(100% - 5px)/120px 12px repeat-x,radial-gradient(circle,#b9ab90 0 3px,#1a120a 3.5px 5px,transparent 5.5px) 5px 0/12px 120px repeat-y,radial-gradient(circle,#b9ab90 0 3px,#1a120a 3.5px 5px,transparent 5.5px) calc(100% - 5px) 0/12px 120px repeat-y,
+    var(--sandTex,none),repeating-linear-gradient(90deg,rgba(0,0,0,.6) 0 4px,rgba(255,240,200,.07) 4px 6px,transparent 6px 152px),repeating-linear-gradient(91deg,rgba(0,0,0,.13) 0 2px,transparent 2px 11px,rgba(255,240,200,.05) 11px 13px,transparent 13px 31px),linear-gradient(#93805f,#6e5a3d 60%,#4d3d28);
+  box-shadow:inset 0 0 0 22px #5c3620,inset 0 0 0 25px #160d07,inset 0 0 150px rgba(0,0,0,.6)}
+.pl::before{background:radial-gradient(ellipse 50% 46% at 50% 60%,rgba(255,214,150,.2) 0,transparent 100%)}
+.pl::after{background:linear-gradient(rgba(0,0,0,.15),rgba(0,0,0,.7)),var(--rustTex,none),repeating-linear-gradient(-55deg,#d39a2c 0 40px,#1c1711 40px 80px);box-shadow:inset 0 5px 0 rgba(0,0,0,.5)}
+.zn{border:5px solid rgba(232,169,58,.42);border-radius:5px;border-style:solid dashed}
+.zn::after{content:attr(data-n);position:absolute;left:0;right:0;text-align:center;font:400 60px/1 "Rubik Spray Paint","Rubik Dirt",Oswald,sans-serif;color:rgba(232,169,58,.38);pointer-events:none}
+.zn.mine::after{bottom:10px}
+.zn.opp::after{top:10px}
+.zn.empty{background:rgba(0,0,0,.25)}
+.zn.tgt{border-color:var(--amber);background:rgba(232,169,58,.2);box-shadow:inset 0 0 40px rgba(232,169,58,.35)}
+.plq{border:3px solid #0d0906;border-radius:3px;color:var(--sand);background:var(--rustTex,none),linear-gradient(#5b4c3b,#2c251d);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 22px 22px rgba(0,0,0,.6)}
+.plq div{color:var(--sand)}
+.plq div+div{border-top:2px solid #0d0906}
+.plq .sold{background:var(--rustTex,none),linear-gradient(#e8ad3e,#c2831f);color:#1b140a}
+.tray{font-family:"Rubik Spray Paint","Rubik Dirt",Oswald,sans-serif;font-weight:400;font-size:30px;border:5px solid rgba(217,200,160,.3);border-style:dashed solid;border-radius:5px;color:rgba(217,200,160,.5)}
+.cap{position:absolute;width:46px;height:46px;border-radius:50%;pointer-events:none;transform:translateZ(4px);box-shadow:0 5px 6px rgba(0,0,0,.6);background:radial-gradient(circle,var(--cc,#a23a1c) 0 50%,rgba(0,0,0,.45) 51% 57%,transparent 58%),repeating-conic-gradient(#d1cab9 0 7deg,#6b655a 7deg 17.14deg)}
+.hud .who b,.hud .st b,.st2 b{font-family:"Rubik Dirt",Oswald,sans-serif;font-weight:400;color:var(--sand);text-shadow:0 2px 0 #000}
+.hud .st b,.st2 b{color:var(--amber)}
+.hud .who{color:var(--sand);text-shadow:0 2px 3px #000}
+.hud .st span,.st2 span{color:var(--sand);text-shadow:0 2px 3px #000}
+.hbtn,.cbtn{color:var(--sand);border-radius:3px;background:var(--rustTex,none),linear-gradient(#4d463a,#2b2620);box-shadow:inset 0 0 0 2px rgba(0,0,0,.7),inset 0 3px 0 rgba(255,255,255,.09),0 4px 0 #070504;text-shadow:0 -1px 0 #000}
+.cbtn.on{background:var(--rustTex,none),linear-gradient(#e2a73c,#b8781e);color:#1b140a;text-shadow:none}
+.cbtn:not(:disabled){color:var(--amber)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -839,6 +908,23 @@ function faceHtml(c){
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
   R.setProperty('--burn',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(4,34,.045)}<g filter="url(#f)"><ellipse cx="-2" cy="142" rx="62" ry="66" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="46" ry="50" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="32" ry="36" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="44" ry="40" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="30" ry="27" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="18" ry="16" fill="#0a0503"/><circle cx="58" cy="62" r="13" fill="none" stroke="#6a3c10" stroke-width="2" opacity=".35"/></g></svg>`));
+  R.setProperty('--rustTex',u(`<svg ${X} width="320" height="320"><filter id="r"><feTurbulence type="fractalNoise" baseFrequency=".03 .055" numOctaves="4" seed="9"/><feColorMatrix values="0 0 0 0 .5 0 0 0 0 .22 0 0 0 0 .07 0 0 0 2.4 -1.2"/></filter><rect width="320" height="320" filter="url(#r)"/></svg>`));
+  R.setProperty('--sandTex',u(`<svg ${X} width="700" height="700"><filter id="s"><feTurbulence type="fractalNoise" baseFrequency=".008 .016" numOctaves="3" seed="21"/><feColorMatrix values="0 0 0 0 .8 0 0 0 0 .66 0 0 0 0 .42 0 0 0 1.3 -.78"/></filter><rect width="700" height="700" filter="url(#s)"/></svg>`));
+  R.setProperty('--dust',u(`<svg ${X} width="200" height="200"><filter id="d"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 .6 0 0 0 0 .5 0 0 0 0 .34 0 0 0 .5 -.2"/></filter><rect width="200" height="200" filter="url(#d)"/></svg>`));
+  R.setProperty('--dirt',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none"><filter id="k" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="14"/><feColorMatrix values="0 0 0 0 .22 0 0 0 0 .13 0 0 0 0 .05 0 0 0 2.6 -1.5"/></filter><filter id="b"><feGaussianBlur stdDeviation="3"/></filter><rect width="100" height="140" filter="url(#k)"/><rect x="0" y="0" width="100" height="140" fill="none" stroke="#3a240c" stroke-width="7" opacity=".5" filter="url(#b)"/><path d="M0 52 38 60 100 47" fill="none" stroke="#fff" stroke-width=".7" opacity=".45"/><path d="M0 53 38 61 100 48" fill="none" stroke="#3a240c" stroke-width=".5" opacity=".45"/></svg>`));
+  let sk='',sk2='';
+  for(let x=0;x<900;){const w=26+rnd()*60,h=14+rnd()*70,j=()=>(rnd()*10).toFixed(0);sk+=`<path d="M${x|0} 130V${(130-h)|0}l${(w*.3)|0} ${j()} ${(w*.2)|0} -${j()} ${(w*.5)|0} ${j()}V130z"/>`;if(rnd()<.35)sk+=`<path d="M${(x+w/2)|0} 130V${(110-h)|0}" stroke="#120b06" stroke-width="2"/>`;x+=w+rnd()*46}
+  for(let x=-20;x<900;){const w=50+rnd()*90,h=30+rnd()*60;sk2+=`<path d="M${x|0} 130V${(130-h)|0}h${(w*.4)|0}v${(h*.3)|0}h${(w*.6)|0}V130z"/>`;x+=w+rnd()*30}
+  R.setProperty('--skyline',u(`<svg ${X} viewBox="0 0 900 130" preserveAspectRatio="none"><circle cx="640" cy="92" r="46" fill="#f3c25a" opacity=".55"/><g fill="#5a3018" opacity=".8">${sk2}</g><g fill="#120b06">${sk}</g><path d="M0 62Q150 82 300 58T620 66T900 54" fill="none" stroke="#120b06" stroke-width="1"/></svg>`));
+  const em=(i,b)=>R.setProperty('--em'+i,u(`<svg ${X} viewBox="0 0 100 100" fill="none" stroke="#e4d6ae" stroke-width="5" stroke-linecap="round" opacity=".85">${b}</svg>`));
+  let sp='',ray='';for(let i=0;i<8;i++){const a=i*Math.PI/4;sp+=`M${(50+10*Math.cos(a)).toFixed(1)} ${(50+10*Math.sin(a)).toFixed(1)}L${(50+38*Math.cos(a)).toFixed(1)} ${(50+38*Math.sin(a)).toFixed(1)}`}
+  for(let i=0;i<12;i++){const a=i*Math.PI/6;ray+=`M${(50+26*Math.cos(a)).toFixed(1)} ${(50+26*Math.sin(a)).toFixed(1)}L${(50+44*Math.cos(a)).toFixed(1)} ${(50+44*Math.sin(a)).toFixed(1)}`}
+  em(0,`<circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="9"/><path d="${sp}"/>`);
+  em(1,`<path d="M50 8 61 38 93 39 68 59 77 90 50 72 23 90 32 59 7 39 39 38z" fill="#e4d6ae"/>`);
+  em(2,`<circle cx="50" cy="50" r="31" stroke-width="15" stroke-dasharray="11 8.5" stroke-linecap="butt"/><circle cx="50" cy="50" r="25"/><circle cx="50" cy="50" r="9"/>`);
+  em(3,`<path d="M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4z" fill="#c9a24b" stroke="none"/>`);
+  em(4,`<circle cx="50" cy="50" r="17" fill="#e4d6ae"/><path d="${ray}"/>`);
+  em(5,`<ellipse cx="50" cy="50" rx="44" ry="15"/><ellipse cx="50" cy="50" rx="44" ry="15" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="44" ry="15" transform="rotate(120 50 50)"/><circle cx="50" cy="50" r="7" fill="#e4d6ae"/>`);
   let sc='';
   for(let i=0;i<22;i++){const x=rnd()*100,y=rnd()*140,a=rnd()*Math.PI,l=8+rnd()*46,dark=rnd()<.35;sc+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l${(Math.cos(a)*l).toFixed(1)} ${(Math.sin(a)*l).toFixed(1)}" stroke="${dark?'#2a2418':'#fff'}" stroke-width="${(.3+rnd()*.7).toFixed(2)}" opacity="${(dark?.25:.5)+rnd()*.35}"/>`}
   R.setProperty('--scratch',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none" fill="none" stroke-linecap="round">${sc}<path d="M8 20Q40 60 92 118" stroke="#fff" stroke-width="1.6" opacity=".7"/><path d="M9 21Q41 61 93 119" stroke="#2a2418" stroke-width=".5" opacity=".5"/></svg>`));
@@ -863,8 +949,8 @@ function board(me){
   }
   lastSold=soldNow;lastMv=mvNow;lastLens=lens;
   const D=stageDims(),ls=D.ls,CW=ls?150:190,CH=CW*1.4,ZW=ls?200:260;
-  const PW=ls?1500:940,PH=ls?980:Math.max(880,Math.min(1300,Math.round((D.H-600)*1.1))),px=ls?(D.W-1500)/2:-20,pb=ls?D.H-250:D.H-362;
-  const lanes=ls?[310,640,970]:[170,470,770],zh=ls?400:Math.round(PH*.41),zo=ls?50:Math.round(PH*.045),zm=ls?545:Math.round(PH*.55),pq=ls?452:Math.round(PH*.5)-45;
+  const PW=ls?1500:940,PH=ls?860:Math.max(860,Math.min(1300,Math.round((D.H-680)*1.1))),px=ls?(D.W-1500)/2:-20,pb=ls?D.H-250:D.H-362;
+  const lanes=ls?[310,640,970]:[170,470,770],zh=ls?350:Math.round(PH*.41),zo=ls?40:Math.round(PH*.045),zm=ls?490:Math.round(PH*.55),pq=ls?397:Math.round(PH*.5)-45;
   const zone=(k,isMine,x)=>{
     const car=cars[k],n=car.cards.length,off=n>1?Math.min(CH*.24,(zh-CH-8)/(n-1)):0;
     const hot=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
@@ -872,7 +958,7 @@ function board(me){
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i),top=isMine?4+i*off:zh-CH-8-(n-1-i)*off;
       return `<div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''} ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}" data-ci="${i}" style="--z:${i};top:${top.toFixed(1)}px">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div>`;
     }).join('');
-    return `<div class="zn ${isMine?'mine':'opp'} ${n?'':'empty'} ${hot?'tgt':''}" data-car="${k}" style="left:${x-ZW/2}px;top:${isMine?zm:zo}px;width:${ZW}px;height:${zh}px;--cw:${CW}px;--cl:${(ZW-CW)/2-3}px">${cards}</div>`;
+    return `<div class="zn ${isMine?'mine':'opp'} ${n?'':'empty'} ${hot?'tgt':''}" data-car="${k}" data-n="${['I','II','III'][k%3]}" style="left:${x-ZW/2}px;top:${isMine?zm:zo}px;width:${ZW}px;height:${zh}px;--cw:${CW}px;--cl:${(ZW-CW)/2-3}px">${cards}</div>`;
   };
   const row=(k,lead)=>{const v=carVal(cars[k]),st2=carState(cars[k]);return `<div class="${sold(v)?'sold':v>26?'bust':''} ${lead?'lead':''}"><span>${v}</span><small>${st2.dir>0?'↑':st2.dir<0?'↓':''}${st2.suit?SU[st2.suit]:''}</small></div>`};
   let tbl='';
@@ -884,10 +970,10 @@ function board(me){
   const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*2.4).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
   const oh=game.hc[ok],ohand=Array.from({length:oh},()=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const disband=`<button class="cbtn ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button>`;
-  const onTable=ls?`<button class="tray" data-act="discard" style="left:38px;top:610px" ${canDiscard?'':'disabled'}>Сброс<br>карты</button><div class="dk back ${bkOf(op)}" style="left:1250px;top:140px;--n:${game.dc[ok]}"><span>${game.dc[ok]}</span></div><div class="dk back ${bkOf(me)}" style="left:1262px;top:640px;--n:${priv.deck.length}"><span>${priv.deck.length}</span></div>`:'';
+  const onTable=ls?`<button class="tray" data-act="discard" style="left:38px;top:540px" ${canDiscard?'':'disabled'}>Сброс<br>карты</button><div class="dk back ${bkOf(op)}" style="left:1250px;top:110px;--n:${game.dc[ok]}"><span>${game.dc[ok]}</span></div><div class="dk back ${bkOf(me)}" style="left:1262px;top:560px;--n:${priv.deck.length}"><span>${priv.deck.length}</span></div>`:'';
   const ctl=ls?`<div class="ctl">${disband}</div>`:`<div class="ctl"><button class="cbtn" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button>${disband}<div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div>`;
   let h=`<div class="stg ${ls?'ls':'pt'}" style="width:${D.W}px;height:${D.H}px;transform:translate(${D.ox.toFixed(1)}px,${D.oy.toFixed(1)}px) scale(${D.sc.toFixed(4)})">
-  <div class="scn"><div class="pl" style="left:${px}px;top:${pb-PH}px;width:${PW}px;height:${PH}px"><div class="ohd">${ohand}</div>${tbl}${onTable}</div></div>
+  <div class="scn"><div class="pl" style="left:${px}px;top:${pb-PH}px;width:${PW}px;height:${PH}px"><div class="ohd">${ohand}</div>${tbl}${onTable}${(ls?[[78,130,'#a23a1c'],[132,170,'#3c5a78'],[1180,440,'#8d8676'],[1420,470,'#a23a1c'],[60,430,'#8d8676']]:[[40,PH*.5-20,'#a23a1c'],[868,PH*.5+6,'#3c5a78']]).map(([x,y,cc])=>`<i class="cap" style="left:${x}px;top:${y|0}px;--cc:${cc}"></i>`).join('')}</div></div>
   <div class="hud"><div class="who">${ls?'':`<div class="pile back ${bkOf(op)}"><span>${game.dc[ok]}</span></div>`}<div style="min-width:0"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div></div>${ls?'<div style="flex:1"></div>':`<div class="st"><b>${msg}</b><span>${last}</span></div>`}<button class="hbtn ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="hbtn" data-act="rules" aria-label="Правила">?</button><button class="hbtn" data-act="leave" aria-label="Выйти">✕</button></div>
   <div class="hnd" style="--hm:${hm.toFixed(1)}px">${hand}</div>${ctl}${ls?`<div class="st2"><b>${msg}</b><span>${last}</span></div>`:''}</div>`;
   if(game.winner>=0&&!overlay)h+=`<div class="over"><div><h1>${local?esc(pname(game.winner)):game.winner===me?'Победа':'Поражение'}</h1><p class="sub">${local?'Караваны дошли. Победа.':game.winner===me?'Ваши караваны дошли первыми.':'Соперник продал больше караванов.'}</p><button class="btn" data-act="rematch">Реванш</button><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost" data-act="leave">В лобби</button></div></div>`;
