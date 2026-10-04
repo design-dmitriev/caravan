@@ -18,8 +18,8 @@
 html,body{height:100%;margin:0}
 html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
 body{background:var(--bg) radial-gradient(ellipse at 50% 35%,#2b2110 0,transparent 75%);color:var(--amber);font:400 14px/1.45 "PT Mono",ui-monospace,Menlo,Consolas,monospace;text-shadow:0 0 6px rgba(255,182,66,.45);-webkit-tap-highlight-color:transparent;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(rgba(0,0,0,.16) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.4) 100%)}
-#app{height:100%;max-width:1240px;margin:0 auto;display:flex;flex-direction:column}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:radial-gradient(ellipse at center,transparent 62%,rgba(0,0,0,.35) 100%)}
+#app{position:relative;height:100%;max-width:none;margin:0 auto;display:flex;flex-direction:column;overflow:hidden}
 h1,h2,.btn,summary,.status b{font-family:Oswald,"Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.07em}
 h1{font-weight:600;font-size:clamp(36px,13vw,52px);line-height:1;margin:0 0 14px;padding-bottom:10px;border-bottom:3px solid var(--amber);box-shadow:0 6px 0 -4px var(--amber)}
 h2{font-weight:600;font-size:19px;line-height:1.2;margin:0 0 8px}
@@ -203,6 +203,65 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
   .hand{padding:12px 10px 10px}
   .top,.status,.acts{padding:6px 8px}
 }
+
+/* ---- game stage: fixed logical size, scaled to the window ---- */
+.stg{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;--cw:150px;--hw:160px;--tilt:50deg;font-size:24px;line-height:1.3;
+  background:radial-gradient(ellipse 80% 60% at 50% 34%,#4a3520 0,#1b110a 55%,#060403 100%)}
+.stg.pt{--hw:150px;--tilt:34deg}
+.st2{position:absolute;left:24px;bottom:24px;width:270px}
+.st2 b{display:block;font:600 30px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.st2 span{font-size:20px;color:var(--dim)}
+.scn{position:absolute;inset:0;perspective:1500px;perspective-origin:50% 10%}
+.stg.pt .scn{perspective:1500px;perspective-origin:50% 4%}
+.pl{position:absolute;transform-origin:50% 100%;transform:rotateX(var(--tilt));transform-style:preserve-3d;border-radius:18px;
+  background:repeating-linear-gradient(91deg,rgba(0,0,0,.17) 0 3px,transparent 3px 14px,rgba(255,200,120,.04) 14px 17px,transparent 17px 37px),repeating-linear-gradient(88.5deg,transparent 0 61px,rgba(0,0,0,.13) 61px 64px),radial-gradient(ellipse 60% 55% at 50% 58%,#7a5433 0,#4a3019 55%,#24160b 100%);
+  box-shadow:inset 0 0 0 22px #2a190b,inset 0 0 0 26px rgba(255,190,110,.2),inset 0 0 0 30px rgba(0,0,0,.35),inset 0 0 160px rgba(0,0,0,.6)}
+.pl::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 48% 44% at 50% 62%,rgba(255,224,170,.22) 0,transparent 100%)}
+.pl::after{content:"";position:absolute;left:0;right:0;top:calc(100% - 1px);height:70px;transform-origin:50% 0;transform:rotateX(-90deg);background:linear-gradient(#54361b,#1d1107 75%);box-shadow:inset 0 4px 0 rgba(255,190,110,.2)}
+.zn{position:absolute;width:200px;border:3px dashed rgba(255,190,110,.2);border-radius:14px;transform-style:preserve-3d;transform:translateZ(.6px)}
+.zn.empty{background:rgba(0,0,0,.22)}
+.zn.tgt{border-color:var(--amber);background:rgba(255,182,66,.15);box-shadow:inset 0 0 40px rgba(255,182,66,.3)}
+.zn.hov{background:rgba(255,182,66,.34)}
+.zn .card{position:absolute;left:var(--cl,22px);border-radius:9px;transform:translateZ(calc(var(--z,0)*4px + 2px));transition:transform .15s}
+.zn .card.tgt{transform:translateZ(calc(var(--z,0)*4px + 18px))}
+.zn .card.new{animation:drop .5s cubic-bezier(.2,1.2,.4,1)}
+.plq{position:absolute;width:200px;height:86px;transform-origin:50% 100%;transform:rotateX(calc(var(--tilt)*-1));background:rgba(18,14,8,.96);border:2px solid var(--line);font:600 34px/1 Oswald,sans-serif;display:grid;grid-template-rows:1fr 1fr;box-shadow:0 22px 22px rgba(0,0,0,.55)}
+.plq div{display:flex;justify-content:space-between;align-items:center;padding:0 12px;color:var(--dim)}
+.plq div+div{border-top:1px solid var(--line)}
+.plq small{font-size:22px;font-weight:500}
+.plq .sold{background:var(--amber);color:var(--bg);text-shadow:none}
+.plq .bust{color:var(--warn);text-decoration:line-through}
+.plq .lead span::before{content:"● ";font-size:16px;vertical-align:middle}
+.ohd{position:absolute;top:34px;left:50%;display:flex;transform:translateX(-50%);transform-style:preserve-3d}
+.ohd i{width:84px;height:118px;margin:0 -16px;border-radius:6px;transform-origin:50% 100%;transform:rotateX(calc(var(--tilt)*-1 - 6deg))}
+.dk{position:absolute;width:150px;height:210px;border-radius:9px;display:grid;place-items:center;transform:translateZ(calc(var(--n,0)*.45px + 3px));box-shadow:inset 0 0 0 5px var(--paper),0 2px 0 #cdbb8a,0 4px 0 #8f7c4e,0 6px 0 #cdbb8a,0 8px 0 #6f5f3a,0 26px 30px rgba(0,0,0,.65)}
+.dk span{font:600 58px Oswald,sans-serif;color:var(--paper);text-shadow:0 2px 6px #000}
+.tray{position:absolute;width:160px;height:230px;border:3px dashed var(--line);border-radius:14px;background:rgba(0,0,0,.28);color:var(--dim);font:600 26px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;transform:translateZ(.6px)}
+.tray:not(:disabled){border-color:var(--amber);color:var(--amber)}
+.tray.hov,.cbtn.hov{background:rgba(255,182,66,.4)}
+.hud{position:absolute;left:0;right:0;top:0;display:flex;align-items:flex-start;gap:14px;padding:18px 24px}
+.hud .who{flex:0 1 300px;min-width:0;font-size:22px;color:var(--dim);display:flex;gap:14px;align-items:center}
+.hud .who b{display:block;font:600 32px/1.15 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud .who .pile{width:52px;height:72px}
+.hud .who .pile span{font-size:24px}
+.hud .st{flex:1;text-align:center;min-width:0}
+.hud .st b{display:block;font:600 34px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.hud .st span{font-size:22px;color:var(--dim)}
+.hbtn{width:66px;height:66px;flex:none;font:600 30px Oswald,sans-serif;background:rgba(18,14,8,.85);box-shadow:inset 0 0 0 2px var(--amber)}
+.hbtn.mute{text-decoration:line-through;opacity:.55}
+.stg.pt .hud{flex-wrap:wrap}
+.stg.pt .hud .who{flex:1 1 0}
+.stg.pt .hud .st{order:5;flex:1 0 100%}
+.hnd{position:absolute;left:0;right:0;bottom:18px;display:flex;justify-content:center;align-items:flex-start;perspective:1000px;perspective-origin:50% 130%}
+.stg .hc{flex:none;width:var(--hw);max-width:none;margin:0 var(--hm,4px);border-radius:10px}
+.stg .hc.sel{transform:translateY(-34px) translateZ(60px) rotate(calc(var(--r)*1deg)) rotateX(0deg);outline:5px solid var(--amber)}
+.ctl{position:absolute;right:24px;bottom:24px;width:270px;display:flex;flex-direction:column;gap:14px}
+.stg.pt .ctl{left:20px;right:20px;bottom:258px;width:auto;flex-direction:row;align-items:center}
+.cbtn{flex:1 1 0;min-width:0;font:600 24px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:18px 10px;background:rgba(18,14,8,.85);box-shadow:inset 0 0 0 2px var(--amber)}
+.cbtn:disabled{opacity:.35}
+.cbtn.on{background:var(--amber);color:var(--bg);text-shadow:none}
+.stg .ctl .pile{width:62px;height:86px;flex:none}
+.stg .ctl .pile span{font-size:28px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -786,52 +845,51 @@ function faceHtml(c){
 })();
 const stain=c=>{let h=7;for(const ch of c)h=(h*31+ch.charCodeAt(0))%997;return `--sx:${10+h%80}%;--sy:${10+(h*7)%80}%`};
 let lastSold=null,lastMv=null;
+function stageDims(){
+  const vw=app.clientWidth,vh=app.clientHeight,ls=vw/vh>1.05;let W,H;
+  if(ls){H=900;W=Math.max(1300,Math.round(900*vw/vh))}else{W=900;H=Math.max(1250,Math.round(900*vh/vw))}
+  const sc=Math.min(vw/W,vh/H);return{ls,W,H,sc,ox:(vw-W*sc)/2,oy:(vh-H*sc)/2};
+}
 function board(me){
   const op=1-me,pk='p'+me,ok='p'+op,turn=myTurn(),open=opening();
-  const c=sel!=null?priv.hand[sel]:null;
-  const cars=game.cars;
-  const lens=cars.map(x=>x.cards.length);
-  const soldNow=cars.map(x=>sold(carVal(x))),mvNow=game.mv||0;
+  const c=sel!=null?priv.hand[sel]:null,cars=game.cars;
+  const lens=cars.map(x=>x.cards.length),soldNow=cars.map(x=>sold(carVal(x))),mvNow=game.mv||0;
   if(lastLens){
     if(lens.some((n,k)=>n>lastLens[k]))SFX.place();
     if(lens.some((n,k)=>n<lastLens[k]))SFX.remove();
     else if(lastMv!==null&&mvNow!==lastMv&&!lens.some((n,k)=>n!==lastLens[k]))SFX.deal();
     if(lastSold&&soldNow.some((v,k)=>v&&!lastSold[k]))SFX.sold();
+    if(lens.some((n,k)=>n!==lastLens[k])){fresh={};lens.forEach((n,k)=>{if(n>lastLens[k])fresh[k]=lastLens[k]});clearTimeout(freshT);freshT=setTimeout(()=>fresh={},600)}
   }
-  lastSold=soldNow;lastMv=mvNow;
-  if(lastLens&&lens.some((n,k)=>n!==lastLens[k])){fresh={};lens.forEach((n,k)=>{if(n>lastLens[k])fresh[k]=lastLens[k]});clearTimeout(freshT);freshT=setTimeout(()=>fresh={},450)}
-  lastLens=lens;
-  const carHtml=(k,isMine)=>{
-    const car=cars[k],n=car.cards.length;
-    const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
+  lastSold=soldNow;lastMv=mvNow;lastLens=lens;
+  const D=stageDims(),ls=D.ls,CW=ls?150:190,CH=CW*1.4,ZW=ls?200:260;
+  const PW=ls?1500:940,PH=ls?980:Math.max(880,Math.min(1300,Math.round((D.H-600)*1.1))),px=ls?(D.W-1500)/2:-20,pb=ls?D.H-250:D.H-362;
+  const lanes=ls?[310,640,970]:[170,470,770],zh=ls?400:Math.round(PH*.41),zo=ls?50:Math.round(PH*.045),zm=ls?545:Math.round(PH*.55),pq=ls?452:Math.round(PH*.5)-45;
+  const zone=(k,isMine,x)=>{
+    const car=cars[k],n=car.cards.length,off=n>1?Math.min(CH*.24,(zh-CH-8)/(n-1)):0;
+    const hot=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
-      const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i),top=isMine?4+i*off:zh-CH-8-(n-1-i)*off;
+      return `<div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''} ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}" data-ci="${i}" style="--z:${i};top:${top.toFixed(1)}px">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div>`;
     }).join('');
-    return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
+    return `<div class="zn ${isMine?'mine':'opp'} ${n?'':'empty'} ${hot?'tgt':''}" data-car="${k}" style="left:${x-ZW/2}px;top:${isMine?zm:zo}px;width:${ZW}px;height:${zh}px;--cw:${CW}px;--cl:${(ZW-CW)/2-3}px">${cards}</div>`;
   };
-  const sc=(k,cls,lead)=>{
-    const v=carVal(cars[k]),s=carState(cars[k]);
-    return `<div class="${cls} ${sold(v)?'sold':v>26?'bust':''} ${lead?'lead':''}"><span>${v}</span><small>${s.dir>0?'↑':s.dir<0?'↓':''}${s.suit?SU[s.suit]:''}</small></div>`;
-  };
-  let cols='';
-  for(let i=0;i<3;i++){
-    const w=colWinner(cars,i);
-    cols+=`<div class="col">${carHtml(op*3+i,false)}<div class="score">${sc(op*3+i,'op',w===op)}${sc(me*3+i,'me',w===me)}</div>${carHtml(me*3+i,true)}</div>`;
-  }
-  const noNums=!priv.hand.some(isNum);
-  let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
+  const row=(k,lead)=>{const v=carVal(cars[k]),st2=carState(cars[k]);return `<div class="${sold(v)?'sold':v>26?'bust':''} ${lead?'lead':''}"><span>${v}</span><small>${st2.dir>0?'↑':st2.dir<0?'↓':''}${st2.suit?SU[st2.suit]:''}</small></div>`};
+  let tbl='';
+  lanes.forEach((x,i)=>{const w=colWinner(cars,i);tbl+=zone(op*3+i,false,x)+zone(me*3+i,true,x)+`<div class="plq" style="left:${x-ZW/2}px;top:${pq}px;width:${ZW}px">${row(op*3+i,w===op)}${row(me*3+i,w===me)}</div>`});
+  const noNums=!priv.hand.some(isNum),canDiscard=turn&&sel!=null&&(!open||noNums);
+  const msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
   const last=game.last?`${game.last.by===me?'Вы':esc(pname(op))}: ${esc(game.last.t)}`:'';
-  const hl=priv.hand.length,mid=(hl-1)/2;
-  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
-  const oh=game.hc[ok],omid=(oh-1)/2;
-  const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
-  const canDiscard=turn&&sel!=null&&(!open||noNums);
-  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  <div class="table"><div class="plane">${cols}</div></div>
-  <div class="status"><b>${msg}</b><span>${last}</span></div>
-  <div class="hand">${hand}</div>
-  <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
+  const hl=priv.hand.length,mid=(hl-1)/2,hw=ls?160:150,room=(ls?D.W-680:D.W-40),hm=hl>1?Math.min(5,(room-hl*hw)/(hl-1)/2):0;
+  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*2.4).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const oh=game.hc[ok],ohand=Array.from({length:oh},()=>`<i class="back ${bkOf(op)}"></i>`).join('');
+  const disband=`<button class="cbtn ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button>`;
+  const onTable=ls?`<button class="tray" data-act="discard" style="left:38px;top:610px" ${canDiscard?'':'disabled'}>Сброс<br>карты</button><div class="dk back ${bkOf(op)}" style="left:1250px;top:140px;--n:${game.dc[ok]}"><span>${game.dc[ok]}</span></div><div class="dk back ${bkOf(me)}" style="left:1262px;top:640px;--n:${priv.deck.length}"><span>${priv.deck.length}</span></div>`:'';
+  const ctl=ls?`<div class="ctl">${disband}</div>`:`<div class="ctl"><button class="cbtn" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button>${disband}<div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div>`;
+  let h=`<div class="stg ${ls?'ls':'pt'}" style="width:${D.W}px;height:${D.H}px;transform:translate(${D.ox.toFixed(1)}px,${D.oy.toFixed(1)}px) scale(${D.sc.toFixed(4)})">
+  <div class="scn"><div class="pl" style="left:${px}px;top:${pb-PH}px;width:${PW}px;height:${PH}px"><div class="ohd">${ohand}</div>${tbl}${onTable}</div></div>
+  <div class="hud"><div class="who">${ls?'':`<div class="pile back ${bkOf(op)}"><span>${game.dc[ok]}</span></div>`}<div style="min-width:0"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div></div>${ls?'<div style="flex:1"></div>':`<div class="st"><b>${msg}</b><span>${last}</span></div>`}<button class="hbtn ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="hbtn" data-act="rules" aria-label="Правила">?</button><button class="hbtn" data-act="leave" aria-label="Выйти">✕</button></div>
+  <div class="hnd" style="--hm:${hm.toFixed(1)}px">${hand}</div>${ctl}${ls?`<div class="st2"><b>${msg}</b><span>${last}</span></div>`:''}</div>`;
   if(game.winner>=0&&!overlay)h+=`<div class="over"><div><h1>${local?esc(pname(game.winner)):game.winner===me?'Победа':'Поражение'}</h1><p class="sub">${local?'Караваны дошли. Победа.':game.winner===me?'Ваши караваны дошли первыми.':'Соперник продал больше караванов.'}</p><button class="btn" data-act="rematch">Реванш</button><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost" data-act="leave">В лобби</button></div></div>`;
   return h;
 }
@@ -937,6 +995,7 @@ app.addEventListener('input',e=>{
     app.querySelectorAll('[data-rng]').forEach(x=>{if(x!==t)x.value=rnd[+x.dataset.rng]});
   }
 });
+let rsT;window.addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{if(screen==='game'&&game)render()},120)});
 init();
 </script>
 </body>
