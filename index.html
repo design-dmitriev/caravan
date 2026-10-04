@@ -243,6 +243,20 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .lightcap{background:radial-gradient(ellipse 62% 66% at 50% 37%,rgba(255,178,98,.17) 0,rgba(255,160,72,.08) 20%,rgba(40,22,8,.2) 42%,rgba(10,6,3,.55) 66%,rgba(3,2,1,.86) 88%,rgba(1,1,0,.95) 100%)}
 .col:nth-child(1) .score{box-shadow:-10px 16px 18px rgba(0,0,0,.6)}
 .col:nth-child(3) .score{box-shadow:10px 16px 18px rgba(0,0,0,.6)}
+
+/* ---- printed backs, lamp flicker ---- */
+.back{box-shadow:0 1px 0 rgba(0,0,0,.7);border-radius:3px}
+.bk0{background:var(--bk0,none) center/100% 100% no-repeat,#7c2318}
+.bk1{background:var(--bk1,none) center/100% 100% no-repeat,#1f3f66}
+.bk2{background:var(--bk2,none) center/100% 100% no-repeat,#24553d}
+.bk3{background:var(--bk3,none) center/100% 100% no-repeat,#17130c}
+.bk4{background:var(--bk4,none) center/100% 100% no-repeat,#a8702c}
+.bk5{background:var(--bk5,none) center/100% 100% no-repeat,#1d5a5c}
+.pile{box-shadow:2px 2px 0 rgba(0,0,0,.75),4px 4px 0 rgba(0,0,0,.5)}
+.swatch.on{box-shadow:0 0 14px var(--amber)}
+.flick{position:absolute;inset:0;pointer-events:none;background:#000;opacity:0;transform:translateZ(76px);animation:lamp 11s linear infinite}
+@keyframes lamp{0%,11%{opacity:0}11.8%{opacity:.075}12.6%{opacity:.02}13.6%{opacity:.06}15.5%,47%{opacity:0}47.700%{opacity:.045}49.500%,74%{opacity:0}74.600%{opacity:.085}75.400%{opacity:.03}76.200%{opacity:.055}78.500%,100%{opacity:0}}
+.table.t3d .lightcap{background:radial-gradient(ellipse 66% 70% at 50% 40%,rgba(255,178,98,.1) 0,rgba(255,160,72,.04) 22%,rgba(30,16,6,.16) 46%,rgba(10,6,3,.5) 70%,rgba(3,2,1,.84) 90%,rgba(1,1,0,.94) 100%)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -302,6 +316,18 @@ let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
 let tblSel=1;
+const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
+function backArt(b){
+  const c=BKC[b],p=b===3?'#c9a24b':'#e9dfc2';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="bp" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0h7M0 0v7" stroke="${p}" stroke-opacity=".34" stroke-width=".7"/><circle cx="3.5" cy="3.5" r=".8" fill="${p}" fill-opacity=".3"/></pattern><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="14"/><feColorMatrix values="0 0 0 0 .1 0 0 0 0 .07 0 0 0 0 .04 0 0 0 2.4 -1.45"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="100" height="140" fill="${b===3?'#1b1610':'#e6dbbc'}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="${c}"/><rect x="5" y="5" width="90" height="130" rx="3" fill="url(#bp)"/>
+<rect x="8" y="8" width="84" height="124" rx="2" fill="none" stroke="${p}" stroke-width="1.1"/><rect x="10.4" y="10.4" width="79.2" height="119.200" rx="1.4" fill="none" stroke="${p}" stroke-width=".45"/>
+<g fill="none" stroke="${p}" stroke-width=".8"><path d="M12 24q11 0 12-12M88 24q-11 0-12-12M12 116q11 0 12 12M88 116q-11 0-12 12"/><path d="M12 30q16-1 18-18M88 30q-16-1-18-18M12 110q16 1 18 18M88 110q-16 1-18 18" stroke-width=".4"/></g>
+<ellipse cx="50" cy="70" rx="17" ry="24" fill="${c}" stroke="${p}" stroke-width="1.2"/><ellipse cx="50" cy="70" rx="13.500" ry="20" fill="none" stroke="${p}" stroke-width=".45"/>
+<path d="M50 54l3.600 12.400L66 70l-12.400 3.600L50 86l-3.600-12.400L34 70l12.400-3.600z" fill="${p}" opacity=".92"/><circle cx="50" cy="70" r="2.600" fill="${c}"/>
+<path d="M50 40v8M50 92v8M30 70h-6M70 70h6" stroke="${p}" stroke-width=".6"/><circle cx="50" cy="37.500" r="1.300" fill="${p}"/><circle cx="50" cy="102.500" r="1.300" fill="${p}"/>
+<rect width="100" height="140" filter="url(#bd)"/><rect width="100" height="140" fill="none" stroke="#2a1806" stroke-width="7" opacity=".4" filter="url(#bb)"/></svg>`;
+}
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
 let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
 const getNames=()=>LS.get('caravan_names')||{};
@@ -782,34 +808,56 @@ const PIPS={1:[[50,50]],2:[[50,12],[50,88]],3:[[50,12],[50,50],[50,88]],4:[[25,1
 const sv=(c,cls='')=>`<svg class="${cls}" viewBox="0 0 100 100"><use href="#s${st(c)}"/></svg>`;
 /* original court figures in the traditional mirrored style; colors come from the deck skin */
 function courtHalf(r,c){
-  const L='stroke="var(--ln)"';
+  const L='stroke="var(--ln)"',G='stroke="var(--gd)"';
   let h=`<path d="M4 95 12 64q18-12 38-8 20-4 38 8l8 31z" fill="var(--c1)" ${L} stroke-width="1.5"/>
 <path d="M50 56 37 95h26z" fill="var(--c2)" ${L} stroke-width="1.2"/>
-<path d="M13 65 23 95M87 65 77 95" stroke="var(--gd)" stroke-width="4"/>
-<path d="M17 72l6 20M27 68l7 24M73 68l-7 24M83 72l-6 20M44 78h12M42 86h16" ${L} stroke-width=".7" opacity=".55"/>
+<path d="M13 65 23 95M87 65 77 95" ${G} stroke-width="4.2"/><path d="M13 65 23 95M87 65 77 95" ${L} stroke-width=".5" stroke-dasharray="1.2 2.2"/>
+<path d="M17 75l9 17M21 69l11 23M27 66l8 20M17 84l10-9M21 92l12-12M27 78l6-6" ${G} stroke-width=".9" opacity=".9"/>
+<path d="M83 75l-9 17M79 69l-11 23M73 66l-8 20M83 84l-10-9M79 92l-12-12M73 78l-6-6" ${G} stroke-width=".9" opacity=".9"/>
+<path d="M43 72l7-8 7 8-7 8zM45 88l5-6 5 6" fill="none" ${G} stroke-width="1"/><circle cx="50" cy="72" r="1.7" fill="var(--gd)" ${L} stroke-width=".4"/><circle cx="50" cy="90" r="1.4" fill="var(--gd)"/>
+<path d="M39 95l5-22M61 95l-5-22" ${L} stroke-width=".5" opacity=".7"/>
 <path d="M30 58q20 14 40 0l-4-7q-16 10-32 0z" fill="var(--pp)" ${L} stroke-width="1.2"/>
-<path d="M38 59v3M46 62v3M54 62v3M62 59v3" ${L} stroke-width="1.4"/>
-<rect x="44" y="42" width="12" height="12" fill="var(--sk)" ${L}/>
+<path d="M36 58v3M41 61v3M46 62.5v3M54 62.5v3M59 61v3M64 58v3" ${L} stroke-width="1.3"/>
+<path d="M44 42h12v10q-6 4-12 0z" fill="var(--sk)" ${L} stroke-width="1"/><path d="M46 51q4 2 8 0" ${L} stroke-width=".5" opacity=".6"/>
 <ellipse cx="50" cy="32" rx="12" ry="14" fill="var(--sk)" ${L} stroke-width="1.5"/>
-<path d="M42 27q3-2 6 0M52 27q3-2 6 0M43 31h4M53 31h4M50 31v6h-2" ${L} stroke-width="1.4" fill="none"/>`;
+<path d="M58 26q3 6 1 14M59.5 30q1.5 4 .5 8" ${L} stroke-width=".45" opacity=".55" fill="none"/>
+<path d="M41.5 26.5q3.5-2.6 7 0M51.5 26.5q3.5-2.6 7 0" ${L} stroke-width="1.5" fill="none"/>
+<path d="M42.5 31q2.6-2 5.2 0-2.6 1.6-5.2 0zM52.3 31q2.6-2 5.2 0-2.6 1.6-5.2 0z" fill="var(--pp)" ${L} stroke-width=".7"/><circle cx="45.1" cy="31" r="1" fill="var(--ln)"/><circle cx="54.9" cy="31" r="1" fill="var(--ln)"/>
+<path d="M50 30.5v6.2q-1.6 1-3 .2M48 38.2h3.4" ${L} stroke-width="1.1" fill="none"/>`;
   if(r==='K')h+=`<path d="M38 33q0 19 12 22 12-3 12-22-4 10-12 10t-12-10z" fill="var(--ln)"/>
-<path d="M44 40q6-3 12 0" stroke="var(--sk)" stroke-width="1.2" fill="none"/>
+<path d="M41 40q2 9 9 12M59 40q-2 9-9 12M45 44q2 5 5 7M55 44q-2 5-5 7" stroke="var(--sk)" stroke-width=".5" opacity=".55" fill="none"/>
+<path d="M43.5 40.5q3.2-2.2 6.5 0 3.3-2.2 6.5 0-3.3 2.6-6.5.6-3.2 2-6.5-.6z" fill="var(--ln)"/><path d="M47 43.2q3 1.4 6 0" stroke="#a8281c" stroke-width="1.2" fill="none"/>
 <path d="M38 22q-6 11-2 23l4-8zM62 22q6 11 2 23l-4-8z" fill="var(--ln)"/>
-<path d="M34 21 32 4l9 8 9-10 9 10 9-8-2 17z" fill="var(--gd)" ${L} stroke-width="1.5"/>
-<circle cx="41" cy="16" r="1.8" fill="var(--c1)"/><circle cx="50" cy="15" r="2.2" fill="var(--c2)"/><circle cx="59" cy="16" r="1.8" fill="var(--c1)"/>
-<path d="M85 6v66" ${L} stroke-width="4.5"/><path d="M85 7v60" stroke="var(--pp)" stroke-width="2.2"/><path d="M77 66h16" stroke="var(--gd)" stroke-width="4"/><circle cx="85" cy="73" r="4.5" fill="var(--sk)" ${L}/>`;
-  else if(r==='Q')h+=`<path d="M46 41q4 2 8 0" stroke="#a8281c" stroke-width="1.8" fill="none"/>
+<path d="M34 21 32 4l9 8 9-10 9 10 9-8-2 17z" fill="var(--gd)" ${L} stroke-width="1.5"/><path d="M34.4 17.5h31.2M35 21h30" ${L} stroke-width=".8"/>
+<circle cx="32" cy="4" r="1.6" fill="var(--pp)" ${L} stroke-width=".6"/><circle cx="50" cy="2.4" r="1.9" fill="var(--pp)" ${L} stroke-width=".6"/><circle cx="68" cy="4" r="1.6" fill="var(--pp)" ${L} stroke-width=".6"/>
+<circle cx="41" cy="14.5" r="1.8" fill="var(--c1)" ${L} stroke-width=".4"/><path d="M48 12.5l2-2.6 2 2.6-2 2.6z" fill="var(--c2)" ${L} stroke-width=".4"/><circle cx="59" cy="14.5" r="1.8" fill="var(--c1)" ${L} stroke-width=".4"/>
+<path d="M68 63q11 0 15 7l-5 8q-6-7-13-7z" fill="var(--c2)" ${L} stroke-width="1.1"/><path d="M71 66q6 1 9 5" ${G} stroke-width="1"/>
+<path d="M85 5v64" ${L} stroke-width="4.6"/><path d="M85 6.5v59" stroke="var(--pp)" stroke-width="2.4"/><path d="M85 8v56" ${L} stroke-width=".4"/><path d="M85 2.5l2.4 5h-4.8z" fill="var(--pp)" ${L} stroke-width=".7"/>
+<path d="M76.5 66h17" ${G} stroke-width="4.2"/><path d="M76.5 66h17" ${L} stroke-width=".5" stroke-dasharray="1 2"/><path d="M85 68v8" ${L} stroke-width="3.4"/><circle cx="85" cy="78" r="2.3" fill="var(--gd)" ${L} stroke-width=".6"/>
+<path d="M80.5 69.5q4.5-3 9 0v5q-4.5 3-9 0z" fill="var(--sk)" ${L} stroke-width=".9"/><path d="M82 71.5h6M82 73.3h6" ${L} stroke-width=".4"/>`;
+  else if(r==='Q')h+=`<path d="M46.2 40.6q1.9-1.6 3.8-.2 1.9-1.4 3.8.2-3.8 3.2-7.600 0z" fill="#a8281c" ${L} stroke-width=".4"/>
 <path d="M37 21q-11 19-3 38l8-9q-4-13-1-24zM63 21q11 19 3 38l-8-9q4-13 1-24z" fill="var(--gd)" ${L} stroke-width="1.2"/>
-<path d="M36 21q0-12 6-8 4-10 8-2 4-8 8 2 6-4 6 8z" fill="var(--gd)" ${L} stroke-width="1.5"/>
-<circle cx="50" cy="14" r="2" fill="var(--c1)"/>
-<path d="M40 52q10 6 20 0" stroke="var(--gd)" stroke-width="2" fill="none" stroke-dasharray="1.5 2"/>
-<path d="M85 80V32" stroke="var(--ln)" stroke-width="2"/><g fill="var(--c1)" ${L} stroke-width="1"><circle cx="85" cy="20" r="4.5"/><circle cx="92" cy="26" r="4.5"/><circle cx="78" cy="26" r="4.5"/><circle cx="81" cy="33" r="4.5"/><circle cx="89" cy="33" r="4.5"/></g><circle cx="85" cy="27" r="3.5" fill="var(--gd)" ${L}/><circle cx="85" cy="80" r="4.5" fill="var(--sk)" ${L}/>`;
-  else h+=`<path d="M46 41q4 1.5 8 0" ${L} stroke-width="1.4" fill="none"/>
+<path d="M35 30q-4 12 0 24M38 34q-3 9 1 17M65 30q4 12 0 24M62 34q3 9-1 17" ${L} stroke-width=".5" opacity=".65" fill="none"/>
+<path d="M38.5 24q11.5-7 23 0-2-7-11.5-7t-11.5 7z" fill="var(--gd)" ${L} stroke-width=".8"/>
+<path d="M36 21q0-12 6-8 4-10 8-2 4-8 8 2 6-4 6 8z" fill="var(--gd)" ${L} stroke-width="1.5"/><path d="M36.300 18h27.400" ${L} stroke-width=".7"/>
+<circle cx="42" cy="12.300" r="1.3" fill="var(--pp)" ${L} stroke-width=".5"/><circle cx="50" cy="7.600" r="1.5" fill="var(--pp)" ${L} stroke-width=".5"/><circle cx="58" cy="12.300" r="1.3" fill="var(--pp)" ${L} stroke-width=".5"/>
+<path d="M48.300 14.500l1.700-2.200 1.700 2.200-1.700 2.200z" fill="var(--c1)" ${L} stroke-width=".4"/>
+<path d="M40 52q10 6 20 0" ${G} stroke-width="2.2" fill="none"/><path d="M40 52q10 6 20 0" ${L} stroke-width=".5" stroke-dasharray=".8 2" fill="none"/><circle cx="50" cy="57.500" r="2" fill="var(--c1)" ${L} stroke-width=".5"/>
+<path d="M68 64q11 1 14 9l-5 7q-5-7-12-8z" fill="var(--c2)" ${L} stroke-width="1.1"/><path d="M71 67q6 2 8 6" ${G} stroke-width="1"/>
+<path d="M85 78V33" stroke="#2e6b3a" stroke-width="2.2"/><path d="M85 60q-6-2-7-8 6 0 7 6zM85 50q6-2 7-7-6 0-7 5z" fill="#2e6b3a" ${L} stroke-width=".5"/>
+<g fill="var(--c1)" ${L} stroke-width=".8"><circle cx="85" cy="19.500" r="4.600"/><circle cx="92" cy="25" r="4.600"/><circle cx="78" cy="25" r="4.600"/><circle cx="80.800" cy="32.500" r="4.600"/><circle cx="89.200" cy="32.500" r="4.600"/></g><circle cx="85" cy="26.500" r="3.400" fill="var(--gd)" ${L} stroke-width=".7"/><path d="M83.600 25.200l2.800 2.600M86.400 25.200l-2.800 2.600" ${L} stroke-width=".4"/>
+<path d="M80.500 76q4.500-3 9 0v5q-4.500 3-9 0z" fill="var(--sk)" ${L} stroke-width=".9"/><path d="M82 78h6M82 79.800h6" ${L} stroke-width=".4"/>`;
+  else h+=`<path d="M46.500 41q3.500 1.400 7 0" ${L} stroke-width="1.300" fill="none"/>
 <path d="M37 23q-5 16 3 24l1-19zM63 23q5 16-3 24l-1-19z" fill="var(--gd)" ${L} stroke-width="1.2"/>
-<path d="M34 22q0-16 20-14 16 2 12 14z" fill="var(--c2)" ${L} stroke-width="1.5"/><path d="M32 22h36" stroke="var(--gd)" stroke-width="3.5"/>
-<path d="M60 10q14-14 24-2-10-2-18 8z" fill="var(--pp)" ${L} stroke-width="1.2"/>
-<path d="M86 14v64" stroke="var(--ln)" stroke-width="3.2"/><path d="M86 14q-13 2-11 16l11-3z" fill="var(--pp)" ${L} stroke-width="1.3"/><path d="M86 6l4 9h-8z" fill="var(--pp)" ${L}/><circle cx="86" cy="74" r="4.5" fill="var(--sk)" ${L}/>`;
-  return h+`<use href="#s${st(c)}" x="5" y="5" width="17" height="17" fill="currentColor"/>`;
+<path d="M37.500 30q-2 9 2 15M62.500 30q2 9-2 15" ${L} stroke-width=".5" opacity=".65" fill="none"/>
+<path d="M34 22q0-16 20-14 16 2 12 14z" fill="var(--c2)" ${L} stroke-width="1.5"/><path d="M40 12q8-3 20 2M38 17q10-3 26 1" ${L} stroke-width=".5" opacity=".6" fill="none"/>
+<path d="M32 22h36" ${G} stroke-width="3.6"/><path d="M32 22h36" ${L} stroke-width=".5" stroke-dasharray="1 2"/><circle cx="50" cy="22" r="2" fill="var(--c1)" ${L} stroke-width=".5"/>
+<path d="M60 10q14-14 24-2-10-2-18 8z" fill="var(--pp)" ${L} stroke-width="1.200"/><path d="M63 12q9-8 17-5M66 13q7-5 13-4" ${L} stroke-width=".4" fill="none"/>
+<path d="M68 63q11 0 16 8l-5 7q-6-7-13-7z" fill="var(--c2)" ${L} stroke-width="1.100"/><path d="M71 66q6 1 9 5" ${G} stroke-width="1"/>
+<path d="M86 12v68" stroke="var(--ln)" stroke-width="3.200"/><path d="M86 14v64" stroke="#7a4a22" stroke-width="1.600"/>
+<path d="M86 14q-14 2-12 17l12-4z" fill="var(--pp)" ${L} stroke-width="1.300"/><path d="M84.500 16.500q-9 2-8.500 11" ${L} stroke-width=".4" fill="none"/><path d="M86 5l4.200 9.500h-8.400z" fill="var(--pp)" ${L} stroke-width="1"/>
+<path d="M81.500 70.500q4.500-3 9 0v5q-4.500 3-9 0z" fill="var(--sk)" ${L} stroke-width=".900"/><path d="M83 72.500h6M83 74.300h6" ${L} stroke-width=".4"/>`;
+  return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${st(c)}" x="6.5" y="6.5" width="16" height="16" fill="currentColor"/>`;
 }
 function faceHtml(c){
   if(c==='JK')return '<span class="ix">★</span><span class="court jkr"><b>✪</b><em>JOKER</em></span>';
@@ -821,6 +869,7 @@ function faceHtml(c){
 (function(){
   const u=x=>`url("data:image/svg+xml,${encodeURIComponent(x)}")`,R=document.documentElement.style,X='xmlns="http://www.w3.org/2000/svg"';
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let b=0;b<6;b++)R.setProperty('--bk'+b,u(backArt(b)));
   R.setProperty('--grain',u(`<svg ${X} width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .55 -.14"/></filter><rect width="140" height="140" filter="url(#n)"/></svg>`));
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
@@ -956,7 +1005,7 @@ function board(me){
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
   let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  ${use3d?'<div class="table t3d"></div>':`<div class="table"><div class="plane">${cols}</div><div class="lightcap"></div></div>`}
+  ${use3d?'<div class="table t3d"><div class="lightcap"></div><div class="flick"></div></div>':`<div class="table"><div class="plane">${cols}</div><div class="lightcap"></div><div class="flick"></div></div>`}
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
   <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
@@ -1005,9 +1054,10 @@ const GL=(function(){
       `<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>`,
       `<g filter="url(#wp)"><ellipse cx="-2" cy="142" rx="60" ry="64" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="44" ry="48" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="30" ry="34" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="42" ry="38" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="28" ry="25" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="17" ry="15" fill="#0a0503"/></g>`,
       `<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,i)=>`<path d="M0 ${9+i*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`][sk];
-    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}${body}${over}</svg>`;
+    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/></svg>`;
   }
-  const backSVG=b=>`<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v7M0 0h7" stroke="#000" stroke-opacity=".3" stroke-width="1.2"/></pattern></defs><rect width="100" height="140" fill="${BK[b]}"/><rect width="100" height="140" fill="url(#h)"/><rect x="4" y="4" width="92" height="132" fill="none" stroke="#e4d6ae" stroke-width="3"/><circle cx="50" cy="70" r="14" fill="none" stroke="#e4d6ae" stroke-width="2.5" opacity=".8"/></svg>`;
+  const backSVG=b=>backArt(b);
+  const backSVGold=b=>`<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v7M0 0h7" stroke="#000" stroke-opacity=".3" stroke-width="1.2"/></pattern></defs><rect width="100" height="140" fill="${BK[b]}"/><rect width="100" height="140" fill="url(#h)"/><rect x="4" y="4" width="92" height="132" fill="none" stroke="#e4d6ae" stroke-width="3"/><circle cx="50" cy="70" r="14" fill="none" stroke="#e4d6ae" stroke-width="2.5" opacity=".8"/></svg>`;
   function mat(key,svg){
     if(mats[key])return mats[key];
     const m=mats[key]=new T.MeshStandardMaterial({color:0xddd2b4,roughness:.78,metalness:0,side:T.DoubleSide}),img=new Image();
@@ -1019,17 +1069,17 @@ const GL=(function(){
     try{
       cv=document.createElement('canvas');cv.id='gl';document.body.appendChild(cv);
       ren=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false,powerPreference:'high-performance'});
-      ren.setPixelRatio(Math.min(2,window.devicePixelRatio||1));ren.outputEncoding=T.sRGBEncoding;ren.toneMapping=T.ACESFilmicToneMapping;ren.toneMappingExposure=1.15;
+      ren.setPixelRatio(Math.min(2,window.devicePixelRatio||1));ren.outputEncoding=T.sRGBEncoding;ren.toneMapping=T.ACESFilmicToneMapping;ren.toneMappingExposure=.98;
       ren.shadowMap.enabled=true;ren.shadowMap.type=T.PCFSoftShadowMap;
       scene=new T.Scene();scene.background=new T.Color(0x030201);
       cam=new T.PerspectiveCamera(34,1.6,.1,80);ray=new T.Raycaster();
-      scene.add(new T.HemisphereLight(0x4a3624,0x060403,.38));
-      const sp=new T.SpotLight(0xffc48a,2.3,34,.82,1,1.1);sp.position.set(.4,8.4,-1.4);sp.target.position.set(0,0,.5);sp.castShadow=true;
+      scene.add(new T.HemisphereLight(0x3a2a1c,0x050302,.26));
+      const sp=new T.SpotLight(0xffb878,2.5,34,.78,1,1.1);sp.position.set(.4,8.4,-1.4);sp.target.position.set(0,0,.5);sp.castShadow=true;
       sp.shadow.mapSize.set(2048,2048);sp.shadow.bias=-.0006;sp.shadow.normalBias=.012;sp.shadow.radius=3;sp.shadow.camera.near=2;sp.shadow.camera.far=22;scene.add(sp,sp.target);
       const fill=new T.PointLight(0xff9a50,.25,18,2);fill.position.set(-5,3,5);scene.add(fill);
       const wood=new T.CanvasTexture(window.tblCanvas||document.createElement('canvas'));wood.encoding=T.sRGBEncoding;wood.anisotropy=ren.capabilities.getMaxAnisotropy();
       const bump=new T.CanvasTexture(window.tblCanvas||document.createElement('canvas'));
-      const top=new T.MeshStandardMaterial({map:wood,bumpMap:bump,bumpScale:.05,roughness:.74,metalness:0}),side=new T.MeshStandardMaterial({color:0x2a1b10,roughness:.9});
+      const top=new T.MeshStandardMaterial({map:wood,color:0xc9b8a2,bumpMap:bump,bumpScale:.05,roughness:.78,metalness:0}),side=new T.MeshStandardMaterial({color:0x2a1b10,roughness:.9});
       const tbl=new T.Mesh(new T.BoxGeometry(17,.7,11.6),[side,side,top,side,side,side]);tbl.position.y=-.35;tbl.receiveShadow=true;scene.add(tbl);
       const sh=new T.Shape(),w=.5,h=.7,r=.055;sh.moveTo(-w+r,-h);sh.lineTo(w-r,-h);sh.quadraticCurveTo(w,-h,w,-h+r);sh.lineTo(w,h-r);sh.quadraticCurveTo(w,h,w-r,h);sh.lineTo(-w+r,h);sh.quadraticCurveTo(-w,h,-w,h-r);sh.lineTo(-w,-h+r);sh.quadraticCurveTo(-w,-h,-w+r,-h);
       geo=new T.ExtrudeGeometry(sh,{depth:TH,bevelEnabled:false,curveSegments:5});
