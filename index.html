@@ -235,6 +235,34 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .car.opp .slot.new .card{animation-name:throwOpp}
 @keyframes throwMine{from{transform:translate3d(10%,240%,170px) rotateZ(22deg)}}
 @keyframes throwOpp{from{transform:translate3d(-10%,-240%,170px) rotateZ(-158deg)}}
+
+/* ---- dark 3D room around the table; camera reacts to pointer / phone tilt ---- */
+.table{background:#050302;perspective:1000px;perspective-origin:calc(50% + var(--px,0)*8%) calc(8% + var(--py,0)*4%)}
+.table::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(4,3,2,.5),transparent 34%),radial-gradient(ellipse 75% 70% at 55% 62%,transparent 40%,rgba(0,0,0,.72) 100%)}
+.plane{container-type:size;left:-4%;right:-4%;bottom:26px;height:112%;padding:5% 10% 8px;transform:rotateX(calc(53deg - var(--py,0)*2.5deg)) rotateZ(calc(var(--px,0)*-2.2deg));
+  background:linear-gradient(rgba(70,34,10,.42),rgba(70,34,10,.42)),repeating-linear-gradient(0deg,rgba(0,0,0,.8) 0 3px,rgba(255,225,180,.05) 3px 5px,transparent 5px 23%),var(--wood,none) 0 0/900px 620px,#2a1e14;
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.6),inset 0 0 140px rgba(0,0,0,.7)}
+.plane::before{background:radial-gradient(ellipse 56% 62% at 93% 14%,rgba(255,180,96,.62) 0,rgba(255,160,80,.18) 45%,transparent 74%),linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.28) 40%,rgba(0,0,0,.45))}
+.plane::after{height:12cqw;background:repeating-linear-gradient(90deg,rgba(0,0,0,.4) 0 2px,transparent 2px 37px),linear-gradient(#2c1f14,#0b0704 80%)}
+.car.empty{background:rgba(0,0,0,.16);border-color:transparent}
+.score{transform:rotateX(-53deg)}
+.w{position:absolute;pointer-events:none}
+.w-floor{left:-90cqw;width:280cqw;top:-150cqw;height:330cqw;transform:translateZ(-36cqw);background:radial-gradient(ellipse 30% 26% at 62% 52%,rgba(255,160,80,.16),transparent 70%),repeating-linear-gradient(90deg,rgba(0,0,0,.7) 0 .4cqw,transparent .4cqw 9cqw),var(--wood,none) 0 0/900px 620px,#120c08;filter:brightness(.45)}
+.w-wall{left:-70cqw;width:240cqw;height:110cqw;top:-170cqw;transform-origin:50% 100%;transform:translateZ(-36cqw) rotateX(-90deg);background:var(--wall,none) 50% 100%/100% 100% no-repeat,#0c0806}
+.w-side{width:150cqw;height:110cqw;top:-170cqw;transform-origin:0 100%;background:linear-gradient(90deg,#0f0a07,#050302),var(--stone,none);filter:brightness(.5)}
+.w-side.l{left:-70cqw;transform:translateZ(-36cqw) rotateX(-90deg) rotateY(-90deg)}
+.w-side.r{left:170cqw;transform:translateZ(-36cqw) rotateX(-90deg) rotateY(-90deg)}
+.w-chair{left:33cqw;width:34cqw;height:44cqw;top:-52cqw;transform-origin:50% 100%;transform:translateZ(-16cqw) rotateX(-90deg);border-radius:1.5cqw 1.5cqw 0 0;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(255,170,90,.1),transparent 70%),linear-gradient(#3a2a1c,#1c130c) 12% 8%/76% 58% no-repeat,linear-gradient(90deg,#20150d 0 9%,transparent 9% 91%,#20150d 91%),linear-gradient(#20150d 0 6%,transparent 6%);box-shadow:inset 0 0 6cqw rgba(0,0,0,.8)}
+.w-lamp{left:90.5cqw;top:5cqw;width:9cqw;height:15cqw;transform-origin:50% 100%;transform:rotateX(-90deg)}
+.w-lamp.x{transform:rotateX(-90deg) rotateY(90deg)}
+.w-lamp svg{width:100%;height:100%;display:block}
+.w-lamp .glow{animation:flick 4.3s linear infinite}
+.w-halo{left:78cqw;top:-14cqw;width:34cqw;height:34cqw;transform-origin:50% 100%;transform:translateY(8cqw) translateZ(3cqw) rotateX(-90deg);border-radius:50%;background:radial-gradient(circle,rgba(255,196,110,.5) 0,rgba(255,170,80,.16) 35%,transparent 68%);animation:flick 4.3s linear infinite}
+.w-btl{left:2.2cqw;top:6cqw;width:4.4cqw;height:15cqw;transform-origin:50% 100%;transform:rotateX(-90deg);border-radius:1cqw 1cqw .6cqw .6cqw;background:linear-gradient(90deg,rgba(255,200,130,.25) 0 18%,transparent 30%),linear-gradient(#1e140a 0 30%,#3a2412 30%);clip-path:polygon(34% 0,66% 0,66% 28%,100% 42%,100% 100%,0 100%,0 42%,34% 28%)}
+.w-btl.x{transform:rotateX(-90deg) rotateY(90deg)}
+.w-btl.b2{left:4.6cqw;top:13cqw;height:12cqw;filter:hue-rotate(60deg) brightness(.8)}
+.cap{width:3.6%}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -767,7 +795,7 @@ function builderView(){
 const chip=c=>`<button class="chip n${builder[c]||0} ${red(c)?'red':''}" data-act="chip" data-c="${c}">${c==='JK'?'Jkr':rk(c)+SU[st(c)]}</button>`;
 
 let lastLens=null,fresh={},freshT;
-const LAMP='<svg class="lamp" viewBox="0 0 60 100"><defs><radialGradient id="lg"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#ffb84a"/><stop offset="1" stop-color="#b8601a" stop-opacity=".25"/></radialGradient></defs><path d="M14 30Q30 -6 46 30" fill="none" stroke="#2a2118" stroke-width="2.5"/><rect x="21" y="22" width="18" height="8" rx="2" fill="#3a3026"/><path d="M17 30h26l4 8H13z" fill="#4a3d2f"/><rect x="15" y="38" width="30" height="36" rx="9" fill="#2b1c0c" opacity=".55"/><ellipse class="glow" cx="30" cy="57" rx="13" ry="17" fill="url(#lg)"/><path d="M15 44v24M45 44v24M22 39q-5 18 0 35M38 39q5 18 0 35" fill="none" stroke="#2a2118" stroke-width="1.6"/><path d="M12 74h36l5 12H7z" fill="#4a3d2f"/><rect x="5" y="86" width="50" height="8" rx="3" fill="#33291f"/></svg>';
+const LAMP='<svg viewBox="0 0 60 100"><defs><radialGradient id="lg"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#ffb84a"/><stop offset="1" stop-color="#b8601a" stop-opacity=".25"/></radialGradient></defs><path d="M14 30Q30 -6 46 30" fill="none" stroke="#2a2118" stroke-width="2.5"/><rect x="21" y="22" width="18" height="8" rx="2" fill="#3a3026"/><path d="M17 30h26l4 8H13z" fill="#4a3d2f"/><rect x="15" y="38" width="30" height="36" rx="9" fill="#2b1c0c" opacity=".55"/><ellipse class="glow" cx="30" cy="57" rx="13" ry="17" fill="url(#lg)"/><path d="M15 44v24M45 44v24M22 39q-5 18 0 35M38 39q5 18 0 35" fill="none" stroke="#2a2118" stroke-width="1.6"/><path d="M12 74h36l5 12H7z" fill="#4a3d2f"/><rect x="5" y="86" width="50" height="8" rx="3" fill="#33291f"/></svg>';
 const mini=x=>`<b class="${red(x)?'red':''}">${x==='JK'?'★':rk(x)==='Q'?'Q'+SU[st(x)]:rk(x)}</b>`;
 const PIPS={1:[[50,50]],2:[[50,12],[50,88]],3:[[50,12],[50,50],[50,88]],4:[[25,12],[75,12],[25,88],[75,88]],5:[[25,12],[75,12],[50,50],[25,88],[75,88]],6:[[25,12],[75,12],[25,50],[75,50],[25,88],[75,88]],7:[[25,12],[75,12],[50,31],[25,50],[75,50],[25,88],[75,88]],8:[[25,12],[75,12],[50,31],[25,50],[75,50],[50,69],[25,88],[75,88]],9:[[25,12],[75,12],[25,37],[75,37],[50,50],[25,63],[75,63],[25,88],[75,88]],10:[[25,12],[75,12],[50,25],[25,37],[75,37],[25,63],[75,63],[50,75],[25,88],[75,88]]};
 const sv=(c,cls='')=>`<svg class="${cls}" viewBox="0 0 100 100"><use href="#s${st(c)}"/></svg>`;
@@ -814,6 +842,7 @@ function faceHtml(c){
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
   R.setProperty('--wood',u(`<svg ${X} width="900" height="620"><filter id="w" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004 .12" numOctaves="5" seed="12"/><feColorMatrix values=".4 0 0 0 .03 .29 0 0 0 .02 .19 0 0 0 .012 0 0 0 0 1"/></filter><filter id="w2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .02" numOctaves="3" seed="31"/><feColorMatrix values="0 0 0 0 .62 0 0 0 0 .52 0 0 0 0 .38 0 0 0 1.1 -.72"/></filter><rect width="900" height="620" filter="url(#w)"/><rect width="900" height="620" filter="url(#w2)"/></svg>`));
   R.setProperty('--stone',u(`<svg ${X} width="600" height="400"><filter id="st" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .02" numOctaves="4" seed="6"/><feColorMatrix values=".3 0 0 0 .02 .24 0 0 0 .015 .18 0 0 0 .01 0 0 0 0 1"/></filter><rect width="600" height="400" filter="url(#st)"/></svg>`));
+  R.setProperty('--wall',u(`<svg ${X} viewBox="0 0 1000 460" preserveAspectRatio="none"><filter id="wn" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .006" numOctaves="4" seed="17"/><feColorMatrix values=".3 0 0 0 .015 .22 0 0 0 .01 .15 0 0 0 .006 0 0 0 0 1"/></filter><radialGradient id="wg" cx=".72" cy=".42" r=".5"><stop offset="0" stop-color="#ffb060" stop-opacity=".38"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient><linearGradient id="wd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".75"/><stop offset=".55" stop-color="#000" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient><rect width="1000" height="460" filter="url(#wn)"/><g fill="#000" opacity=".55">${Array.from({length:13},(_,i)=>`<rect x="${i*80+rnd()*10}" y="0" width="3" height="460"/>`).join('')}</g><rect x="170" y="150" width="150" height="310" fill="#020101"/><rect x="160" y="140" width="170" height="14" fill="#1a110a"/><rect x="560" y="238" width="330" height="12" fill="#0d0805"/><g fill="#070403">${[590,622,668,700,760,812,846].map((x,i)=>`<path d="M${x} 238v-${30+(i%3)*10}h5v-${14+(i%2)*6}h8v${14+(i%2)*6}h5v${30+(i%3)*10}z"/>`).join('')}</g><rect width="1000" height="460" fill="url(#wg)"/><rect width="1000" height="460" fill="url(#wd)"/></svg>`));
   R.setProperty('--grain',u(`<svg ${X} width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .55 -.14"/></filter><rect width="140" height="140" filter="url(#n)"/></svg>`));
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
@@ -855,7 +884,7 @@ function board(me){
   let cols='';
   for(let i=0;i<3;i++){
     const w=colWinner(cars,i);
-    cols+=`<div class="col"><div class="mark"><b>${i+1}</b><u></u><i></i></div>${carHtml(op*3+i,false)}<div class="score">${sc(op*3+i,'op',w===op)}${sc(me*3+i,'me',w===me)}</div>${carHtml(me*3+i,true)}</div>`;
+    cols+=`<div class="col">${carHtml(op*3+i,false)}<div class="score">${sc(op*3+i,'op',w===op)}${sc(me*3+i,'me',w===me)}</div>${carHtml(me*3+i,true)}</div>`;
   }
   const noNums=!priv.hand.some(isNum);
   let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
@@ -866,7 +895,7 @@ function board(me){
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
   let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  <div class="table"><div class="plane">${cols}${[[92.6,24,'#a23a2c'],[95.6,28,'#b98a3a'],[93.4,33,'#a23a2c'],[96.4,37,'#8d8676'],[2.6,61,'#b98a3a']].map(([x,y,cc])=>`<span class="cap" style="left:${x}%;top:${y}%;--cc:${cc}"></span>`).join('')}</div>${LAMP}<div class="motes">${[[72,60,9],[84,38,13],[60,72,11],[90,66,15],[40,50,17],[78,82,12]].map(([x,y,d])=>`<i style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:-${d/3}s"></i>`).join('')}</div></div>
+  <div class="table"><div class="plane"><div class="w w-floor"></div><div class="w w-wall"></div><div class="w w-side l"></div><div class="w w-side r"></div><div class="w w-chair"></div>${cols}<div class="w w-halo"></div><div class="w w-lamp">${LAMP}</div><div class="w w-lamp x">${LAMP}</div><div class="w w-btl"></div><div class="w w-btl x"></div><div class="w w-btl b2"></div><div class="w w-btl b2 x"></div>${[[92.5,30,'#a23a2c'],[95,36,'#b98a3a'],[92,41,'#8d8676'],[3.5,34,'#a23a2c']].map(([x,y,cc])=>`<span class="cap" style="left:${x}%;top:${y}%;--cc:${cc}"></span>`).join('')}</div><div class="motes">${[[72,60,9],[84,38,13],[60,72,11],[90,66,15],[40,50,17],[78,82,12]].map(([x,y,d])=>`<i style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:-${d/3}s"></i>`).join('')}</div></div>
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
   <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
@@ -976,6 +1005,18 @@ app.addEventListener('input',e=>{
     app.querySelectorAll('[data-rng]').forEach(x=>{if(x!==t)x.value=rnd[+x.dataset.rng]});
   }
 });
+const par={x:0,y:0,tx:0,ty:0,n:0,ask:0};
+addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){par.tx=(e.clientX/innerWidth-.5)*2;par.ty=(e.clientY/innerHeight-.5)*2}},{passive:true});
+addEventListener('deviceorientation',e=>{if(e.gamma==null)return;par.tx=Math.max(-1,Math.min(1,e.gamma/22));par.ty=Math.max(-1,Math.min(1,(e.beta-50)/22))},{passive:true});
+document.addEventListener('click',()=>{if(par.ask||screen!=='game')return;par.ask=1;try{if(window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission)DeviceOrientationEvent.requestPermission().catch(()=>{})}catch(e){}});
+const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+(function tick(t){
+  requestAnimationFrame(tick);
+  if(screen!=='game'||document.hidden||(par.n++&1))return;
+  const dx=calm?0:Math.sin(t/4100)*.3,dy=calm?0:Math.cos(t/5300)*.22,nx=par.x+(par.tx+dx-par.x)*.1,ny=par.y+(par.ty+dy-par.y)*.1;
+  if(Math.abs(nx-par.x)+Math.abs(ny-par.y)<.0015)return;
+  par.x=nx;par.y=ny;app.style.setProperty('--px',nx.toFixed(3));app.style.setProperty('--py',ny.toFixed(3));
+})(0);
 init();
 </script>
 </body>
