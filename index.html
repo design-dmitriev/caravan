@@ -258,6 +258,15 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 @keyframes lamp{0%,11%{opacity:0}11.8%{opacity:.075}12.6%{opacity:.02}13.6%{opacity:.06}15.5%,47%{opacity:0}47.700%{opacity:.045}49.500%,74%{opacity:0}74.600%{opacity:.085}75.400%{opacity:.03}76.200%{opacity:.055}78.500%,100%{opacity:0}}
 .table.t3d .lightcap{background:radial-gradient(ellipse 66% 70% at 50% 40%,rgba(255,178,98,.1) 0,rgba(255,160,72,.04) 22%,rgba(30,16,6,.16) 46%,rgba(10,6,3,.5) 70%,rgba(3,2,1,.84) 90%,rgba(1,1,0,.94) 100%)}
 .card.sk0{background:var(--grain,none),linear-gradient(140deg,#f3ead0 0,#e9dcb6 50%,#d6c492 100%)}
+
+/* ---- volume panel: large touch targets ---- */
+.volrow{display:flex;justify-content:space-between;align-items:baseline;font-size:16px}
+.volrow b{font:600 28px Oswald,sans-serif}
+input.vol{width:100%;height:46px;margin:0;accent-color:var(--amber);touch-action:pan-y}
+input.vol::-webkit-slider-thumb{width:34px;height:34px}
+input.vol::-moz-range-thumb{width:30px;height:30px}
+.volq{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.volq .btn{width:auto;padding:12px 0;font-size:15px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -400,11 +409,12 @@ const skOf=i=>((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length;
 const bkOf=i=>'bk'+(((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length);
 
 /* sound: synthesized, no samples */
-let AC=null,master=null,silentEl=null;
+let AC=null,master=null,silentEl=null,vol=LS.get('caravan_vol');if(typeof vol!=='number')vol=.7;
+const applyVol=()=>{if(master)master.gain.value=1.15*vol};
 function ac(){
   if(muted)return null;
   try{
-    if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();const comp=AC.createDynamicsCompressor();master=AC.createGain();master.gain.value=1.15;master.connect(comp);comp.connect(AC.destination)}
+    if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();const comp=AC.createDynamicsCompressor();master=AC.createGain();master.gain.value=1.15*vol;master.connect(comp);comp.connect(AC.destination)}
     if(AC.state!=='running')AC.resume();
   }catch(e){return null}
   return AC;
@@ -824,6 +834,7 @@ function render(){
   else h=gameView();
   if(overlay==='rules')h+=`<div class="over"><div><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn" data-act="closeOverlay">Понятно</button></div></div>`;
   if(overlay==='records')h+=`<div class="over"><div><h2>Таблица рекордов</h2>${recordsHtml()}<button class="btn" data-act="closeOverlay">Закрыть</button><button class="btn ghost" data-act="clearStats">Очистить таблицу</button></div></div>`;
+  if(overlay==='sound')h+=`<div class="over"><div><h2>Звук</h2><div class="volrow"><span>Громкость</span><b id="volv">${muted?'выкл':Math.round(vol*100)+'%'}</b></div><input class="vol" type="range" min="0" max="100" step="5" value="${Math.round(vol*100)}" data-vol aria-label="Громкость"><div class="volq">${[0,25,50,75,100].map(v=>`<button class="btn ghost sm" data-act="volSet" data-v="${v}">${v}</button>`).join('')}</div><button class="btn ghost" data-act="muteT">${muted?'Включить звук':'Выключить звук'}</button><button class="btn" data-act="closeOverlay">Готово</button></div></div>`;
   if(h!==lastHtml){lastHtml=h;app.innerHTML=h}
   GL.sync();
 }
@@ -836,7 +847,7 @@ function lobby(){
   :canP2P?`<button class="btn" data-act="p2pNew">Создать стол и получить ссылку</button>${(sp=>sp&&sp.code?`<button class="btn ghost" data-act="p2pResume">Вернуться за стол ${esc(sp.code)}</button>`:'')(LS.get('caravan_p2p'))}<p class="sub">Отправьте ссылку сопернику — он откроет её и сядет за стол. Аккаунты не нужны.</p>`
   :'<p class="sub">Сетевая игра сейчас недоступна: не загрузился модуль связи. Проверьте интернет и обновите страницу.</p>';
   return `<div class="page"><div><h1>Караван</h1><p class="sub">Карточная игра пустошей. Двое, три каравана, кто продаст два — тот и прав.</p></div>
-  <div class="sec"><input type="text" maxlength="16" data-nm="me" placeholder="Ваше имя" value="${esc(getNames().me||'')}" autocomplete="off"><div style="display:flex;gap:8px"><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost ic ${muted?'mute':''}" style="height:auto;width:52px" data-act="mute" aria-label="Звук">♪</button></div></div>
+  <div class="sec"><input type="text" maxlength="16" data-nm="me" placeholder="Ваше имя" value="${esc(getNames().me||'')}" autocomplete="off"><div style="display:flex;gap:8px"><button class="btn ghost" data-act="records">Таблица рекордов</button><button class="btn ghost ic ${muted||!vol?'mute':''}" style="height:auto;width:52px" data-act="mute" aria-label="Звук">♪</button></div></div>
   <div class="sec"><h2>Один телефон</h2><input type="text" maxlength="16" data-nm="p2" placeholder="Имя второго игрока" value="${esc(getNames().p2||'')}" autocomplete="off"><button class="btn" data-act="local">Новая партия</button>${saved&&saved.game?'<button class="btn ghost" data-act="localResume">Продолжить партию</button>':''}</div>
   <div class="sec"><h2>Два телефона</h2>${online}</div>
   <details><summary>Правила</summary>${RULES}</details></div>`;
@@ -1100,7 +1111,7 @@ function board(me){
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
-  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted||!vol?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
   ${use3d?'<div class="table t3d"><div class="lightcap"></div><div class="flick"></div></div>':`<div class="table"><div class="plane">${cols}</div><div class="lightcap"></div><div class="flick"></div></div>`}
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
@@ -1337,9 +1348,11 @@ app.addEventListener('click',e=>{
       case 'disband':mode=mode==='disband'?null:'disband';sel=null;return render();
       case 'rematch':return rematch();
       case 'records':overlay='records';return render();
+      case 'volSet':vol=+d.v/100;LS.set('caravan_vol',vol);if(vol>0&&muted){muted=false;LS.set('caravan_mute',false)}applyVol();unlock();SFX.place();return render();
       case 'tbl':tblSel=(tblSel+1)%TABLES.length;LS.set('caravan_table',tblSel);paintTable(tblSel);return toast(`Стол ${tblSel+1}/${TABLES.length}: ${TABLES[tblSel]}`);
       case 'clearStats':LS.set('caravan_stats',{p:{},seen:(LS.get('caravan_stats')||{seen:[]}).seen});return render();
-      case 'mute':muted=!muted;LS.set('caravan_mute',muted);unlock();if(!muted)SFX.sold();return render();
+      case 'mute':overlay='sound';return render();
+      case 'muteT':muted=!muted;LS.set('caravan_mute',muted);unlock();if(!muted)SFX.place();return render();
       case 'back':backSel=+d.b;return render();
     }
     return;
@@ -1353,6 +1366,7 @@ app.addEventListener('click',e=>{
 });
 app.addEventListener('input',e=>{
   const t=e.target;
+  if(t.dataset.vol!==undefined){vol=t.value/100;LS.set('caravan_vol',vol);if(vol>0&&muted){muted=false;LS.set('caravan_mute',false)}applyVol();const v=document.getElementById('volv');if(v)v.textContent=Math.round(vol*100)+'%';return}
   if(t.dataset.nm){const n=getNames();n[t.dataset.nm]=t.value;LS.set('caravan_names',n)}
   else if(t.dataset.rng){
     const i=+t.dataset.rng;rnd[i]=+t.value;
@@ -1368,6 +1382,7 @@ app.addEventListener('pointerover',e=>{
   const k=b.dataset.act+'|'+(b.dataset.code||b.dataset.kind||b.dataset.b||b.dataset.c||''),now=Date.now();
   if(k===hovKey||now-hovT<90)return;hovKey=k;hovT=now;SFX.hover();
 });
+app.addEventListener('change',e=>{if(e.target.dataset.vol!==undefined){unlock();SFX.place();lastHtml=null;render()}});
 load3d();
 init();
 </script>
