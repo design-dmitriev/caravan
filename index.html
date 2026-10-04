@@ -212,6 +212,15 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .plane{box-shadow:inset 0 0 90px rgba(0,0,0,.45),inset 0 -3px 0 rgba(255,245,225,.12)}
 .col+.col{border-left:0}
 .car.empty{border-color:rgba(255,250,235,.14);background:rgba(0,0,0,.14)}
+
+/* ---- incandescent bulb over the table: warm pool of light, dark edges, visible beam ---- */
+.table{background:radial-gradient(ellipse 60% 50% at 50% 0,#2b1a0b 0,#070504 72%)}
+.plane::before{background:radial-gradient(ellipse 30% 28% at 50% 44%,rgba(255,214,150,.2) 0,transparent 100%)}
+.lightcap{position:absolute;inset:0;pointer-events:none;transform:translateZ(70px);background:radial-gradient(ellipse 58% 62% at 50% 40%,rgba(255,170,84,.15) 0,rgba(255,150,60,.06) 36%,rgba(8,5,2,.46) 70%,rgba(3,2,1,.88) 100%)}
+.beam{position:absolute;left:50%;top:-4%;width:130%;height:92%;transform:translateX(-50%) translateZ(72px);pointer-events:none;background:radial-gradient(ellipse 50% 100% at 50% 0,rgba(255,196,120,.2),rgba(255,180,100,.06) 55%,transparent 78%);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);filter:blur(16px)}
+.bulb{position:absolute;left:50%;top:0;width:clamp(24px,5%,50px);transform:translateX(-50%) translateZ(74px);pointer-events:none}
+.bulb svg{display:block;width:100%;position:relative;z-index:1;filter:drop-shadow(0 0 6px rgba(255,200,120,.9))}
+.bulb::after{content:"";position:absolute;left:50%;top:72%;width:1100%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,206,130,.5) 0,rgba(255,176,90,.17) 22%,rgba(255,160,80,.05) 42%,transparent 62%)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -269,6 +278,8 @@ let screen='loading',tables=[],code=null,game=null,priv=null,privLoading=false,u
 let sel=null,mode=null,busy=false,overlay=null,builder=null,names={};
 let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
+let tblSel=(LS.get('caravan_table')|0)%6;
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
 let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
 const getNames=()=>LS.get('caravan_names')||{};
@@ -791,33 +802,43 @@ function faceHtml(c){
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
   R.setProperty('--burn',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(4,34,.045)}<g filter="url(#f)"><ellipse cx="-2" cy="142" rx="62" ry="66" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="46" ry="50" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="32" ry="36" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="44" ry="40" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="30" ry="27" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="18" ry="16" fill="#0a0503"/><circle cx="58" cy="62" r="13" fill="none" stroke="#6a3c10" stroke-width="2" opacity=".35"/></g></svg>`));
-  /* plank table top: painted once on a canvas (wood fibres, knots, weathering, gaps with lit edges) and kept as a bitmap */
-  (function(){
+  /* table tops: six painted variants (wood fibres, knots, weathering, gaps with lit edges), each drawn once on a canvas and kept as a bitmap */
+  const TP=[
+    {N:6,base:[98,87,72],warm:16,tone:[.8,.34],pale:[.36,7],dark:[.44,6],rust:[.2,3],knots:.5,fib:1,gap:1},
+    {N:6,base:[66,46,30],warm:14,tone:[.85,.3],pale:[.12,3],dark:[.5,7],rust:[.25,4],knots:.6,fib:1.1,gap:1},
+    {N:6,base:[72,62,50],warm:10,tone:[.8,.3],pale:[.8,15],dark:[.5,6],rust:[.15,2],knots:.3,fib:1.2,gap:1.1,paint:1},
+    {N:6,base:[42,36,31],warm:6,tone:[.7,.4],pale:[.1,3],dark:[.7,10],rust:[.1,2],knots:.4,fib:1.3,gap:1.3},
+    {N:5,base:[132,86,46],warm:20,tone:[.85,.25],pale:[.2,4],dark:[.35,5],rust:[.25,4],knots:1,fib:.9,gap:.8},
+    {N:9,base:[88,72,55],warm:14,tone:[.75,.4],pale:[.28,4],dark:[.4,4],rust:[.2,2],knots:.35,fib:1,gap:.8}
+  ],tblUrl={};
+  window.paintTable=function(ti){
+    if(tblUrl[ti])return R.setProperty('--planks',tblUrl[ti]);
+    const P=TP[ti]||TP[0];let sd0=1234567+ti*7919;const rnd=()=>(sd0=(sd0*16807)%2147483647)/2147483647;
     const W=2048,H=1536,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');if(!c)return;
     const hash=n=>{const q=Math.sin(n*127.1)*43758.5453;return q-Math.floor(q)};
     const vn=(x,sd)=>{const k=Math.floor(x),f=x-k,w=f*f*(3-2*f);return hash(k+sd*57.3)*(1-w)+hash(k+1+sd*57.3)*w};
     const fbm=(x,sd)=>vn(x,sd)*.6+vn(x*2.3,sd+9)*.28+vn(x*5.1,sd+21)*.12;
-    const N=6,ys=[0];for(let k=1;k<N;k++)ys.push(Math.round(H*k/N+(rnd()-.5)*H*.035));ys.push(H);
+    const N=P.N,ys=[0];for(let k=1;k<N;k++)ys.push(Math.round(H*k/N+(rnd()-.5)*H*.2/N));ys.push(H);
     c.fillStyle='#050403';c.fillRect(0,0,W,H);
     for(let p=0;p<N;p++){
-      const y0=ys[p],y1=ys[p+1],ph=y1-y0,sd=p*13+3,tone=.8+rnd()*.34,warm=rnd();
-      const base=[(98+warm*16)*tone,(87+warm*7)*tone,(72-warm*5)*tone],col=k=>`rgb(${base.map(v=>Math.round(v*k)).join(',')})`;
+      const y0=ys[p],y1=ys[p+1],ph=y1-y0,sd=p*13+3+ti*101,tone=P.tone[0]+rnd()*P.tone[1],warm=rnd();
+      const base=[(P.base[0]+warm*P.warm)*tone,(P.base[1]+warm*P.warm*.45)*tone,(P.base[2]-warm*P.warm*.3)*tone],col=k=>`rgb(${base.map(v=>Math.round(Math.min(255,v*k))).join(',')})`;
       c.save();c.beginPath();c.rect(0,y0,W,ph);c.clip();
       const g=c.createLinearGradient(0,y0,0,y1);g.addColorStop(0,col(1.14));g.addColorStop(.1,col(1));g.addColorStop(.8,col(.93));g.addColorStop(1,col(.66));
       c.fillStyle=g;c.fillRect(0,y0,W,ph);
-      const knots=[],kn=rnd()<.5?1:rnd()<.3?2:0;for(let k=0;k<kn;k++)knots.push([rnd()*W,y0+ph*(.25+rnd()*.5),16+rnd()*24]);
+      const knots=[],kn=rnd()<P.knots?(rnd()<.35?2:1):0;for(let k=0;k<kn;k++)knots.push([rnd()*W,y0+ph*(.25+rnd()*.5),Math.min(ph*.2,16+rnd()*24)]);
       const flow=(x,y)=>{let d=(fbm(x/420,sd)-.5)*ph*.16;for(const [kx,ky,kr] of knots){const dx=(x-kx)/(kr*5),dy=(y-ky)/(kr*1.7);d+=(y<ky?-1:1)*kr*.95*Math.exp(-dx*dx-dy*dy)}return d};
       const fibres=(cnt,lmin,lmax,amul,wmax)=>{for(let k=0;k<cnt;k++){
-        const yy=y0+rnd()*ph,x0=rnd()*W*1.2-W*.2,len=lmin+rnd()*(lmax-lmin),dark=rnd()<.6,a=(.035+rnd()*.11)*amul;
+        const yy=y0+rnd()*ph,x0=rnd()*W*1.2-W*.2,len=lmin+rnd()*(lmax-lmin),dark=rnd()<.6,a=(.035+rnd()*.11)*amul*P.fib;
         c.strokeStyle=dark?`rgba(20,14,9,${a})`:`rgba(228,216,192,${a*.8})`;c.lineWidth=.6+rnd()*wmax;c.beginPath();
         for(let x=x0;x<=x0+len;x+=22){const y=yy+flow(x,yy)+(vn(x/90,sd+k)-.5)*3;x===x0?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}};
-      fibres(560,180,1100,1,2.4);
+      fibres(Math.round(3300/N),180,1100,1,2.4);
       for(const [kx,ky,kr] of knots){
         for(let r=kr;r>2;r-=3){c.strokeStyle=`rgba(18,12,8,${.1+(1-r/kr)*.26})`;c.lineWidth=1.5;c.beginPath();c.ellipse(kx,ky,r*1.5,r*.8,0,0,7);c.stroke()}
         const kg=c.createRadialGradient(kx,ky,0,kx,ky,kr);kg.addColorStop(0,'rgba(12,8,5,.78)');kg.addColorStop(1,'rgba(12,8,5,0)');c.fillStyle=kg;c.beginPath();c.ellipse(kx,ky,kr*1.5,kr*.8,0,0,7);c.fill()}
-      const blob=(rgb,al,cnt)=>{for(let k=0;k<cnt;k++){const bx=rnd()*W,by=y0+rnd()*ph,r=30+rnd()*90;c.save();c.translate(bx,by);c.scale(2.5+rnd()*5,.3+rnd()*.5);const bg=c.createRadialGradient(0,0,0,0,0,r);bg.addColorStop(0,`rgba(${rgb},${(al*(.5+rnd()*.5)).toFixed(3)})`);bg.addColorStop(1,`rgba(${rgb},0)`);c.fillStyle=bg;c.beginPath();c.arc(0,0,r,0,7);c.fill();c.restore()}};
-      blob('214,204,182',.36,7);blob('16,11,7',.44,6);blob('92,58,28',.2,3);
-      fibres(220,60,360,.8,1.4);
+      const blob=(rgb,al,cnt,hard)=>{for(let k=0;k<cnt;k++){const bx=rnd()*W,by=y0+rnd()*ph,r=30+rnd()*90;c.save();c.translate(bx,by);c.scale(2.5+rnd()*5,.3+rnd()*.5);const a=al*(.5+rnd()*.5),bg=c.createRadialGradient(0,0,0,0,0,r);bg.addColorStop(0,`rgba(${rgb},${a.toFixed(3)})`);if(hard)bg.addColorStop(.78,`rgba(${rgb},${(a*.85).toFixed(3)})`);bg.addColorStop(1,`rgba(${rgb},0)`);c.fillStyle=bg;c.beginPath();c.arc(0,0,r,0,7);c.fill();c.restore()}};
+      blob(P.paint?'196,188,166':'214,204,182',P.pale[0],P.pale[1],P.paint);blob('16,11,7',P.dark[0],P.dark[1]);blob('92,58,28',P.rust[0],P.rust[1]);
+      fibres(Math.round((P.paint?2600:1300)/N),60,360,P.paint?1.3:.8,1.4);
       const nc=1+(rnd()*3|0);
       for(let k=0;k<nc;k++){
         const cy=y0+ph*(.15+rnd()*.7),cx=rnd()*W*.8,cl=160+rnd()*620,pts=[];
@@ -827,7 +848,7 @@ function faceHtml(c){
         c.strokeStyle='rgba(236,226,206,.17)';c.lineWidth=1;c.beginPath();pts.forEach(([x,y],q)=>q?c.lineTo(x,y+wd(q)+1.2):c.moveTo(x,y+wd(q)+1.2));c.stroke()}
       for(const bx of [W*.06,W*.63,W*.95]){
         if(rnd()<.25)continue;
-        for(const oy of [.28,.74]){
+        for(const oy of N>7?[.5]:[.28,.74]){
           if(rnd()<.35)continue;const x=bx+(rnd()-.5)*40,y=y0+ph*oy+(rnd()-.5)*14,r=6+rnd()*3;
           c.save();c.translate(x,y);c.scale(5,.6);const rg=c.createRadialGradient(4,0,0,4,0,r*2.2);rg.addColorStop(0,'rgba(74,38,14,.5)');rg.addColorStop(1,'rgba(74,38,14,0)');c.fillStyle=rg;c.beginPath();c.arc(4,0,r*2.2,0,7);c.fill();c.restore();
           const ng=c.createRadialGradient(x-1,y-1,0,x,y,r);ng.addColorStop(0,'#000');ng.addColorStop(.7,'#0a0705');ng.addColorStop(1,'rgba(10,7,5,0)');c.fillStyle=ng;c.beginPath();c.arc(x,y,r,0,7);c.fill();
@@ -835,7 +856,7 @@ function faceHtml(c){
       c.restore();
     }
     for(let p=1;p<N;p++){
-      const y=ys[p],sd=p*31,top=x=>y-3-fbm(x/140,sd)*7,bot=x=>y+3+fbm(x/170,sd+5)*8;
+      const y=ys[p],sd=p*31+ti,gw=P.gap,top=x=>y-3*gw-fbm(x/140,sd)*7*gw,bot=x=>y+3*gw+fbm(x/170,sd+5)*8*gw;
       const sg=c.createLinearGradient(0,y-28,0,y);sg.addColorStop(0,'rgba(0,0,0,0)');sg.addColorStop(1,'rgba(0,0,0,.6)');c.fillStyle=sg;c.fillRect(0,y-28,W,28);
       c.beginPath();c.moveTo(0,top(0));for(let x=0;x<=W;x+=16)c.lineTo(x,top(x));for(let x=W;x>=0;x-=16)c.lineTo(x,bot(x));c.closePath();c.fillStyle='#030201';c.fill();
       c.strokeStyle='rgba(240,230,208,.34)';c.lineWidth=1.6;c.beginPath();for(let x=0;x<=W;x+=16){const yy=bot(x)+1.2;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke();
@@ -844,9 +865,9 @@ function faceHtml(c){
     const t=document.createElement('canvas');t.width=t.height=256;const tc=t.getContext('2d'),id=tc.createImageData(256,256);
     for(let k=0;k<id.data.length;k+=4){const v=rnd()*255|0;id.data[k]=id.data[k+1]=id.data[k+2]=v;id.data[k+3]=255}tc.putImageData(id,0,0);
     c.globalCompositeOperation='overlay';c.globalAlpha=.17;c.fillStyle=c.createPattern(t,'repeat');c.fillRect(0,0,W,H);c.globalAlpha=1;c.globalCompositeOperation='source-over';
-    const lg=c.createRadialGradient(W*.5,H*.56,H*.2,W*.5,H*.56,H*.95);lg.addColorStop(0,'rgba(255,244,220,.07)');lg.addColorStop(1,'rgba(0,0,0,.46)');c.fillStyle=lg;c.fillRect(0,0,W,H);
-    try{cv.toBlob(b=>{if(b)R.setProperty('--planks',`url("${URL.createObjectURL(b)}")`)},'image/jpeg',.9)}catch(e){}
-  })();
+    try{cv.toBlob(b=>{if(b){tblUrl[ti]=`url("${URL.createObjectURL(b)}")`;if(ti===tblSel)R.setProperty('--planks',tblUrl[ti])}},'image/jpeg',.9)}catch(e){}
+  };
+  paintTable(tblSel);
   let sc='';
   for(let i=0;i<22;i++){const x=rnd()*100,y=rnd()*140,a=rnd()*Math.PI,l=8+rnd()*46,dark=rnd()<.35;sc+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l${(Math.cos(a)*l).toFixed(1)} ${(Math.sin(a)*l).toFixed(1)}" stroke="${dark?'#2a2418':'#fff'}" stroke-width="${(.3+rnd()*.7).toFixed(2)}" opacity="${(dark?.25:.5)+rnd()*.35}"/>`}
   R.setProperty('--scratch',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none" fill="none" stroke-linecap="round">${sc}<path d="M8 20Q40 60 92 118" stroke="#fff" stroke-width="1.6" opacity=".7"/><path d="M9 21Q41 61 93 119" stroke="#2a2418" stroke-width=".5" opacity=".5"/></svg>`));
@@ -894,8 +915,8 @@ function board(me){
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
-  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  <div class="table"><div class="plane">${cols}</div></div>
+  let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="tbl" aria-label="Сменить стол">▤</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+  <div class="table"><div class="plane">${cols}</div><div class="lightcap"></div><div class="beam"></div><div class="bulb"><svg viewBox="0 0 40 70"><defs><radialGradient id="bg1" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#ffd27a"/><stop offset="1" stop-color="#e88a2a" stop-opacity=".55"/></radialGradient></defs><path d="M20 0v22" stroke="#0c0906" stroke-width="2.5"/><rect x="13" y="20" width="14" height="13" rx="2" fill="#2a231b"/><path d="M13 24h14M13 28h14" stroke="#0c0906" stroke-width="1"/><path d="M12 33h16c6 6 8 12 8 18a16 16 0 0 1-32 0c0-6 2-12 8-18z" fill="url(#bg1)"/><path d="M15 50q2.5-7 5 0t5 0" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div></div>
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
   <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
@@ -982,6 +1003,7 @@ app.addEventListener('click',e=>{
       case 'disband':mode=mode==='disband'?null:'disband';sel=null;return render();
       case 'rematch':return rematch();
       case 'records':overlay='records';return render();
+      case 'tbl':tblSel=(tblSel+1)%TABLES.length;LS.set('caravan_table',tblSel);paintTable(tblSel);return toast(`Стол ${tblSel+1}/${TABLES.length}: ${TABLES[tblSel]}`);
       case 'clearStats':LS.set('caravan_stats',{p:{},seen:(LS.get('caravan_stats')||{seen:[]}).seen});return render();
       case 'mute':muted=!muted;LS.set('caravan_mute',muted);unlock();if(!muted)SFX.sold();return render();
       case 'back':backSel=+d.b;return render();
