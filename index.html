@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Караван</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&display=swap">
+<style>
+:root{
+  --bg:#120e08;--panel:#1d170c;--amber:#ffb642;--dim:rgba(255,182,66,.66);--line:rgba(255,182,66,.34);--paper:#e4d6ae;--ink:#1a1712;--blood:#9a2a1c;--warn:#ff7a5c;
+  --cw:70px;--ch:98px;--strip:25px;--hw:60px;--hp:26px;--ix:15px;--sc:20px;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;
+}
+@media (min-width:700px) and (min-height:650px){:root{--cw:98px;--ch:137px;--strip:34px;--hw:98px;--hp:46px;--ix:21px;--sc:28px}body{font-size:16px!important}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0b06}}
+:root[data-theme="dark"]{--bg:#0f0b06}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+body{background:var(--bg) radial-gradient(ellipse at 50% 35%,#2b2110 0,transparent 75%);color:var(--amber);font:400 14px/1.45 "PT Mono",ui-monospace,Menlo,Consolas,monospace;text-shadow:0 0 6px rgba(255,182,66,.45);-webkit-tap-highlight-color:transparent;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(rgba(0,0,0,.16) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.4) 100%)}
+#app{height:100%;max-width:1240px;margin:0 auto;display:flex;flex-direction:column}
+h1,h2,.btn,summary,.status b{font-family:Oswald,"Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.07em}
+h1{font-weight:600;font-size:52px;line-height:1;margin:0;padding-bottom:10px;border-bottom:3px solid var(--amber);box-shadow:0 6px 0 -4px var(--amber)}
+h2{font-weight:600;font-size:19px;line-height:1.2;margin:0 0 8px}
+h2::before{content:"> "}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation;text-shadow:inherit;padding:0}
+button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn{background:var(--amber);color:var(--bg);font-weight:600;font-size:16px;padding:12px 16px;width:100%;text-align:center;text-shadow:none;box-shadow:0 0 12px rgba(255,182,66,.35)}
+.btn.ghost{background:rgba(255,182,66,.06);color:var(--amber);box-shadow:inset 0 0 0 2px var(--amber);text-shadow:inherit}
+.btn:disabled{opacity:.35}
+.btn.sm{width:auto;padding:7px 10px;font-size:13px}
+.btn.ic{width:36px;height:36px;padding:0;font-size:16px;flex:none}
+.page{padding:22px 16px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:16px;width:100%;max-width:560px;margin:0 auto}
+.sec{display:grid;gap:10px}
+.sub{color:var(--dim);margin:0}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.code{font:600 46px/1 Oswald,sans-serif;letter-spacing:.16em}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{font-weight:600;cursor:pointer}
+details ul,.rules ul{padding-left:18px;margin:8px 0;color:var(--dim);font-size:13px}
+li{margin:5px 0}
+li::marker{content:"- "}
+
+.game{flex:1;min-height:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--panel);border-bottom:2px solid var(--amber);font-size:12px}
+.top .who{flex:1;min-width:0}
+.top b{font:600 16px/1.2 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back{background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),repeating-linear-gradient(-45deg,transparent 0 4px,rgba(0,0,0,.28) 4px 5px),#7c2318;box-shadow:inset 0 0 0 2px var(--paper),0 1px 0 rgba(0,0,0,.7);border-radius:3px}
+.ohand{display:flex;padding-left:8px}
+.ohand .back{width:18px;height:26px;margin-left:-8px;transform:rotate(calc(var(--r)*1deg));transform-origin:50% 120%}
+.pile{position:relative;width:32px;height:44px;flex:none;box-shadow:inset 0 0 0 2px var(--paper),2px 2px 0 #3d120c,4px 4px 0 #2a0c08}
+.pile span{position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);font:600 15px Oswald,sans-serif;text-shadow:0 1px 2px #000}
+
+.table{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);padding:8px 4px;
+  background:repeating-linear-gradient(91deg,rgba(0,0,0,.16) 0 2px,transparent 2px 9px,rgba(255,200,120,.035) 9px 11px,transparent 11px 23px),repeating-linear-gradient(88deg,transparent 0 37px,rgba(0,0,0,.12) 37px 39px),radial-gradient(ellipse at 50% 50%,#573a23 0,#33200f 65%,#1a0f07 100%);
+  box-shadow:inset 0 0 50px rgba(0,0,0,.85),inset 0 0 0 3px #1a0f07,inset 0 0 0 4px rgba(255,182,66,.18)}
+.col{display:flex;flex-direction:column;min-height:0;gap:5px;padding:0 4px}
+.col+.col{border-left:1px dashed rgba(255,182,66,.16)}
+.car{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:3px;border:1.5px dashed transparent;border-radius:8px}
+.car.opp{justify-content:flex-end}
+.car.empty{border-color:rgba(255,182,66,.22);background:rgba(0,0,0,.18)}
+.car.tgt{border-color:var(--amber);background:rgba(255,182,66,.13);box-shadow:inset 0 0 18px rgba(255,182,66,.28)}
+.car.hov{background:rgba(255,182,66,.3)}
+.slot{flex:0 1 var(--strip);min-height:13px;display:flex;justify-content:center}
+.slot:last-child{flex:0 0 var(--ch)}
+.card{position:relative;flex:none;display:block;width:var(--cw);height:var(--ch);max-width:100%;background:linear-gradient(140deg,#f1e6c4 0,var(--paper) 45%,#c9b684 100%);color:var(--ink);text-shadow:none;border-radius:6px;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 -2px 5px rgba(0,0,0,.55)}
+.card.red,.red{color:var(--blood)}
+.card .ix{position:absolute;top:3px;left:6px;font-size:var(--ix);line-height:1}
+.card .pip{position:absolute;left:0;right:0;bottom:14%;text-align:center;font-size:calc(var(--ch)*.4);line-height:1;opacity:.92}
+.card .fx{position:absolute;top:3px;right:4px;display:flex;gap:2px}
+.card .fx b{background:#fbf3d6;color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font-size:calc(var(--ix)*.72);line-height:1;font-weight:600}
+.card .fx b.red{color:var(--blood)}
+.card.tgt{box-shadow:0 0 0 2.5px var(--amber),0 0 14px var(--amber)}
+.card.hov{box-shadow:0 0 0 4px #fff,0 0 18px var(--amber)}
+.slot.new .card{animation:drop .38s cubic-bezier(.2,1.5,.4,1)}
+@keyframes drop{from{transform:translateY(-34px) scale(1.3) rotate(-8deg);opacity:0}}
+.score{background:rgba(18,14,8,.82);border:1px solid var(--line);padding:3px;font:600 var(--sc)/1.15 Oswald,sans-serif;display:grid;gap:2px}
+.score div{display:flex;justify-content:space-between;align-items:baseline;color:var(--dim);padding:1px 5px}
+.score small{font-size:.62em;font-weight:500}
+.score .sold{background:var(--amber);color:var(--bg);text-shadow:none;animation:pulse 1.4s ease-in-out infinite alternate}
+@keyframes pulse{to{box-shadow:0 0 14px var(--amber)}}
+.score .bust{color:var(--warn);text-decoration:line-through}
+.score .lead::before{content:"●";font-size:.45em;margin-right:3px;align-self:center}
+.status{padding:6px 10px;background:var(--panel);border-top:2px solid var(--amber);font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.status b{font-size:14px}
+.status span{color:var(--dim);text-align:right}
+.hand{display:flex;padding:18px 12px 8px;justify-content:center}
+.hc{flex:0 1 var(--hw);width:auto;height:auto;min-width:0;aspect-ratio:5/7;margin:0 1px;touch-action:none;cursor:grab;transform:translateY(calc(var(--y)*1px)) rotate(calc(var(--r)*1deg));transition:transform .12s;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 3px 6px rgba(0,0,0,.6)}
+.hc .pip{font-size:var(--hp);bottom:12%}
+.hc.jk .pip,.card.jk .pip{font-size:calc(var(--ix)*.7);letter-spacing:.05em;bottom:28%}
+.hc.sel{transform:translateY(-14px) rotate(calc(var(--r)*1deg));box-shadow:0 0 0 3px var(--amber),0 0 18px var(--amber)}
+.hc.lifted{opacity:.22}
+.ghost{position:fixed;left:0;top:0;z-index:40;pointer-events:none;margin:0;flex:none;transition:none;box-shadow:0 0 0 2px var(--amber),0 18px 26px rgba(0,0,0,.7)}
+.acts{display:flex;gap:8px;padding:4px 10px 10px;align-items:center}
+.acts .btn{padding:9px 4px;font-size:13px}
+.acts .on,.acts .btn.hov{background:var(--amber);color:var(--bg);text-shadow:none}
+.over{position:fixed;inset:0;background:rgba(8,6,3,.9);display:flex;align-items:center;justify-content:center;padding:24px;z-index:45}
+.over>div{background:var(--panel);border:2px solid var(--amber);box-shadow:0 0 24px rgba(255,182,66,.3);padding:22px;width:100%;max-width:380px;display:grid;gap:14px;text-align:center;max-height:90%;overflow:auto}
+.over h1{font-size:40px}
+.over .rules{text-align:left}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.chip{position:relative;padding:8px 0;font:600 15px/1 Oswald,sans-serif;text-align:center;opacity:.3;background:var(--paper);color:var(--ink);text-shadow:none;border-radius:4px}
+.chip.red{color:var(--blood)}
+.chip.n1,.chip.n2{opacity:1}
+.chip.n2::after{content:"×2";position:absolute;top:-5px;right:-3px;background:var(--amber);color:var(--bg);font-size:10px;padding:1px 3px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--amber);color:var(--bg);text-shadow:none;padding:10px 14px;font-size:13px;max-width:90%;width:max-content;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+#toast.show{opacity:1}
+
+@media (min-width:900px) and (orientation:landscape) and (min-height:600px){
+  .game{display:grid;grid-template-columns:1fr 270px;grid-template-rows:auto auto 1fr auto;grid-template-areas:"table top" "table status" "table ." "hand acts"}
+  .table{grid-area:table;padding:14px 10px}
+  .top{grid-area:top;flex-wrap:wrap;border-bottom:0;border-left:2px solid var(--amber);padding:14px;gap:12px;font-size:14px}
+  .top .who{flex:1 0 100%}
+  .status{grid-area:status;flex-direction:column;align-items:flex-start;border-top:1px solid var(--line);border-left:2px solid var(--amber);padding:14px;font-size:14px;gap:10px}
+  .status b{font-size:20px}.status span{text-align:left}
+  .game::after{content:"";grid-area:3/2;background:var(--panel);border-left:2px solid var(--amber)}
+  .hand{grid-area:hand;padding:22px 16px 14px;background:rgba(0,0,0,.25)}
+  .acts{grid-area:acts;flex-wrap:wrap;background:var(--panel);border-left:2px solid var(--amber);padding:14px;align-content:flex-end}
+  .acts .btn{flex:1 0 100%;padding:12px;font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"><div class="page"><p class="sub">Загрузка…</p></div></div>
+<div id="toast" role="status"></div>
+<script>
+const SU={S:'♠',H:'♥',D:'♦',C:'♣'},RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const rk=c=>c==='JK'?'JK':c.slice(0,-1),st=c=>c==='JK'?'':c.slice(-1);
+const isNum=c=>!['J','Q','K','JK'].includes(rk(c));
+const nv=c=>rk(c)==='A'?1:+rk(c);
+const red=c=>'HD'.includes(st(c))&&c!=='JK';
+const lab=c=>c==='JK'?'Джокер':rk(c)+SU[st(c)];
+const cardVal=t=>nv(t.c)*2**t.f.filter(x=>rk(x)==='K').length;
+const carVal=car=>car.cards.reduce((a,t)=>a+cardVal(t),0);
+const sold=v=>v>=21&&v<=26;
+function carState(car){
+  const n=car.cards;if(!n.length)return{dir:0,suit:null,last:null};
+  const L=n[n.length-1],qs=L.f.filter(x=>rk(x)==='Q');
+  let dir=0;
+  if(n.length>1){dir=Math.sign(nv(L.c)-nv(n[n.length-2].c));if(qs.length%2)dir=-dir}
+  return{dir,suit:qs.length?st(qs[qs.length-1]):st(L.c),last:L};
+}
+function canPlayNum(c,car){
+  const s=carState(car);if(!s.last)return true;
+  const d=nv(c)-nv(s.last.c);if(!d)return false;
+  return !s.dir||st(c)===s.suit||Math.sign(d)===s.dir;
+}
+function colWinner(cars,i){
+  const a=carVal(cars[i]),b=carVal(cars[3+i]),sa=sold(a),sb=sold(b);
+  if(!sa&&!sb)return -1;
+  if(sa&&sb)return a===b?-1:a>b?0:1;
+  return sa?0:1;
+}
+function winnerOf(cars,op){
+  if(op.p0<3||op.p1<3)return -1;
+  const w=[0,0];
+  for(let i=0;i<3;i++){const c=colWinner(cars,i);if(c<0)return -1;w[c]++}
+  return w[0]>w[1]?0:1;
+}
+const fullDeck=()=>{const d=[];for(const s in SU)for(const r of RANKS)d.push(r+s);d.push('JK','JK');return d};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const emptyCars=()=>Array.from({length:6},()=>({cards:[]}));
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+const app=document.getElementById('app');
+let db=null,user=null,uid=null;
+let screen='loading',tables=[],code=null,game=null,priv=null,privLoading=false,unsub=null;
+let sel=null,mode=null,busy=false,overlay=null,builder=null,names={};
+let local=false,privs=[null,null],viewer=0,handoff=false;
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const saveLocal=()=>LS.set('caravan_local',{game,privs,viewer});
+
+const store={get(){try{return localStorage.getItem('caravan_code')}catch(e){return null}},set(v){try{v?localStorage.setItem('caravan_code',v):localStorage.removeItem('caravan_code')}catch(e){}}};
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3500)}
+function fail(e){toast(e&&e.code==='invalid_argument'?'Нет прав на запись. Владелец страницы должен дать вам доступ редактора.':'Не получилось сохранить ход. Попробуйте ещё раз.')}
+
+const gameRef=()=>db.doc('games/'+code);
+const privRef=()=>db.doc('data/users/'+uid+'/g_'+code);
+const deckRef=()=>db.doc('data/users/'+uid+'/deck');
+const meIdx=()=>!game?-1:local?viewer:game.pl.p0===uid?0:game.pl.p1===uid?1:-1;
+
+async function init(){
+  if(window.claude&&claude.use){
+    [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+    uid=user?await user.id():null;if(!uid)db=null;
+  }
+  if(db){
+    db.collection('games').orderBy('created','desc').limit(30).onSnapshot(s=>{
+      tables=s.docs.map(d=>({id:d.id,...d.data()}));if(screen==='lobby')render();
+    },()=>{});
+    const saved=store.get();if(saved)return enter(saved);
+  }
+  screen='lobby';render();
+}
+function startLocal(resume){
+  lastLens=null;local=true;screen='game';sel=mode=overlay=builder=null;
+  const s=resume&&LS.get('caravan_local');
+  if(s){({game,privs,viewer}=s);handoff=game.ready.p0&&game.ready.p1&&game.winner<0}
+  else{game={pl:{p0:'L0',p1:'L1'},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1};privs=[null,null];viewer=0;handoff=false}
+  priv=privs[viewer];render();
+}
+function enter(c){
+  lastLens=null;local=false;code=c;game=null;priv=null;sel=mode=overlay=builder=null;screen='game';store.set(c);render();
+  unsub=gameRef().onSnapshot(s=>{
+    if(!s.exists){if(!s.metadata.fromCache)leave();return}
+    if(s.data().pl.p0!==uid&&s.data().pl.p1!==uid)return leave();
+    const prevTurn=game&&game.turn;game=s.data();
+    if(prevTurn!==game.turn){sel=null;mode=null}
+    const me=meIdx();
+    if(game.ready['p'+me]&&(!priv||priv.round!==game.round)&&!privLoading&&!busy)loadPriv();
+    const o=game.pl['p'+(1-me)];
+    if(o&&names[o]===undefined){names[o]='';user.profiles([o]).then(p=>{names[o]=p[o].name||'';render()})}
+    render();
+  },()=>leave());
+}
+function leave(){if(unsub)unsub();unsub=null;if(!local)store.set(null);local=false;handoff=false;code=null;game=null;priv=null;screen='lobby';overlay=builder=null;render()}
+async function loadPriv(){
+  privLoading=true;
+  try{const s=await privRef().get();priv=s.exists?s.data():null}catch(e){}
+  privLoading=false;render();
+}
+
+async function createTable(){
+  if(busy)return;busy=true;
+  const c=Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join('');
+  code=c;
+  try{
+    await gameRef().set({created:Date.now(),open:true,pl:{p0:uid,p1:null},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1});
+    enter(c);
+  }catch(e){code=null;fail(e)}
+  busy=false;
+}
+async function joinTable(c){
+  if(busy)return;busy=true;code=c;
+  try{
+    const l=await gameRef().acquire({holder:uid,ttlMs:4000});
+    if(!l.acquired)throw{code:'busy'};
+    const s=await gameRef().get(),d=s.exists&&s.data();
+    if(!d||d.pl.p1){toast('Стол уже занят');code=null}
+    else{await gameRef().update({pl:{p1:uid},open:false});enter(c)}
+  }catch(e){code=null;e.code==='busy'?toast('Стол уже занят'):fail(e)}
+  busy=false;
+}
+async function closeTable(){try{await gameRef().delete()}catch(e){}leave()}
+
+async function chooseDeck(kind){
+  if(busy)return;
+  let deck;
+  if(kind==='full')deck=fullDeck();
+  else if(kind==='rand'){do{deck=shuffle(fullDeck()).slice(0,30)}while(deck.filter(isNum).length<14)}
+  else{deck=[];for(const c in builder)for(let i=0;i<builder[c];i++)deck.push(c)}
+  shuffle(deck);
+  const hand=deck.splice(0,8),pk='p'+meIdx();
+  if(local){
+    if(kind==='own')LS.set('caravan_deck',builder);
+    builder=null;privs[viewer]={round:game.round,deck,hand};
+    game.ready[pk]=true;game.dc[pk]=deck.length;game.hc[pk]=hand.length;
+    if(!game.ready.p0)viewer=0;else if(!game.ready.p1)viewer=1;else{viewer=game.turn;handoff=true}
+    priv=privs[viewer];saveLocal();return render();
+  }
+  busy=true;
+  try{
+    if(kind==='own')await deckRef().set({counts:builder});
+    priv={round:game.round,deck,hand};
+    await privRef().set(priv);
+    await gameRef().update({ready:{[pk]:true},dc:{[pk]:deck.length},hc:{[pk]:hand.length}});
+    builder=null;
+  }catch(e){fail(e)}
+  busy=false;render();
+}
+async function openBuilder(){
+  builder={};
+  if(local)builder=LS.get('caravan_deck')||{};
+  else try{const s=await deckRef().get();if(s.exists)builder={...s.data().counts}}catch(e){}
+  if(!Object.keys(builder).length)for(const c of new Set(fullDeck()))builder[c]=c==='JK'?2:1;
+  render();
+}
+
+async function commit(cars,hand,deck,text,o={}){
+  busy=true;
+  const me=meIdx(),pk='p'+me,ok='p'+(1-me),wasOpening=game.op[pk]<3,old=priv;
+  if(deck.length&&(o.forceDraw||(!wasOpening&&hand.length<5)))hand.push(deck.shift());
+  const op={...game.op};if(o.opening)op[pk]++;
+  let winner=winnerOf(cars,op);
+  if(winner<0&&op[ok]>=3&&game.hc[ok]===0&&game.dc[ok]===0)winner=me;
+  if(local){
+    privs[me]={round:game.round,deck,hand};
+    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
+    if(winner<0){viewer=1-me;handoff=true}
+    priv=privs[viewer];saveLocal();busy=false;sel=null;mode=null;return render();
+  }
+  try{
+    priv={round:game.round,deck,hand};
+    await privRef().set(priv);
+    try{await gameRef().update({cars,turn:1-me,dc:{[pk]:deck.length},hc:{[pk]:hand.length},op:{[pk]:op[pk]},last:{by:me,t:text},winner})}
+    catch(e){priv=old;await privRef().set(old).catch(()=>{});throw e}
+  }catch(e){fail(e)}
+  busy=false;sel=null;mode=null;render();
+}
+const cloneCars=()=>JSON.parse(JSON.stringify(game.cars));
+const mine=k=>(k/3|0)===meIdx();
+const opening=()=>game.op['p'+meIdx()]<3;
+const myTurn=()=>game.turn===meIdx()&&game.winner<0&&!busy;
+const legalNum=(c,k)=>mine(k)&&(opening()?!game.cars[k].cards.length:canPlayNum(c,game.cars[k]));
+const legalFace=(c,k,ci)=>!opening()&&(rk(c)!=='Q'||ci===game.cars[k].cards.length-1);
+
+function tapTable(k,ci){
+  if(!myTurn())return;
+  if(mode==='disband'){
+    if(mine(k)&&game.cars[k].cards.length){const cars=cloneCars();cars[k].cards=[];commit(cars,[...priv.hand],[...priv.deck],'распущен караван '+(k%3+1))}
+    return;
+  }
+  if(sel==null)return;
+  const c=priv.hand[sel],hand=[...priv.hand],deck=[...priv.deck],cars=cloneCars();
+  if(isNum(c)){
+    if(!legalNum(c,k))return toast(opening()?'Сначала положите по карте на каждый свой пустой караван':'Эту карту сюда нельзя');
+    hand.splice(sel,1);cars[k].cards.push({c,f:[]});
+    return commit(cars,hand,deck,lab(c)+' → караван '+(k%3+1),{opening:opening()});
+  }
+  if(ci==null)return;
+  if(!legalFace(c,k,ci))return toast(opening()?'Картинки — после начальной раскладки':'Дама кладётся только на последнюю карту каравана');
+  hand.splice(sel,1);
+  const t=cars[k].cards[ci];let text=lab(c)+' на '+lab(t.c);
+  if(rk(c)==='J')cars[k].cards.splice(ci,1);
+  else{
+    t.f.push(c);
+    if(c==='JK'){
+      let n=0;const ace=rk(t.c)==='A';
+      for(const car of cars)car.cards=car.cards.filter(x=>{const hit=x!==t&&(ace?st(x.c)===st(t.c):rk(x.c)!=='A'&&nv(x.c)===nv(t.c));n+=hit;return !hit});
+      text+=', убрано карт: '+n;
+    }
+  }
+  commit(cars,hand,deck,text);
+}
+function discard(){
+  if(!myTurn()||sel==null||(opening()&&priv.hand.some(isNum)))return;
+  const hand=[...priv.hand];hand.splice(sel,1);
+  commit(cloneCars(),hand,[...priv.deck],'сброс карты',{forceDraw:true});
+}
+async function rematch(){
+  if(busy)return;
+  if(local){
+    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1});
+    privs=[null,null];viewer=0;priv=null;saveLocal();return render();
+  }
+  busy=true;
+  try{await gameRef().update({ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1})}catch(e){fail(e)}
+  busy=false;
+}
+
+const RULES=`<ul>
+<li>У каждого три каравана. Караван продан, когда его сумма от 21 до 26.</li>
+<li>Игра кончается, когда в каждой из трёх пар караванов есть проданный (при равенстве пара не считается). Побеждает тот, у кого больше стоимость в двух парах из трёх.</li>
+<li>Начало: по очереди кладёте по одной числовой карте на каждый свой караван. Дальше в руке 5 карт.</li>
+<li>Ход: сыграть карту, либо сбросить карту, либо распустить свой караван.</li>
+<li>Туз = 1, 2–10 по номиналу. Вторая карта задаёт направление (вверх или вниз). Дальше карта должна идти по направлению или совпадать по масти с последней. Одинаковое значение подряд нельзя.</li>
+<li>Король — удваивает карту, на которую положен (свою или чужую).</li>
+<li>Валет — убирает карту вместе с её картинками.</li>
+<li>Дама — на последнюю карту каравана: меняет направление и масть.</li>
+<li>Джокер на туза — убирает со стола все остальные числовые карты этой масти. Джокер на 2–10 — убирает все остальные карты этого значения.</li>
+<li>Если на вашем ходу нет ни карт в руке, ни колоды — вы проиграли.</li></ul>`;
+
+function render(){
+  if(drag&&drag.on)return;
+  let h='';
+  if(screen==='loading')h='<div class="page"><p class="sub">Загрузка…</p></div>';
+  else if(screen==='nodb')h='<div class="page"><h1>Караван</h1><p class="sub">Чтобы играть вдвоём, откройте эту страницу в Claude под своим аккаунтом.</p></div>';
+  else if(screen==='lobby')h=lobby();
+  else h=gameView();
+  if(overlay==='rules')h+=`<div class="over"><div><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn" data-act="closeOverlay">Понятно</button></div></div>`;
+  app.innerHTML=h;
+}
+function lobby(){
+  const my=tables.filter(t=>(t.pl.p0===uid||t.pl.p1===uid)),open=tables.filter(t=>t.open&&t.pl.p0!==uid),saved=LS.get('caravan_local');
+  const online=db?`<button class="btn" data-act="create">Создать стол</button>
+  ${open.length?open.map(t=>`<div class="row"><span>Стол <b>${esc(t.id)}</b></span><button class="btn sm" data-act="join" data-code="${esc(t.id)}">Сесть за стол</button></div>`).join(''):'<p class="sub">Свободных столов нет. Создайте стол и скажите сопернику его код.</p>'}
+  ${my.map(t=>`<div class="row"><span>Стол <b>${esc(t.id)}</b> <span class="sub">${t.open?'ждёт соперника':t.winner>=0?'закончена':'идёт игра'}</span></span><button class="btn sm ghost" data-act="resume" data-code="${esc(t.id)}">Вернуться</button></div>`).join('')}`
+  :'<p class="sub">Доступно, когда страница открыта в Claude под своим аккаунтом.</p>';
+  return `<div class="page"><div><h1>Караван</h1><p class="sub" style="margin-top:10px">Карточная игра пустошей. Двое, три каравана, кто продаст два — тот и прав.</p></div>
+  <div class="sec"><h2>Один телефон</h2><button class="btn" data-act="local">Новая партия</button>${saved&&saved.game?'<button class="btn ghost" data-act="localResume">Продолжить партию</button>':''}</div>
+  <div class="sec"><h2>Два телефона</h2>${online}</div>
+  <details><summary>Правила</summary>${RULES}</details></div>`;
+}
+function gameView(){
+  if(!game)return '<div class="page"><p class="sub">Подключаемся к столу…</p></div>';
+  const me=meIdx(),pk='p'+me,ok='p'+(1-me);
+  const back='<button class="btn ghost" data-act="leave">В лобби</button>';
+  const pn=local?`Игрок ${me+1}: `:'';
+  if(!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Соперник открывает эту же страницу и садится за стол с кодом:</p><div class="code">${esc(code)}</div><p class="sub">Игра начнётся, как только он подключится.</p><button class="btn ghost" data-act="close">Закрыть стол</button>${back}</div>`;
+  if(!game.ready[pk]){
+    if(builder)return builderView();
+    return `<div class="page"><h2>${pn}выберите колоду</h2>
+    <button class="btn" data-act="deck" data-kind="full">Полная колода, 54 карты</button>
+    <button class="btn" data-act="deck" data-kind="rand">Случайные 30 карт</button>
+    <button class="btn ghost" data-act="builder">Собрать свою колоду</button>
+    <p class="sub">${local?'Второй игрок пока не смотрит.':game.ready[ok]?'Соперник уже готов.':'Соперник тоже выбирает.'}</p>${back}</div>`;
+  }
+  if(!game.ready[ok])return `<div class="page"><h2>Колода готова</h2><p class="sub">Ждём, пока соперник выберет свою.</p>${back}</div>`;
+  if(!priv||priv.round!==game.round)return '<div class="page"><p class="sub">Раздаём карты…</p></div>';
+  if(local&&handoff)return `<div class="page"><h2>Ход игрока ${me+1}</h2><p class="sub">Передайте телефон игроку ${me+1}. Карты откроются по кнопке.</p>${game.last?`<p>Игрок ${game.last.by+1}: ${esc(game.last.t)}</p>`:''}<button class="btn" data-act="show">Я игрок ${me+1}, показать карты</button>${back}</div>`;
+  return board(me);
+}
+function builderView(){
+  const total=Object.values(builder).reduce((a,b)=>a+b,0);
+  let g='';
+  for(const s in SU)g+=`<div class="grid">${RANKS.map(r=>chip(r+s)).join('')}${s==='C'?chip('JK'):''}</div>`;
+  return `<div class="page"><h2>${local?`Игрок ${viewer+1}: `:''}своя колода</h2><p class="sub">Нажимайте на карту: нет, одна, две. Нужно не меньше 30 карт.</p>${g}
+  <p><b>Карт в колоде: ${total}</b></p>
+  <button class="btn" data-act="deck" data-kind="own" ${total<30?'disabled':''}>Играть этой колодой</button>
+  <button class="btn ghost" data-act="builderBack">Назад</button></div>`;
+}
+const chip=c=>`<button class="chip n${builder[c]||0} ${red(c)?'red':''}" data-act="chip" data-c="${c}">${c==='JK'?'Jkr':rk(c)+SU[st(c)]}</button>`;
+
+let lastLens=null,fresh={},freshT;
+const mini=x=>`<b class="${red(x)?'red':''}">${x==='JK'?'Jkr':rk(x)+SU[st(x)]}</b>`;
+const faceHtml=c=>`<span class="ix">${c==='JK'?'★':rk(c)+SU[st(c)]}</span><span class="pip">${c==='JK'?'JOKER':SU[st(c)]}</span>`;
+function board(me){
+  const op=1-me,pk='p'+me,ok='p'+op,turn=myTurn(),open=opening();
+  const c=sel!=null?priv.hand[sel]:null;
+  const cars=game.cars;
+  const lens=cars.map(x=>x.cards.length);
+  if(lastLens&&lens.some((n,k)=>n!==lastLens[k])){fresh={};lens.forEach((n,k)=>{if(n>lastLens[k])fresh[k]=lastLens[k]});clearTimeout(freshT);freshT=setTimeout(()=>fresh={},450)}
+  lastLens=lens;
+  const carHtml=(k,isMine)=>{
+    const car=cars[k],n=car.cards.length;
+    const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
+    const cards=car.cards.map((t,i)=>{
+      const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
+      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+    }).join('');
+    return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
+  };
+  const sc=(k,cls,lead)=>{
+    const v=carVal(cars[k]),s=carState(cars[k]);
+    return `<div class="${cls} ${sold(v)?'sold':v>26?'bust':''} ${lead?'lead':''}"><span>${v}</span><small>${s.dir>0?'↑':s.dir<0?'↓':''}${s.suit?SU[s.suit]:''}</small></div>`;
+  };
+  let cols='';
+  for(let i=0;i<3;i++){
+    const w=colWinner(cars,i);
+    cols+=`<div class="col">${carHtml(op*3+i,false)}<div class="score">${sc(op*3+i,'op',w===op)}${sc(me*3+i,'me',w===me)}</div>${carHtml(me*3+i,true)}</div>`;
+  }
+  const noNums=!priv.hand.some(isNum);
+  let msg=game.winner>=0?'Игра окончена':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
+  const last=game.last?`${game.last.by===me?'Вы':'Соперник'}: ${esc(game.last.t)}`:'';
+  const hl=priv.hand.length,mid=(hl-1)/2;
+  const hand=priv.hand.map((x,i)=>`<button class="card hc ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*3.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*2).toFixed(1)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const oh=game.hc[ok],omid=(oh-1)/2;
+  const ohand=Array.from({length:oh},(_,i)=>`<i class="back" style="--r:${(i-omid)*5}"></i>`).join('');
+  const canDiscard=turn&&sel!=null&&(!open||noNums);
+  let h=`<div class="game"><div class="top"><div class="who"><b>${local?'Игрок '+(op+1):esc(names[game.pl[ok]]||'Соперник')}</b>карт в руке: ${oh}</div><div class="ohand">${ohand}</div><div class="pile back" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+  <div class="table">${cols}</div>
+  <div class="status"><b>${msg}</b><span>${last}</span></div>
+  <div class="hand">${hand}</div>
+  <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
+  if(game.winner>=0&&overlay!=='rules')h+=`<div class="over"><div><h1>${local?'Игрок '+(game.winner+1):game.winner===me?'Победа':'Поражение'}</h1><p class="sub">${local?'Караваны дошли. Победа за ним.':game.winner===me?'Ваши караваны дошли первыми.':'Соперник продал больше караванов.'}</p><button class="btn" data-act="rematch">Реванш</button><button class="btn ghost" data-act="leave">В лобби</button></div></div>`;
+  return h;
+}
+
+let drag=null,swallow=false;
+function clearMarks(){app.querySelectorAll('.tgt,.hov').forEach(x=>x.classList.remove('tgt','hov'))}
+function dropTarget(x,y){
+  const t=document.elementFromPoint(x,y);if(!t)return null;
+  const d=t.closest('[data-act="discard"]');if(d)return{el:d,discard:true};
+  const z=t.closest('[data-car]');if(!z)return null;
+  const c=t.closest('[data-ci]'),num=isNum(priv.hand[drag.i]);
+  return{el:num?z:c,k:+z.dataset.car,ci:c?+c.dataset.ci:null};
+}
+app.addEventListener('pointerdown',e=>{
+  const h=e.target.closest('[data-h]');
+  if(!h||drag||!game||!priv||!myTurn()||e.button>0)return;
+  drag={el:h,i:+h.dataset.h,x:e.clientX,y:e.clientY,id:e.pointerId,on:false};
+  try{h.setPointerCapture(e.pointerId)}catch(_){}
+});
+app.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  if(!drag.on){
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8)return;
+    drag.on=true;sel=drag.i;mode=null;
+    const r=drag.el.getBoundingClientRect(),g=drag.el.cloneNode(true);
+    g.className='card hc ghost '+(red(priv.hand[sel])?'red ':'')+(priv.hand[sel]==='JK'?'jk':'');
+    g.removeAttribute('data-h');g.style.width=r.width+'px';g.style.height=r.height+'px';
+    drag.g=g;drag.w=r.width;drag.h=r.height;document.body.appendChild(g);
+    clearMarks();app.querySelectorAll('.hc.sel').forEach(x=>x.classList.remove('sel'));drag.el.classList.add('lifted');
+    const c=priv.hand[sel];
+    app.querySelectorAll('[data-car]').forEach(z=>{
+      const k=+z.dataset.car;
+      if(isNum(c))z.classList.toggle('tgt',legalNum(c,k));
+      else z.querySelectorAll('[data-ci]').forEach(t=>t.classList.toggle('tgt',legalFace(c,k,+t.dataset.ci)));
+    });
+    const d=app.querySelector('[data-act="discard"]');if(d)d.disabled=opening()&&priv.hand.some(isNum);
+  }
+  drag.g.style.transform=`translate(${e.clientX-drag.w/2}px,${e.clientY-drag.h*.75}px) rotate(4deg) scale(1.08)`;
+  app.querySelectorAll('.hov').forEach(x=>x.classList.remove('hov'));
+  const t=dropTarget(e.clientX,e.clientY);
+  if(t&&t.el&&(t.discard?!t.el.disabled:t.el.classList.contains('tgt')))t.el.classList.add('hov');
+});
+function endDrag(e,cancel){
+  if(!drag||e.pointerId!==drag.id)return;
+  const d=drag;
+  if(!d.on){drag=null;return}
+  const t=cancel?null:dropTarget(e.clientX,e.clientY);
+  d.g.remove();drag=null;swallow=true;setTimeout(()=>swallow=false,80);
+  if(t&&t.discard){if(t.el.disabled)toast('Сначала разложите начальные карты');else discard()}
+  else if(t)tapTable(t.k,t.ci);
+  if(!busy)sel=null;
+  render();
+}
+app.addEventListener('pointerup',e=>endDrag(e,false));
+app.addEventListener('pointercancel',e=>endDrag(e,true));
+
+app.addEventListener('click',e=>{
+  const a=e.target.closest('[data-act]');
+  if(a){
+    const d=a.dataset;
+    switch(d.act){
+      case 'create':return createTable();
+      case 'local':return startLocal(false);
+      case 'localResume':return startLocal(true);
+      case 'show':handoff=false;return render();
+      case 'join':return joinTable(d.code);
+      case 'resume':return enter(d.code);
+      case 'leave':return leave();
+      case 'close':return closeTable();
+      case 'deck':return chooseDeck(d.kind);
+      case 'builder':return openBuilder();
+      case 'builderBack':builder=null;return render();
+      case 'chip':builder[d.c]=((builder[d.c]||0)+1)%3;return render();
+      case 'rules':overlay='rules';return render();
+      case 'closeOverlay':overlay=null;return render();
+      case 'discard':return discard();
+      case 'disband':mode=mode==='disband'?null:'disband';sel=null;return render();
+      case 'rematch':return rematch();
+    }
+    return;
+  }
+  const h=e.target.closest('[data-h]');
+  if(h){if(swallow)return;sel=sel===+h.dataset.h?null:+h.dataset.h;mode=null;return render()}
+  const z=e.target.closest('[data-car]');
+  if(z){const c=e.target.closest('[data-ci]');tapTable(+z.dataset.car,c?+c.dataset.ci:null)}
+});
+init();
+</script>
+</body>
+</html>
