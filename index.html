@@ -36,6 +36,7 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .sub{color:var(--dim);margin:0}
 .row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
 .code{font:600 46px/1 Oswald,sans-serif;letter-spacing:.16em}
+.link{margin:0;padding:10px;border:1px dashed var(--line);word-break:break-all;-webkit-user-select:text;user-select:text}
 details{border-top:1px solid var(--line);padding-top:10px}
 summary{font-weight:600;cursor:pointer}
 details ul,.rules ul{padding-left:18px;margin:8px 0;color:var(--dim);font-size:13px}
@@ -171,6 +172,68 @@ let sel=null,mode=null,busy=false,overlay=null,builder=null,names={};
 let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const saveLocal=()=>LS.set('caravan_local',{game,privs,viewer});
+const newGame=(p0,p1)=>({pl:{p0,p1},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1,seq:0});
+
+/* direct phone-to-phone play outside Claude (PeerJS) */
+const PFX='caravan-dd-',PEER_SRC='https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js';
+let p2p=null,canP2P=false;
+const saveP2P=()=>{if(p2p)LS.set('caravan_p2p',{code:p2p.code,role:p2p.role,game,priv})};
+const send=m=>{if(p2p&&p2p.conn&&p2p.conn.open)try{p2p.conn.send(m)}catch(e){}};
+const roomUrl=()=>location.origin+location.pathname+'?room='+p2p.code;
+const loadPeer=()=>new Promise(r=>{if(window.Peer)return r(true);const x=document.createElement('script');x.src=PEER_SRC;x.onload=()=>r(!!window.Peer);x.onerror=()=>r(false);document.head.appendChild(x);setTimeout(()=>r(!!window.Peer),9000)});
+function startP2P(role,c,saved){
+  if(p2p&&p2p.peer)try{p2p.peer.destroy()}catch(e){}
+  lastLens=null;local=false;screen='game';sel=mode=overlay=builder=null;handoff=false;
+  c=c||Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join('');
+  const me=p2p={role,code:c,conn:null,up:false,err:null};
+  game=saved?saved.game:role===0?newGame('H',null):null;priv=saved?saved.priv:null;
+  const peer=me.peer=role===0?new Peer(PFX+c):new Peer();
+  peer.on('open',()=>{if(p2p!==me)return;me.err=null;if(role===1)dial();render()});
+  peer.on('connection',x=>{if(p2p!==me||role!==0)return x.close();attach(x)});
+  peer.on('disconnected',()=>setTimeout(()=>{if(p2p===me&&!peer.destroyed)try{peer.reconnect()}catch(e){}},2000));
+  peer.on('error',e=>{
+    if(p2p!==me)return;
+    if(e.type==='peer-unavailable'){me.err='Стол не найден или его создатель не в сети. Пробуем снова…';setTimeout(()=>{if(p2p===me&&!me.up)dial()},3000)}
+    else{
+      me.err=e.type==='unavailable-id'?'Этот стол уже открыт в другой вкладке. Пробуем снова…':'Нет связи с сервером. Пробуем снова…';
+      setTimeout(()=>{if(p2p!==me)return;if(peer.destroyed)startP2P(role,c,{game,priv});else if(peer.disconnected)try{peer.reconnect()}catch(_){}},4000);
+    }
+    render();
+  });
+  try{history.replaceState(null,'','?room='+c)}catch(e){}
+  saveP2P();render();
+}
+function dial(){
+  const me=p2p;if(!me||me.role!==1||me.up||me.peer.destroyed||me.peer.disconnected)return;
+  attach(me.peer.connect(PFX+me.code,{reliable:true}));
+  setTimeout(()=>{if(p2p===me&&!me.up)dial()},12000);
+}
+function attach(x){
+  const me=p2p;if(me.conn&&me.conn!==x)try{me.conn.close()}catch(e){}
+  me.conn=x;me.up=false;
+  x.on('open',()=>{
+    if(p2p!==me||me.conn!==x)return;me.up=true;me.err=null;
+    if(me.role===0&&!game.pl.p1){game.pl.p1='G';game.seq++}
+    send(game?{t:'game',game}:{t:'need'});saveP2P();render();
+  });
+  x.on('data',m=>{if(p2p===me&&me.conn===x)onMsg(m)});
+  x.on('close',()=>{if(p2p!==me||me.conn!==x)return;me.up=false;render();if(me.role===1)setTimeout(()=>{if(p2p===me&&!me.up)dial()},2500)});
+  x.on('error',()=>{});
+}
+function onMsg(m){
+  if(!m||typeof m!=='object')return;
+  if(m.t==='need')return send({t:'game',game});
+  if(m.t==='ready'&&game&&m.round===game.round){
+    const pk=m.p?'p1':'p0';
+    if(!game.ready[pk]){game.ready[pk]=true;game.dc[pk]=m.dc|0;game.hc[pk]=m.hc|0;game.seq++}
+  }else if(m.t==='game'&&m.game){
+    const mine=game,g=m.game;
+    if(!mine||g.round>mine.round||(g.round===mine.round&&g.seq>mine.seq)){game=g;sel=null;mode=null}
+    if(mine&&mine.round===g.round)for(const src of[mine,g])for(const pk of['p0','p1'])if(src.ready[pk]&&!game.ready[pk]){game.ready[pk]=true;game.dc[pk]=src.dc[pk];game.hc[pk]=src.hc[pk]}
+    if(priv&&priv.round!==game.round)priv=null;
+  }else return;
+  saveP2P();if(!busy)render();
+}
 
 const store={get(){try{return localStorage.getItem('caravan_code')}catch(e){return null}},set(v){try{v?localStorage.setItem('caravan_code',v):localStorage.removeItem('caravan_code')}catch(e){}}};
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3500)}
@@ -179,7 +242,7 @@ function fail(e){toast(e&&e.code==='invalid_argument'?'Нет прав на за
 const gameRef=()=>db.doc('games/'+code);
 const privRef=()=>db.doc('data/users/'+uid+'/g_'+code);
 const deckRef=()=>db.doc('data/users/'+uid+'/deck');
-const meIdx=()=>!game?-1:local?viewer:game.pl.p0===uid?0:game.pl.p1===uid?1:-1;
+const meIdx=()=>!game?-1:local?viewer:p2p?p2p.role:game.pl.p0===uid?0:game.pl.p1===uid?1:-1;
 
 async function init(){
   if(window.claude&&claude.use){
@@ -192,13 +255,18 @@ async function init(){
     },()=>{});
     const saved=store.get();if(saved)return enter(saved);
   }
+  if(!db&&!(window.claude&&claude.use)){
+    canP2P=await loadPeer();
+    const room=(new URLSearchParams(location.search).get('room')||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,8);
+    if(canP2P&&room){const sv=LS.get('caravan_p2p');return sv&&sv.code===room?startP2P(sv.role,room,sv):startP2P(1,room)}
+  }
   screen='lobby';render();
 }
 function startLocal(resume){
   lastLens=null;local=true;screen='game';sel=mode=overlay=builder=null;
   const s=resume&&LS.get('caravan_local');
   if(s){({game,privs,viewer}=s);handoff=game.ready.p0&&game.ready.p1&&game.winner<0}
-  else{game={pl:{p0:'L0',p1:'L1'},ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},turn:0,cars:emptyCars(),winner:-1,last:null,round:1};privs=[null,null];viewer=0;handoff=false}
+  else{game=newGame('L0','L1');privs=[null,null];viewer=0;handoff=false}
   priv=privs[viewer];render();
 }
 function enter(c){
@@ -215,7 +283,7 @@ function enter(c){
     render();
   },()=>leave());
 }
-function leave(){if(unsub)unsub();unsub=null;if(!local)store.set(null);local=false;handoff=false;code=null;game=null;priv=null;screen='lobby';overlay=builder=null;render()}
+function leave(){if(unsub)unsub();unsub=null;if(p2p){try{p2p.peer.destroy()}catch(e){}p2p=null;LS.set('caravan_p2p',null);try{history.replaceState(null,'',location.pathname)}catch(e){}}else if(!local)store.set(null);local=false;handoff=false;code=null;game=null;priv=null;screen='lobby';overlay=builder=null;render()}
 async function loadPriv(){
   privLoading=true;
   try{const s=await privRef().get();priv=s.exists?s.data():null}catch(e){}
@@ -260,6 +328,12 @@ async function chooseDeck(kind){
     if(!game.ready.p0)viewer=0;else if(!game.ready.p1)viewer=1;else{viewer=game.turn;handoff=true}
     priv=privs[viewer];saveLocal();return render();
   }
+  if(p2p){
+    if(kind==='own')LS.set('caravan_deck',builder);
+    builder=null;priv={round:game.round,deck,hand};
+    game.ready[pk]=true;game.dc[pk]=deck.length;game.hc[pk]=hand.length;game.seq++;
+    send({t:'ready',p:p2p.role,round:game.round,dc:deck.length,hc:hand.length});saveP2P();return render();
+  }
   busy=true;
   try{
     if(kind==='own')await deckRef().set({counts:builder});
@@ -272,7 +346,7 @@ async function chooseDeck(kind){
 }
 async function openBuilder(){
   builder={};
-  if(local)builder=LS.get('caravan_deck')||{};
+  if(local||p2p)builder=LS.get('caravan_deck')||{};
   else try{const s=await deckRef().get();if(s.exists)builder={...s.data().counts}}catch(e){}
   if(!Object.keys(builder).length)for(const c of new Set(fullDeck()))builder[c]=c==='JK'?2:1;
   render();
@@ -291,6 +365,11 @@ async function commit(cars,hand,deck,text,o={}){
     if(winner<0){viewer=1-me;handoff=true}
     priv=privs[viewer];saveLocal();busy=false;sel=null;mode=null;return render();
   }
+  if(p2p){
+    priv={round:game.round,deck,hand};
+    Object.assign(game,{cars,turn:1-me,op,last:{by:me,t:text},winner,seq:game.seq+1});game.dc[pk]=deck.length;game.hc[pk]=hand.length;
+    send({t:'game',game});saveP2P();busy=false;sel=null;mode=null;return render();
+  }
   try{
     priv={round:game.round,deck,hand};
     await privRef().set(priv);
@@ -302,7 +381,7 @@ async function commit(cars,hand,deck,text,o={}){
 const cloneCars=()=>JSON.parse(JSON.stringify(game.cars));
 const mine=k=>(k/3|0)===meIdx();
 const opening=()=>game.op['p'+meIdx()]<3;
-const myTurn=()=>game.turn===meIdx()&&game.winner<0&&!busy;
+const myTurn=()=>game.turn===meIdx()&&game.winner<0&&!busy&&(!p2p||p2p.up);
 const legalNum=(c,k)=>mine(k)&&(opening()?!game.cars[k].cards.length:canPlayNum(c,game.cars[k]));
 const legalFace=(c,k,ci)=>!opening()&&(rk(c)!=='Q'||ci===game.cars[k].cards.length-1);
 
@@ -345,6 +424,11 @@ async function rematch(){
     Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1});
     privs=[null,null];viewer=0;priv=null;saveLocal();return render();
   }
+  if(p2p){
+    if(!p2p.up)return toast('Нет связи с соперником');
+    Object.assign(game,{ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1,seq:0});
+    priv=null;send({t:'game',game});saveP2P();return render();
+  }
   busy=true;
   try{await gameRef().update({ready:{p0:false,p1:false},dc:{p0:0,p1:0},hc:{p0:0,p1:0},op:{p0:0,p1:0},cars:emptyCars(),winner:-1,last:null,turn:1-game.winner,round:game.round+1})}catch(e){fail(e)}
   busy=false;
@@ -377,17 +461,20 @@ function lobby(){
   const online=db?`<button class="btn" data-act="create">Создать стол</button>
   ${open.length?open.map(t=>`<div class="row"><span>Стол <b>${esc(t.id)}</b></span><button class="btn sm" data-act="join" data-code="${esc(t.id)}">Сесть за стол</button></div>`).join(''):'<p class="sub">Свободных столов нет. Создайте стол и скажите сопернику его код.</p>'}
   ${my.map(t=>`<div class="row"><span>Стол <b>${esc(t.id)}</b> <span class="sub">${t.open?'ждёт соперника':t.winner>=0?'закончена':'идёт игра'}</span></span><button class="btn sm ghost" data-act="resume" data-code="${esc(t.id)}">Вернуться</button></div>`).join('')}`
-  :'<p class="sub">Доступно, когда страница открыта в Claude под своим аккаунтом.</p>';
+  :canP2P?`<button class="btn" data-act="p2pNew">Создать стол и получить ссылку</button>${(sp=>sp&&sp.code?`<button class="btn ghost" data-act="p2pResume">Вернуться за стол ${esc(sp.code)}</button>`:'')(LS.get('caravan_p2p'))}<p class="sub">Отправьте ссылку сопернику — он откроет её и сядет за стол. Аккаунты не нужны.</p>`
+  :'<p class="sub">Сетевая игра сейчас недоступна: не загрузился модуль связи. Проверьте интернет и обновите страницу.</p>';
   return `<div class="page"><div><h1>Караван</h1><p class="sub" style="margin-top:10px">Карточная игра пустошей. Двое, три каравана, кто продаст два — тот и прав.</p></div>
   <div class="sec"><h2>Один телефон</h2><button class="btn" data-act="local">Новая партия</button>${saved&&saved.game?'<button class="btn ghost" data-act="localResume">Продолжить партию</button>':''}</div>
   <div class="sec"><h2>Два телефона</h2>${online}</div>
   <details><summary>Правила</summary>${RULES}</details></div>`;
 }
 function gameView(){
-  if(!game)return '<div class="page"><p class="sub">Подключаемся к столу…</p></div>';
+  const perr=p2p&&p2p.err?`<p style="color:var(--warn)">${p2p.err}</p>`:'';
+  if(!game)return `<div class="page"><h2>Стол ${esc(p2p?p2p.code:code||'')}</h2><p class="sub">Подключаемся к столу…</p>${perr}<button class="btn ghost" data-act="leave">В лобби</button></div>`;
   const me=meIdx(),pk='p'+me,ok='p'+(1-me);
   const back='<button class="btn ghost" data-act="leave">В лобби</button>';
   const pn=local?`Игрок ${me+1}: `:'';
+  if(p2p&&!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Отправьте сопернику эту ссылку. Игра начнётся, как только он её откроет. Не закрывайте страницу.</p><p class="link">${esc(roomUrl())}</p>${perr}<button class="btn" data-act="share">Отправить ссылку</button><button class="btn ghost" data-act="copy">Скопировать ссылку</button>${back}</div>`;
   if(!game.pl.p1)return `<div class="page"><h2>Стол создан</h2><p class="sub">Соперник открывает эту же страницу и садится за стол с кодом:</p><div class="code">${esc(code)}</div><p class="sub">Игра начнётся, как только он подключится.</p><button class="btn ghost" data-act="close">Закрыть стол</button>${back}</div>`;
   if(!game.ready[pk]){
     if(builder)return builderView();
@@ -397,8 +484,8 @@ function gameView(){
     <button class="btn ghost" data-act="builder">Собрать свою колоду</button>
     <p class="sub">${local?'Второй игрок пока не смотрит.':game.ready[ok]?'Соперник уже готов.':'Соперник тоже выбирает.'}</p>${back}</div>`;
   }
-  if(!game.ready[ok])return `<div class="page"><h2>Колода готова</h2><p class="sub">Ждём, пока соперник выберет свою.</p>${back}</div>`;
-  if(!priv||priv.round!==game.round)return '<div class="page"><p class="sub">Раздаём карты…</p></div>';
+  if(!game.ready[ok])return `<div class="page"><h2>Колода готова</h2><p class="sub">${p2p&&!p2p.up?'Соперник не в сети, ждём переподключения.':'Ждём, пока соперник выберет свою.'}</p>${perr}${back}</div>`;
+  if(!priv||priv.round!==game.round)return `<div class="page"><p class="sub">${p2p?'На этом устройстве нет ваших карт для этой партии. Вернитесь с того телефона, с которого начинали, или начните новую партию.':'Раздаём карты…'}</p>${p2p?back:''}</div>`;
   if(local&&handoff)return `<div class="page"><h2>Ход игрока ${me+1}</h2><p class="sub">Передайте телефон игроку ${me+1}. Карты откроются по кнопке.</p>${game.last?`<p>Игрок ${game.last.by+1}: ${esc(game.last.t)}</p>`:''}<button class="btn" data-act="show">Я игрок ${me+1}, показать карты</button>${back}</div>`;
   return board(me);
 }
@@ -442,7 +529,7 @@ function board(me){
     cols+=`<div class="col">${carHtml(op*3+i,false)}<div class="score">${sc(op*3+i,'op',w===op)}${sc(me*3+i,'me',w===me)}</div>${carHtml(me*3+i,true)}</div>`;
   }
   const noNums=!priv.hand.some(isNum);
-  let msg=game.winner>=0?'Игра окончена':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
+  let msg=game.winner>=0?'Игра окончена':p2p&&!p2p.up?'Нет связи с соперником, ждём…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
   const last=game.last?`${game.last.by===me?'Вы':'Соперник'}: ${esc(game.last.t)}`:'';
   const hl=priv.hand.length,mid=(hl-1)/2;
   const hand=priv.hand.map((x,i)=>`<button class="card hc ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*3.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*2).toFixed(1)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
@@ -519,6 +606,10 @@ app.addEventListener('click',e=>{
       case 'local':return startLocal(false);
       case 'localResume':return startLocal(true);
       case 'show':handoff=false;return render();
+      case 'p2pNew':return startP2P(0);
+      case 'p2pResume':{const sv=LS.get('caravan_p2p');return sv?startP2P(sv.role,sv.code,sv):render()}
+      case 'share':if(navigator.share)return navigator.share({title:'Караван',text:'Сыграем в Караван?',url:roomUrl()}).catch(()=>{});
+      case 'copy':return navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(roomUrl()).then(()=>toast('Ссылка скопирована'),()=>toast('Выделите и скопируйте ссылку вручную')):toast('Выделите и скопируйте ссылку вручную');
       case 'join':return joinTable(d.code);
       case 'resume':return enter(d.code);
       case 'leave':return leave();
