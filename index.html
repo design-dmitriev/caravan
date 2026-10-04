@@ -208,7 +208,8 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .table{background:radial-gradient(ellipse at 50% 0,#2b261f 0,#0a0806 65%)}
 .plane{background:var(--planks,none) 0 0/100% 100% no-repeat,#5d5548;box-shadow:inset 0 0 90px rgba(0,0,0,.5)}
 .plane::before{background:radial-gradient(ellipse 62% 56% at 50% 58%,rgba(255,250,235,.08) 0,transparent 100%)}
-.plane::after{background:linear-gradient(#4b4439,#15110c 75%);box-shadow:inset 0 3px 0 rgba(255,255,255,.08)}
+.plane::after{height:46px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 1px,transparent 1px 7px),linear-gradient(#5a5144,#2a241c 30%,#0c0906 85%);box-shadow:inset 0 3px 0 rgba(255,245,225,.16),inset 0 -14px 18px rgba(0,0,0,.6)}
+.plane{box-shadow:inset 0 0 90px rgba(0,0,0,.45),inset 0 -3px 0 rgba(255,245,225,.12)}
 .col+.col{border-left:0}
 .car.empty{border-color:rgba(255,250,235,.14);background:rgba(0,0,0,.14)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -790,26 +791,61 @@ function faceHtml(c){
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
   R.setProperty('--burn',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(4,34,.045)}<g filter="url(#f)"><ellipse cx="-2" cy="142" rx="62" ry="66" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="46" ry="50" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="32" ry="36" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="44" ry="40" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="30" ry="27" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="18" ry="16" fill="#0a0503"/><circle cx="58" cy="62" r="13" fill="none" stroke="#6a3c10" stroke-width="2" opacity=".35"/></g></svg>`));
-  /* plank table top, drawn once and baked into a bitmap so it costs nothing while playing */
+  /* plank table top: painted once on a canvas (wood fibres, knots, weathering, gaps with lit edges) and kept as a bitmap */
   (function(){
-    const W=1200,H=840,N=6,ph=H/N;let g='',tint='',cr='',nails='';
-    for(let i=0;i<N;i++){
-      const y=i*ph,gh=7+rnd()*7;
-      tint+=`<rect x="0" y="${y.toFixed(0)}" width="${W}" height="${ph.toFixed(0)}" fill="${rnd()<.5?'#000':'#fff'}" opacity="${(.03+rnd()*.11).toFixed(2)}"/>`;
-      g+=`<rect x="-20" y="${(y-gh/2).toFixed(1)}" width="${W+40}" height="${gh.toFixed(1)}" fill="#060403"/><rect x="-20" y="${(y+gh/2).toFixed(1)}" width="${W+40}" height="2.5" fill="#fff" opacity=".1"/><rect x="-20" y="${(y-gh/2-5).toFixed(1)}" width="${W+40}" height="5" fill="#000" opacity=".28"/>`;
-      for(let j=0;j<3;j++){let x=rnd()*W,yy=y+14+rnd()*(ph-28),d=`M${x.toFixed(0)} ${yy.toFixed(0)}`;const n=3+(rnd()*5|0);for(let k=0;k<n;k++)d+=`l${(30+rnd()*90).toFixed(0)} ${((rnd()-.5)*7).toFixed(1)}`;cr+=`<path d="${d}" stroke-width="${(.8+rnd()*1.4).toFixed(1)}" opacity="${(.35+rnd()*.4).toFixed(2)}"/>`}
-      for(const bx of [70,W*.62,W-70]){const x=bx+(rnd()-.5)*26;for(const oy of [.3,.72]){if(rnd()<.5)continue;const yy=y+ph*oy+(rnd()-.5)*10;nails+=`<circle cx="${x.toFixed(0)}" cy="${yy.toFixed(0)}" r="${(4+rnd()*2).toFixed(1)}" fill="#070504"/><ellipse cx="${(x+9).toFixed(0)}" cy="${yy.toFixed(0)}" rx="9" ry="3" fill="#000" opacity=".25"/><path d="M${(x-4).toFixed(0)} ${(yy+5).toFixed(0)}q4 3 8 0" fill="none" stroke="#fff" stroke-width="1" opacity=".22"/>`}}
+    const W=2048,H=1536,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');if(!c)return;
+    const hash=n=>{const q=Math.sin(n*127.1)*43758.5453;return q-Math.floor(q)};
+    const vn=(x,sd)=>{const k=Math.floor(x),f=x-k,w=f*f*(3-2*f);return hash(k+sd*57.3)*(1-w)+hash(k+1+sd*57.3)*w};
+    const fbm=(x,sd)=>vn(x,sd)*.6+vn(x*2.3,sd+9)*.28+vn(x*5.1,sd+21)*.12;
+    const N=6,ys=[0];for(let k=1;k<N;k++)ys.push(Math.round(H*k/N+(rnd()-.5)*H*.035));ys.push(H);
+    c.fillStyle='#050403';c.fillRect(0,0,W,H);
+    for(let p=0;p<N;p++){
+      const y0=ys[p],y1=ys[p+1],ph=y1-y0,sd=p*13+3,tone=.8+rnd()*.34,warm=rnd();
+      const base=[(98+warm*16)*tone,(87+warm*7)*tone,(72-warm*5)*tone],col=k=>`rgb(${base.map(v=>Math.round(v*k)).join(',')})`;
+      c.save();c.beginPath();c.rect(0,y0,W,ph);c.clip();
+      const g=c.createLinearGradient(0,y0,0,y1);g.addColorStop(0,col(1.14));g.addColorStop(.1,col(1));g.addColorStop(.8,col(.93));g.addColorStop(1,col(.66));
+      c.fillStyle=g;c.fillRect(0,y0,W,ph);
+      const knots=[],kn=rnd()<.5?1:rnd()<.3?2:0;for(let k=0;k<kn;k++)knots.push([rnd()*W,y0+ph*(.25+rnd()*.5),16+rnd()*24]);
+      const flow=(x,y)=>{let d=(fbm(x/420,sd)-.5)*ph*.16;for(const [kx,ky,kr] of knots){const dx=(x-kx)/(kr*5),dy=(y-ky)/(kr*1.7);d+=(y<ky?-1:1)*kr*.95*Math.exp(-dx*dx-dy*dy)}return d};
+      const fibres=(cnt,lmin,lmax,amul,wmax)=>{for(let k=0;k<cnt;k++){
+        const yy=y0+rnd()*ph,x0=rnd()*W*1.2-W*.2,len=lmin+rnd()*(lmax-lmin),dark=rnd()<.6,a=(.035+rnd()*.11)*amul;
+        c.strokeStyle=dark?`rgba(20,14,9,${a})`:`rgba(228,216,192,${a*.8})`;c.lineWidth=.6+rnd()*wmax;c.beginPath();
+        for(let x=x0;x<=x0+len;x+=22){const y=yy+flow(x,yy)+(vn(x/90,sd+k)-.5)*3;x===x0?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}};
+      fibres(560,180,1100,1,2.4);
+      for(const [kx,ky,kr] of knots){
+        for(let r=kr;r>2;r-=3){c.strokeStyle=`rgba(18,12,8,${.1+(1-r/kr)*.26})`;c.lineWidth=1.5;c.beginPath();c.ellipse(kx,ky,r*1.5,r*.8,0,0,7);c.stroke()}
+        const kg=c.createRadialGradient(kx,ky,0,kx,ky,kr);kg.addColorStop(0,'rgba(12,8,5,.78)');kg.addColorStop(1,'rgba(12,8,5,0)');c.fillStyle=kg;c.beginPath();c.ellipse(kx,ky,kr*1.5,kr*.8,0,0,7);c.fill()}
+      const blob=(rgb,al,cnt)=>{for(let k=0;k<cnt;k++){const bx=rnd()*W,by=y0+rnd()*ph,r=30+rnd()*90;c.save();c.translate(bx,by);c.scale(2.5+rnd()*5,.3+rnd()*.5);const bg=c.createRadialGradient(0,0,0,0,0,r);bg.addColorStop(0,`rgba(${rgb},${(al*(.5+rnd()*.5)).toFixed(3)})`);bg.addColorStop(1,`rgba(${rgb},0)`);c.fillStyle=bg;c.beginPath();c.arc(0,0,r,0,7);c.fill();c.restore()}};
+      blob('214,204,182',.36,7);blob('16,11,7',.44,6);blob('92,58,28',.2,3);
+      fibres(220,60,360,.8,1.4);
+      const nc=1+(rnd()*3|0);
+      for(let k=0;k<nc;k++){
+        const cy=y0+ph*(.15+rnd()*.7),cx=rnd()*W*.8,cl=160+rnd()*620,pts=[];
+        for(let x=cx;x<=cx+cl;x+=18)pts.push([x,cy+flow(x,cy)+(vn(x/60,sd+k*7)-.5)*5]);
+        const wd=q=>Math.sin(Math.PI*q/(pts.length-1))*1.7+.3;
+        c.beginPath();pts.forEach(([x,y],q)=>q?c.lineTo(x,y-wd(q)):c.moveTo(x,y-wd(q)));for(let q=pts.length-1;q>=0;q--)c.lineTo(pts[q][0],pts[q][1]+wd(q));c.closePath();c.fillStyle='rgba(7,5,3,.92)';c.fill();
+        c.strokeStyle='rgba(236,226,206,.17)';c.lineWidth=1;c.beginPath();pts.forEach(([x,y],q)=>q?c.lineTo(x,y+wd(q)+1.2):c.moveTo(x,y+wd(q)+1.2));c.stroke()}
+      for(const bx of [W*.06,W*.63,W*.95]){
+        if(rnd()<.25)continue;
+        for(const oy of [.28,.74]){
+          if(rnd()<.35)continue;const x=bx+(rnd()-.5)*40,y=y0+ph*oy+(rnd()-.5)*14,r=6+rnd()*3;
+          c.save();c.translate(x,y);c.scale(5,.6);const rg=c.createRadialGradient(4,0,0,4,0,r*2.2);rg.addColorStop(0,'rgba(74,38,14,.5)');rg.addColorStop(1,'rgba(74,38,14,0)');c.fillStyle=rg;c.beginPath();c.arc(4,0,r*2.2,0,7);c.fill();c.restore();
+          const ng=c.createRadialGradient(x-1,y-1,0,x,y,r);ng.addColorStop(0,'#000');ng.addColorStop(.7,'#0a0705');ng.addColorStop(1,'rgba(10,7,5,0)');c.fillStyle=ng;c.beginPath();c.arc(x,y,r,0,7);c.fill();
+          c.strokeStyle='rgba(240,230,210,.28)';c.lineWidth=1.2;c.beginPath();c.arc(x,y,r*.82,.5,2.6);c.stroke()}}
+      c.restore();
     }
-    const svg=`<svg ${X} width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-<filter id="a" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004 .19" numOctaves="5" seed="23"/><feColorMatrix values=".5 0 0 0 .05 .44 0 0 0 .04 .35 0 0 0 .028 0 0 0 0 1"/></filter>
-<filter id="b" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".006 .034" numOctaves="4" seed="41"/><feColorMatrix values="0 0 0 0 .74 0 0 0 0 .69 0 0 0 0 .58 0 0 0 2.6 -1.5"/></filter>
-<filter id="c" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".007 .03" numOctaves="4" seed="77"/><feColorMatrix values="0 0 0 0 .07 0 0 0 0 .055 0 0 0 0 .04 0 0 0 2.2 -1.12"/></filter>
-<filter id="e" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".02 .3" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter>
-<rect width="${W}" height="${H}" filter="url(#a)"/>${tint}<rect width="${W}" height="${H}" filter="url(#b)"/><rect width="${W}" height="${H}" filter="url(#c)"/>
-<g fill="none" stroke="#0e0a07" stroke-linecap="round">${cr}</g><g filter="url(#e)">${g}</g>${nails}</svg>`;
-    const img=new Image();
-    img.onload=()=>{try{const cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.getContext('2d').drawImage(img,0,0,W,H);cv.toBlob(b=>{if(b)R.setProperty('--planks',`url("${URL.createObjectURL(b)}")`)},'image/jpeg',.86)}catch(e){}};
-    img.src='data:image/svg+xml,'+encodeURIComponent(svg);
+    for(let p=1;p<N;p++){
+      const y=ys[p],sd=p*31,top=x=>y-3-fbm(x/140,sd)*7,bot=x=>y+3+fbm(x/170,sd+5)*8;
+      const sg=c.createLinearGradient(0,y-28,0,y);sg.addColorStop(0,'rgba(0,0,0,0)');sg.addColorStop(1,'rgba(0,0,0,.6)');c.fillStyle=sg;c.fillRect(0,y-28,W,28);
+      c.beginPath();c.moveTo(0,top(0));for(let x=0;x<=W;x+=16)c.lineTo(x,top(x));for(let x=W;x>=0;x-=16)c.lineTo(x,bot(x));c.closePath();c.fillStyle='#030201';c.fill();
+      c.strokeStyle='rgba(240,230,208,.34)';c.lineWidth=1.6;c.beginPath();for(let x=0;x<=W;x+=16){const yy=bot(x)+1.2;x?c.lineTo(x,yy):c.moveTo(x,yy)}c.stroke();
+      const hg=c.createLinearGradient(0,y+9,0,y+32);hg.addColorStop(0,'rgba(255,245,225,.11)');hg.addColorStop(1,'rgba(255,245,225,0)');c.fillStyle=hg;c.fillRect(0,y+9,W,23);
+    }
+    const t=document.createElement('canvas');t.width=t.height=256;const tc=t.getContext('2d'),id=tc.createImageData(256,256);
+    for(let k=0;k<id.data.length;k+=4){const v=rnd()*255|0;id.data[k]=id.data[k+1]=id.data[k+2]=v;id.data[k+3]=255}tc.putImageData(id,0,0);
+    c.globalCompositeOperation='overlay';c.globalAlpha=.17;c.fillStyle=c.createPattern(t,'repeat');c.fillRect(0,0,W,H);c.globalAlpha=1;c.globalCompositeOperation='source-over';
+    const lg=c.createRadialGradient(W*.5,H*.56,H*.2,W*.5,H*.56,H*.95);lg.addColorStop(0,'rgba(255,244,220,.07)');lg.addColorStop(1,'rgba(0,0,0,.46)');c.fillStyle=lg;c.fillRect(0,0,W,H);
+    try{cv.toBlob(b=>{if(b)R.setProperty('--planks',`url("${URL.createObjectURL(b)}")`)},'image/jpeg',.9)}catch(e){}
   })();
   let sc='';
   for(let i=0;i<22;i++){const x=rnd()*100,y=rnd()*140,a=rnd()*Math.PI,l=8+rnd()*46,dark=rnd()<.35;sc+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l${(Math.cos(a)*l).toFixed(1)} ${(Math.sin(a)*l).toFixed(1)}" stroke="${dark?'#2a2418':'#fff'}" stroke-width="${(.3+rnd()*.7).toFixed(2)}" opacity="${(dark?.25:.5)+rnd()*.35}"/>`}
