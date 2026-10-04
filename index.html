@@ -203,6 +203,14 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
   .hand{padding:12px 10px 10px}
   .top,.status,.acts{padding:6px 8px}
 }
+
+/* ---- table top: wide weathered grey planks with dark gaps, worn pale patches, nail holes ---- */
+.table{background:radial-gradient(ellipse at 50% 0,#2b261f 0,#0a0806 65%)}
+.plane{background:var(--planks,none) 0 0/100% 100% no-repeat,#5d5548;box-shadow:inset 0 0 90px rgba(0,0,0,.5)}
+.plane::before{background:radial-gradient(ellipse 62% 56% at 50% 58%,rgba(255,250,235,.08) 0,transparent 100%)}
+.plane::after{background:linear-gradient(#4b4439,#15110c 75%);box-shadow:inset 0 3px 0 rgba(255,255,255,.08)}
+.col+.col{border-left:0}
+.car.empty{border-color:rgba(255,250,235,.14);background:rgba(0,0,0,.14)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -782,6 +790,27 @@ function faceHtml(c){
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
   R.setProperty('--burn',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(4,34,.045)}<g filter="url(#f)"><ellipse cx="-2" cy="142" rx="62" ry="66" fill="#7a4212" opacity=".45"/><ellipse cx="-2" cy="142" rx="46" ry="50" fill="#3a1c08" opacity=".8"/><ellipse cx="-2" cy="142" rx="32" ry="36" fill="#0a0503"/><ellipse cx="104" cy="-4" rx="44" ry="40" fill="#7a4212" opacity=".4"/><ellipse cx="104" cy="-4" rx="30" ry="27" fill="#2a1306" opacity=".85"/><ellipse cx="104" cy="-4" rx="18" ry="16" fill="#0a0503"/><circle cx="58" cy="62" r="13" fill="none" stroke="#6a3c10" stroke-width="2" opacity=".35"/></g></svg>`));
+  /* plank table top, drawn once and baked into a bitmap so it costs nothing while playing */
+  (function(){
+    const W=1200,H=840,N=6,ph=H/N;let g='',tint='',cr='',nails='';
+    for(let i=0;i<N;i++){
+      const y=i*ph,gh=7+rnd()*7;
+      tint+=`<rect x="0" y="${y.toFixed(0)}" width="${W}" height="${ph.toFixed(0)}" fill="${rnd()<.5?'#000':'#fff'}" opacity="${(.03+rnd()*.11).toFixed(2)}"/>`;
+      g+=`<rect x="-20" y="${(y-gh/2).toFixed(1)}" width="${W+40}" height="${gh.toFixed(1)}" fill="#060403"/><rect x="-20" y="${(y+gh/2).toFixed(1)}" width="${W+40}" height="2.5" fill="#fff" opacity=".1"/><rect x="-20" y="${(y-gh/2-5).toFixed(1)}" width="${W+40}" height="5" fill="#000" opacity=".28"/>`;
+      for(let j=0;j<3;j++){let x=rnd()*W,yy=y+14+rnd()*(ph-28),d=`M${x.toFixed(0)} ${yy.toFixed(0)}`;const n=3+(rnd()*5|0);for(let k=0;k<n;k++)d+=`l${(30+rnd()*90).toFixed(0)} ${((rnd()-.5)*7).toFixed(1)}`;cr+=`<path d="${d}" stroke-width="${(.8+rnd()*1.4).toFixed(1)}" opacity="${(.35+rnd()*.4).toFixed(2)}"/>`}
+      for(const bx of [70,W*.62,W-70]){const x=bx+(rnd()-.5)*26;for(const oy of [.3,.72]){if(rnd()<.5)continue;const yy=y+ph*oy+(rnd()-.5)*10;nails+=`<circle cx="${x.toFixed(0)}" cy="${yy.toFixed(0)}" r="${(4+rnd()*2).toFixed(1)}" fill="#070504"/><ellipse cx="${(x+9).toFixed(0)}" cy="${yy.toFixed(0)}" rx="9" ry="3" fill="#000" opacity=".25"/><path d="M${(x-4).toFixed(0)} ${(yy+5).toFixed(0)}q4 3 8 0" fill="none" stroke="#fff" stroke-width="1" opacity=".22"/>`}}
+    }
+    const svg=`<svg ${X} width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+<filter id="a" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004 .19" numOctaves="5" seed="23"/><feColorMatrix values=".5 0 0 0 .05 .44 0 0 0 .04 .35 0 0 0 .028 0 0 0 0 1"/></filter>
+<filter id="b" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".006 .034" numOctaves="4" seed="41"/><feColorMatrix values="0 0 0 0 .74 0 0 0 0 .69 0 0 0 0 .58 0 0 0 2.6 -1.5"/></filter>
+<filter id="c" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".007 .03" numOctaves="4" seed="77"/><feColorMatrix values="0 0 0 0 .07 0 0 0 0 .055 0 0 0 0 .04 0 0 0 2.2 -1.12"/></filter>
+<filter id="e" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".02 .3" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter>
+<rect width="${W}" height="${H}" filter="url(#a)"/>${tint}<rect width="${W}" height="${H}" filter="url(#b)"/><rect width="${W}" height="${H}" filter="url(#c)"/>
+<g fill="none" stroke="#0e0a07" stroke-linecap="round">${cr}</g><g filter="url(#e)">${g}</g>${nails}</svg>`;
+    const img=new Image();
+    img.onload=()=>{try{const cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.getContext('2d').drawImage(img,0,0,W,H);cv.toBlob(b=>{if(b)R.setProperty('--planks',`url("${URL.createObjectURL(b)}")`)},'image/jpeg',.86)}catch(e){}};
+    img.src='data:image/svg+xml,'+encodeURIComponent(svg);
+  })();
   let sc='';
   for(let i=0;i<22;i++){const x=rnd()*100,y=rnd()*140,a=rnd()*Math.PI,l=8+rnd()*46,dark=rnd()<.35;sc+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l${(Math.cos(a)*l).toFixed(1)} ${(Math.sin(a)*l).toFixed(1)}" stroke="${dark?'#2a2418':'#fff'}" stroke-width="${(.3+rnd()*.7).toFixed(2)}" opacity="${(dark?.25:.5)+rnd()*.35}"/>`}
   R.setProperty('--scratch',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none" fill="none" stroke-linecap="round">${sc}<path d="M8 20Q40 60 92 118" stroke="#fff" stroke-width="1.6" opacity=".7"/><path d="M9 21Q41 61 93 119" stroke="#2a2418" stroke-width=".5" opacity=".5"/></svg>`));
