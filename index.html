@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Караван</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&family=Bebas+Neue&family=Special+Elite&family=Cinzel:wght@700&family=Rye&family=Permanent+Marker&display=swap">
 <style>
 :root{
   --bg:#120e08;--panel:#1d170c;--amber:#ffb642;--dim:rgba(255,182,66,.66);--line:rgba(255,182,66,.34);--paper:#e4d6ae;--ink:#1a1712;--blood:#9a2a1c;--warn:#ff7a5c;
@@ -74,10 +74,11 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .pile{position:relative;width:32px;height:44px;flex:none;box-shadow:inset 0 0 0 2px var(--paper),2px 2px 0 rgba(0,0,0,.75),4px 4px 0 rgba(0,0,0,.5)}
 .pile span{position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);font:600 15px Oswald,sans-serif;text-shadow:0 1px 2px #000}
 
-.table{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);padding:8px 4px;
-  background:repeating-linear-gradient(91deg,rgba(0,0,0,.16) 0 2px,transparent 2px 9px,rgba(255,200,120,.035) 9px 11px,transparent 11px 23px),repeating-linear-gradient(88deg,transparent 0 37px,rgba(0,0,0,.12) 37px 39px),radial-gradient(ellipse at 50% 50%,#573a23 0,#33200f 65%,#1a0f07 100%);
-  box-shadow:inset 0 0 50px rgba(0,0,0,.85),inset 0 0 0 3px #1a0f07,inset 0 0 0 4px rgba(255,182,66,.18)}
-.col{display:flex;flex-direction:column;min-height:0;gap:5px;padding:0 4px}
+.table{flex:1;min-height:0;position:relative;overflow:hidden;perspective:900px;perspective-origin:50% 12%;background:radial-gradient(ellipse at 50% 0,#2a1c10 0,#0b0704 70%)}
+.plane{position:absolute;left:-7%;right:-7%;bottom:-1%;height:117%;display:grid;grid-template-columns:repeat(3,1fr);padding:10px 9% 14px;transform:rotateX(24deg);transform-origin:50% 100%;transform-style:preserve-3d;
+  background:repeating-linear-gradient(91deg,rgba(0,0,0,.16) 0 2px,transparent 2px 9px,rgba(255,200,120,.035) 9px 11px,transparent 11px 23px),repeating-linear-gradient(88deg,transparent 0 37px,rgba(0,0,0,.12) 37px 39px),radial-gradient(ellipse at 50% 60%,#62432a 0,#3a2513 60%,#1a0f07 100%);
+  box-shadow:inset 0 0 70px rgba(0,0,0,.8),inset 0 0 0 5px #24160b,inset 0 0 0 7px rgba(255,182,66,.22)}
+.col{display:flex;flex-direction:column;min-height:0;gap:5px;padding:0 4px;transform-style:preserve-3d}
 .col+.col{border-left:1px dashed rgba(255,182,66,.16)}
 .car{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:3px;border:1.5px dashed transparent;border-radius:8px}
 .car.opp{justify-content:flex-end}
@@ -88,8 +89,48 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .slot:last-child{flex:0 0 var(--ch)}
 .card{position:relative;flex:none;display:block;width:var(--cw);aspect-ratio:5/7;max-width:100%;container-type:inline-size;overflow:hidden;
   background:radial-gradient(ellipse at var(--sx,20%) var(--sy,80%),rgba(110,70,25,.3) 0,transparent 42%),radial-gradient(ellipse at calc(100% - var(--sx,20%)) calc(100% - var(--sy,80%)),rgba(90,55,20,.2) 0,transparent 36%),linear-gradient(140deg,#f1e6c4 0,var(--paper) 45%,#c9b684 100%);
-  color:var(--ink);text-shadow:none;border-radius:6px;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 -2px 5px rgba(0,0,0,.55)}
+  color:var(--ink);text-shadow:none;border-radius:6px;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px rgba(90,60,20,.45),inset 0 0 12px rgba(120,80,30,.35),0 1px 0 #8f7c4e,0 -2px 5px rgba(0,0,0,.55)}
 .card.red,.red{color:var(--blood)}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+/* 1 gloss */
+.sk1{--ink:#101a2c;--blood:#c81e2c;font-family:"Bebas Neue",Oswald,sans-serif;font-weight:400;border-radius:8px;background:linear-gradient(160deg,#f3f6f9 0,#e3e9ef 55%,#cfd8e1 100%);box-shadow:inset 0 0 0 1px rgba(20,30,50,.35),0 -2px 5px rgba(0,0,0,.55)}
+.sk1::after{background:linear-gradient(118deg,transparent 0 34%,rgba(255,255,255,.7) 35% 47%,transparent 48% 72%,rgba(255,255,255,.45) 73% 78%,transparent 79%)}
+.card.sk1 .ix{font-size:28cqw}
+.card.sk1 .court{border-width:0;outline:0;background:linear-gradient(currentColor,currentColor) top/100% 14% no-repeat,linear-gradient(currentColor,currentColor) bottom/100% 14% no-repeat}
+.card.sk1 .court i{color:#fff}
+/* 2 scratched */
+.sk2{--ink:#2d3a32;--blood:#8a3a2c;font-family:"Special Elite","Courier New",monospace;font-weight:400;background:linear-gradient(150deg,#e3e6d3 0,#cdd3bb 60%,#b3bb9f 100%)}
+.sk2::after{background:repeating-linear-gradient(63deg,transparent 0 17px,rgba(255,255,255,.75) 17px 18px,transparent 18px 43px),repeating-linear-gradient(-27deg,transparent 0 29px,rgba(30,25,15,.35) 29px 30px,transparent 30px 71px),repeating-linear-gradient(112deg,transparent 0 53px,rgba(255,255,255,.6) 53px 55px,transparent 55px 97px),repeating-linear-gradient(8deg,transparent 0 37px,rgba(30,25,15,.22) 37px 38px,transparent 38px 59px)}
+.card.sk2 .ix,.sk2 .pips,.sk2 .court{opacity:.82}
+.card.sk2 .court{border-style:dashed;outline:0;background:none}
+.card.sk2 .court b{font-size:0}
+.card.sk2 .court b::before{content:attr(data-o);font-size:30px;font-size:54cqw}
+/* 3 black and gold */
+.sk3{--ink:#e2bd6a;--blood:#e8745a;font-family:Cinzel,Georgia,serif;font-weight:700;background:linear-gradient(145deg,#2c2519 0,#15110b 55%,#0a0805 100%);box-shadow:inset 0 0 0 1px #e2bd6a,inset 0 0 0 3px #15110b,inset 0 0 0 4px rgba(226,189,106,.6),0 -2px 5px rgba(0,0,0,.6)}
+.sk3::after{background:linear-gradient(125deg,rgba(255,235,180,.22) 0 22%,transparent 23%)}
+.card.sk3 .ix{font-size:21cqw;top:5px;left:6px}
+.card.sk3 .court{background:radial-gradient(circle at 50% 50%,rgba(226,189,106,.25),transparent 70%);border-width:1px}
+/* 4 burnt */
+.sk4{--ink:#2a1a0e;--blood:#8c2a12;font-family:Rye,Georgia,serif;font-weight:400;
+  background:radial-gradient(ellipse at 0 100%,#0d0603 0,rgba(45,22,8,.92) 20%,rgba(120,70,25,.45) 36%,transparent 52%),radial-gradient(ellipse at 100% 0,#140a05 0,rgba(60,30,10,.85) 13%,rgba(130,80,30,.4) 26%,transparent 40%),radial-gradient(circle at var(--sx,60%) var(--sy,55%),transparent 0 15%,rgba(105,60,18,.5) 16% 18%,transparent 19%),linear-gradient(150deg,#e2cc94 0,#cdb178 55%,#a8874c 100%);
+  border-radius:7px 5px 9px 3px}
+.card.sk4 .ix{font-size:21cqw}
+.card.sk4 .court{border-width:2px;outline:0;background:rgba(90,50,15,.14)}
+.card.sk4 .court b{font-size:0}
+.card.sk4 .court b::before{content:attr(data-l);font-size:34px;font-size:62cqw}
+/* 5 hand-drawn */
+.sk5{--ink:#1c2f6b;--blood:#c22f25;font-family:"Permanent Marker","Comic Sans MS",cursive;font-weight:400;border:2px solid #1c2f6b;border-radius:13px 5px 15px 6px/6px 14px 5px 13px;
+  background:linear-gradient(90deg,transparent 0 11%,rgba(200,60,50,.45) 11% 12.5%,transparent 12.5%),repeating-linear-gradient(transparent 0 8px,rgba(60,110,170,.3) 8px 9px),#f6f3e6;box-shadow:0 -2px 5px rgba(0,0,0,.55)}
+.card.sk5 .ix{font-size:23cqw;rotate:-4deg}
+.card.sk5 .pips i{color:transparent;-webkit-text-stroke:1.3px var(--ink)}
+.card.sk5.red .pips i{-webkit-text-stroke-color:var(--blood)}
+.card.sk5 .pips i:nth-child(odd){rotate:-11deg}
+.card.sk5 .pips i:nth-child(even){rotate:8deg}
+.card.sk5 .court{border:2px solid currentColor;outline:0;border-radius:9px 4px 11px 5px/5px 10px 4px 9px;background:none;rotate:1.5deg}
+.card.sk5 .court b{font-size:0}
+.card.sk5 .court b::before{content:attr(data-l);font-size:32px;font-size:58cqw}
+.preview{display:flex;gap:10px;align-items:center}
+.preview .card{--cw:64px;width:64px;box-shadow:0 3px 8px rgba(0,0,0,.6)}
 .card .ix{position:absolute;top:3px;left:5px;font-size:15px;font-size:24cqw;line-height:1;white-space:nowrap}
 .card .pips{position:absolute;top:27%;bottom:9%;left:17%;right:17%}
 .card .pips i{position:absolute;font-style:normal;font-size:14px;font-size:24cqw;line-height:1;transform:translate(-50%,-50%)}
@@ -103,13 +144,13 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .card .court.jkr{justify-content:center;gap:6%}
 .card .court.jkr em{font-style:normal;font-size:8px;font-size:15cqw;letter-spacing:.08em}
 .card .fx{position:absolute;top:3px;right:4px;display:flex;gap:2px}
-.card .fx b{background:#fbf3d6;color:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font-size:10px;font-size:16cqw;line-height:1;font-weight:600}
-.card .fx b.red{color:var(--blood)}
+.card .fx b{background:#fbf3d6;color:#1a1712;box-shadow:0 0 0 1px rgba(0,0,0,.5);border-radius:2px;padding:1px 2px;font:600 10px/1 Oswald,sans-serif;font-size:16cqw}
+.card .fx b.red{color:#9a2a1c}
 .card.tgt{box-shadow:0 0 0 2.5px var(--amber),0 0 14px var(--amber)}
 .card.hov{box-shadow:0 0 0 4px #fff,0 0 18px var(--amber)}
 .slot.new .card{animation:drop .38s cubic-bezier(.2,1.5,.4,1)}
 @keyframes drop{from{transform:translateY(-34px) scale(1.3) rotate(-8deg);opacity:0}}
-.score{background:rgba(18,14,8,.82);border:1px solid var(--line);padding:3px;font:600 var(--sc)/1.15 Oswald,sans-serif;display:grid;gap:2px}
+.score{transform:rotateX(-24deg);transform-origin:50% 100%;box-shadow:0 10px 14px rgba(0,0,0,.55);background:rgba(18,14,8,.92);border:1px solid var(--line);padding:3px;font:600 var(--sc)/1.15 Oswald,sans-serif;display:grid;gap:2px}
 .score div{display:flex;justify-content:space-between;align-items:baseline;color:var(--dim);padding:1px 5px}
 .score small{font-size:.62em;font-weight:500}
 .score .sold{background:var(--amber);color:var(--bg);text-shadow:none;animation:pulse 1.4s ease-in-out infinite alternate}
@@ -157,7 +198,6 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
   .acts .btn{flex:1 0 100%}
 }
 @media (min-width:900px) and (orientation:landscape) and (min-height:650px){
-  .table{padding:14px 10px}
   .top,.status,.acts{padding:14px;font-size:14px}
   .status b{font-size:20px}
   .acts .btn{padding:12px;font-size:15px}
@@ -165,7 +205,6 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 }
 @media (max-height:500px) and (orientation:landscape){
   :root{--sc:16px;--ch:clamp(50px,15dvh,80px)}
-  .table{padding:4px}
   .col{gap:3px}
   .score{grid-template-columns:1fr 1fr}
   .score .me{border-top:0;border-left:1px solid var(--line);padding-top:1px}
@@ -228,32 +267,55 @@ let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS
 const getNames=()=>LS.get('caravan_names')||{};
 const myName=()=>String(getNames().me||'').trim().slice(0,16);
 const pname=i=>{const n=game&&game.nm&&game.nm['p'+i];if(n)return n;if(local)return 'Игрок '+(i+1);return i===meIdx()?'Вы':(game&&names[game.pl['p'+i]])||'Соперник'};
+const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','нарисованные от руки'];
+const skOf=i=>((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length;
 const bkOf=i=>'bk'+(((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length);
 
 /* sound: synthesized, no samples */
-let AC=null;
-function ac(){if(muted)return null;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+let AC=null,master=null,silentEl=null;
+function ac(){
+  if(muted)return null;
+  try{
+    if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();const comp=AC.createDynamicsCompressor();master=AC.createGain();master.gain.value=1.8;master.connect(comp);comp.connect(AC.destination)}
+    if(AC.state!=='running')AC.resume();
+  }catch(e){return null}
+  return AC;
+}
+function silentWav(){const n=4000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)b[o+i]=t.charCodeAt(i)};w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);b.fill(128,44);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+/* phones: audio must start inside a touch, and iOS silences Web Audio in silent mode unless a media element is playing */
+function unlock(){
+  if(muted){if(silentEl)silentEl.pause();return}
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  try{
+    if(!silentEl){silentEl=new Audio(silentWav());silentEl.loop=true;silentEl.setAttribute('playsinline','');silentEl.volume=1}
+    if(silentEl.paused)silentEl.play().catch(()=>{});
+  }catch(e){}
+  const a=ac();
+  if(a&&!a._kick){try{const s0=a.createBufferSource();s0.buffer=a.createBuffer(1,1,22050);s0.connect(a.destination);s0.start(0);a._kick=1}catch(e){}}
+}
+['pointerdown','touchstart','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,unlock,{capture:true,passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(silentEl)silentEl.pause()}else if(AC&&AC.state!=='running'&&!muted)AC.resume().catch(()=>{})});
 function noise(dur,freq,q,gain,when=0){
   const a=ac();if(!a)return;const n=a.sampleRate*dur|0,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);
   for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);
   const src=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();src.buffer=b;f.type='bandpass';f.frequency.value=freq;f.Q.value=q;g.gain.value=gain;
-  src.connect(f);f.connect(g);g.connect(a.destination);src.start(a.currentTime+when);
+  src.connect(f);f.connect(g);g.connect(master);src.start(a.currentTime+when);
 }
 function tone(freq,dur,type,gain,when=0,to){
   const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+when;
   o.type=type;o.frequency.setValueAtTime(freq,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
   g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+dur+.02);
+  o.connect(g);g.connect(master);o.start(t);o.stop(t+dur+.02);
 }
 const SFX={
-  blip(){tone(920,.035,'square',.05)},
-  place(){noise(.09,1900,.8,.9);tone(150,.07,'sine',.3)},
-  deal(){noise(.14,3400,.6,.5);noise(.08,1500,1,.3,.05)},
-  remove(){noise(.2,800,.7,.8);tone(110,.2,'sawtooth',.14,0,45)},
-  shuffle(){for(let i=0;i<7;i++)noise(.05,2400+Math.random()*900,1,.4,i*.055)},
-  sold(){tone(1319,.45,'triangle',.22,.12);tone(1976,.7,'triangle',.18,.21)},
-  win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.32,'square',.08,i*.13))},
-  lose(){[392,330,262,196].forEach((f,i)=>tone(f,.42,'sawtooth',.06,i*.19))}
+  blip(){tone(1250,.05,'square',.14);noise(.03,3000,1,.3)},
+  place(){noise(.1,2400,.7,1.4);noise(.06,900,.9,.9);tone(360,.09,'triangle',.5,0,190)},
+  deal(){noise(.16,3600,.5,1);noise(.1,1700,.9,.7,.06)},
+  remove(){noise(.24,1100,.6,1.3);tone(420,.25,'sawtooth',.28,0,120)},
+  shuffle(){for(let i=0;i<8;i++)noise(.05,2600+Math.random()*1200,1,.9,i*.055)},
+  sold(){tone(1319,.5,'triangle',.5,.12);tone(1976,.8,'triangle',.42,.21);tone(2637,.6,'sine',.2,.21)},
+  win(){[523,659,784,1047,1319].forEach((f,i)=>{tone(f,.34,'square',.2,i*.13);tone(f*2,.3,'triangle',.12,i*.13)})},
+  lose(){[392,330,262,196].forEach((f,i)=>tone(f*2,.42,'sawtooth',.16,i*.19))}
 };
 
 /* records, kept on this device */
@@ -597,7 +659,7 @@ function gameView(){
   if(!game.ready[pk]){
     if(builder)return builderView();
     return `<div class="page"><h2>${esc(pname(me))}: колода</h2>
-    <div class="box"><span>Рубашка: <b id="bkname">${BACKS[backSel]}</b></span><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
+    <div class="box"><span>Колода: <b>${BACKS[backSel]}</b>, ${BACK_NOTE[backSel]}</span><div class="preview"><div class="card back bk${backSel}" style="aspect-ratio:5/7"></div>${['7S','KH','AD'].map(c=>`<div class="card sk${backSel} ${red(c)?'red':''}">${faceHtml(c)}</div>`).join('')}</div><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
     <button class="btn" data-act="deck" data-kind="full">Полная колода, 54 карты</button>
     <div class="box"><div class="rng"><label>от <b id="ra">${rnd[0]}</b><input type="range" min="30" max="108" value="${rnd[0]}" data-rng="0"></label><label>до <b id="rb">${rnd[1]}</b><input type="range" min="30" max="108" value="${rnd[1]}" data-rng="1"></label></div>
     <button class="btn" data-act="deck" data-kind="rand">Случайная колода</button><p class="sub" style="font-size:12px">Число карт выпадет случайно в этих пределах. По правилам в колоде не меньше 30 карт, набирать можно из двух комплектов.</p></div>
@@ -623,11 +685,11 @@ const chip=c=>`<button class="chip n${builder[c]||0} ${red(c)?'red':''}" data-ac
 let lastLens=null,fresh={},freshT;
 const mini=x=>`<b class="${red(x)?'red':''}">${x==='JK'?'★':rk(x)==='Q'?'Q'+SU[st(x)]:rk(x)}</b>`;
 const PIPS={1:[[50,50]],2:[[50,12],[50,88]],3:[[50,12],[50,50],[50,88]],4:[[25,12],[75,12],[25,88],[75,88]],5:[[25,12],[75,12],[50,50],[25,88],[75,88]],6:[[25,12],[75,12],[25,50],[75,50],[25,88],[75,88]],7:[[25,12],[75,12],[50,31],[25,50],[75,50],[25,88],[75,88]],8:[[25,12],[75,12],[50,31],[25,50],[75,50],[50,69],[25,88],[75,88]],9:[[25,12],[75,12],[25,37],[75,37],[50,50],[25,63],[75,63],[25,88],[75,88]],10:[[25,12],[75,12],[50,25],[25,37],[75,37],[25,63],[75,63],[50,75],[25,88],[75,88]]};
-const COURT={J:'♞\uFE0E',Q:'♛\uFE0E',K:'♚\uFE0E'};
+const COURT={J:'♞\uFE0E',Q:'♛\uFE0E',K:'♚\uFE0E'},COURT_O={J:'♘\uFE0E',Q:'♕\uFE0E',K:'♔\uFE0E'};
 function faceHtml(c){
   if(c==='JK')return '<span class="ix">★</span><span class="court jkr"><b>✪</b><em>JOKER</em></span>';
   const r=rk(c),su=SU[st(c)],ix=`<span class="ix">${r}${su}</span>`;
-  if(COURT[r])return ix+`<span class="court"><i>${su}</i><b>${COURT[r]}</b><i class="fl">${su}</i></span>`;
+  if(COURT[r])return ix+`<span class="court"><i>${su}</i><b data-l="${r}" data-o="${COURT_O[r]}">${COURT[r]}</b><i class="fl">${su}</i></span>`;
   const n=nv(c);return ix+`<span class="pips ${n===1?'ace':''}">${PIPS[n].map(([x,y])=>`<i class="${y>50?'fl':''}" style="left:${x}%;top:${y}%">${su}</i>`).join('')}</span>`;
 }
 const stain=c=>{let h=7;for(const ch of c)h=(h*31+ch.charCodeAt(0))%997;return `--sx:${10+h%80}%;--sy:${10+(h*7)%80}%`};
@@ -652,7 +714,7 @@ function board(me){
     const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="${stain(t.c)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      return `<div class="slot ${fresh[k]!==undefined&&i>=fresh[k]?'new':''}"><div class="card sk${skOf(k/3|0)} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="${stain(t.c)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
     }).join('');
     return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
   };
@@ -669,12 +731,12 @@ function board(me){
   let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
   const last=game.last?`${game.last.by===me?'Вы':esc(pname(op))}: ${esc(game.last.t)}`:'';
   const hl=priv.hand.length,mid=(hl-1)/2;
-  const hand=priv.hand.map((x,i)=>`<button class="card hc ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};${stain(x)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};${stain(x)}" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
   let h=`<div class="game"><div class="top"><div class="who"><b>${esc(pname(op))}</b>${p2p&&!oppOnline()?'не в сети':'в руке: '+oh}</div><div class="ohand">${ohand}</div><div class="pile back ${bkOf(op)}" title="Колода соперника"><span>${game.dc[ok]}</span></div><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
-  <div class="table">${cols}</div>
+  <div class="table"><div class="plane">${cols}</div></div>
   <div class="status"><b>${msg}</b><span>${last}</span></div>
   <div class="hand">${hand}</div>
   <div class="acts"><button class="btn ghost" data-act="discard" ${canDiscard?'':'disabled'}>Сбросить карту</button><button class="btn ghost ${mode==='disband'?'on':''}" data-act="disband" ${turn&&!open?'':'disabled'}>Распустить караван</button><div class="pile back ${bkOf(me)}" title="Ваша колода"><span>${priv.deck.length}</span></div></div></div>`;
@@ -703,7 +765,7 @@ app.addEventListener('pointermove',e=>{
     if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8)return;
     drag.on=true;sel=drag.i;mode=null;
     const r=drag.el.getBoundingClientRect(),g=drag.el.cloneNode(true);
-    g.className='card hc dragghost '+(red(priv.hand[sel])?'red ':'')+(priv.hand[sel]==='JK'?'jk':'');
+    g.className='card hc dragghost sk'+skOf(meIdx())+' '+(red(priv.hand[sel])?'red ':'')+(priv.hand[sel]==='JK'?'jk':'');
     g.removeAttribute('data-h');g.style.width=r.width+'px';g.style.height=r.height+'px';
     drag.g=g;drag.w=r.width;drag.h=r.height;document.body.appendChild(g);
     clearMarks();app.querySelectorAll('.hc.sel').forEach(x=>x.classList.remove('sel'));drag.el.classList.add('lifted');
@@ -762,7 +824,7 @@ app.addEventListener('click',e=>{
       case 'rematch':return rematch();
       case 'records':overlay='records';return render();
       case 'clearStats':LS.set('caravan_stats',{p:{},seen:(LS.get('caravan_stats')||{seen:[]}).seen});return render();
-      case 'mute':muted=!muted;LS.set('caravan_mute',muted);if(!muted)SFX.blip();return render();
+      case 'mute':muted=!muted;LS.set('caravan_mute',muted);unlock();if(!muted)SFX.sold();return render();
       case 'back':backSel=+d.b;return render();
     }
     return;
