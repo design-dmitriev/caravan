@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Караван</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&family=Libre+Baskerville:wght@700&family=Cinzel:wght@700&family=Permanent+Marker&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=PT+Mono&family=Libre+Baskerville:wght@700&family=Cinzel:wght@700&family=Permanent+Marker&family=Comfortaa:wght@500&display=swap">
 <style>
 :root{
   --bg:#120e08;--panel:#1d170c;--amber:#ffb642;--dim:rgba(255,182,66,.66);--line:rgba(255,182,66,.34);--paper:#e4d6ae;--ink:#1a1712;--blood:#9a2a1c;--warn:#ff7a5c;
@@ -273,13 +273,15 @@ input.vol::-moz-range-thumb{width:30px;height:30px}
 .volq{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .volq .btn{width:auto;padding:12px 0;font-size:15px}
 /* deck 5: laboratory cards on graph paper */
-.card.sk5{--ink:#173a4a;--blood:#b3401f;--c1:#eef2ee;--c2:#2f6f6c;--gd:#8a9aa0;--pp:#f2f6f2;font-family:"PT Mono",ui-monospace,Menlo,Consolas,monospace;font-weight:400;border-radius:4px;
+.card.sk5{--ink:#3a2e22;--blood:#b5503a;font-family:Comfortaa,"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:500;border-radius:6px;background:var(--grain,none),linear-gradient(150deg,#f1e9d2 0,#e7dcc0 55%,#d6c8a4 100%)}
   background:repeating-linear-gradient(0deg,rgba(23,58,74,.2) 0 1px,transparent 1px 25%),repeating-linear-gradient(90deg,rgba(23,58,74,.2) 0 1px,transparent 1px 25%),repeating-linear-gradient(0deg,rgba(23,58,74,.09) 0 1px,transparent 1px 5%),repeating-linear-gradient(90deg,rgba(23,58,74,.09) 0 1px,transparent 1px 5%),var(--grain,none),linear-gradient(150deg,#eaf1ec 0,#dbe6de 55%,#c6d3ca 100%)}
-.card.sk5:not(.red){--c1:#2f6f6c;--c2:#eef2ee}
-.card.sk5 .ix{font-size:21cqw;font-weight:700;border:1px solid currentColor;padding:2% 3% 3%;background:rgba(242,246,242,.7);letter-spacing:-.06em}
-.card.sk5 .ix:not(.ix2){top:3%;left:4%}
-.card.sk5 .ix2{bottom:3%;right:4%}
-.card.sk5 .court{border:1px solid currentColor}
+
+.card.sk5 .ix{font-size:27cqw;line-height:1;letter-spacing:-.05em;opacity:.92}
+.card.sk5 .ix svg{width:19cqw;height:19cqw;margin-top:8%}
+.card.sk5 .ix:not(.ix2){top:4%;left:6%}
+.card.sk5 .ix2{bottom:4%;right:6%}
+.card .art{position:absolute;inset:0;pointer-events:none}
+
 .card .sci{display:none}
 .card.sk5 .sci{display:inline}
 .bk6{background:var(--bk6,none) center/100% 100% no-repeat,#f3efdf}
@@ -413,7 +415,7 @@ function wearInner(c,sk){
   const ding=()=>{const x=r()<.5?0:100,y=r()<.5?0:140,d=R(5,11);return `<path d="M${x} ${y}h${x?-d:d}L${x} ${y+(y?-d:d)}z" fill="#000" opacity="${R(.12,.28).toFixed(2)}"/>`};
   /* every deck is dirty: grime specks and liquid stains with a darker tide line, placed differently on each card */
   const dust=sk===3?'.55 0 0 0 0 .47 0 0 0 0 .33':'.2 0 0 0 0 .12 0 0 0 0 .05';
-  o+=`<defs><filter id="${id}s" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${R(.07,.12).toFixed(3)} ${R(.06,.1).toFixed(3)}" numOctaves="4" seed="${(r()*200|0)+1}"/><feColorMatrix values="0 0 0 0 ${dust.split(' ')[0]} 0 0 0 0 ${dust.split(' ')[5]} 0 0 0 0 ${dust.split(' ')[10]} 0 0 0 ${n1(R(2.2,2.8))} ${R(sk===1?-1.8:-1.62,sk===1?-1.66:-1.42).toFixed(2)}"/></filter><filter id="${id}g" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="${(r()*90|0)+1}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></defs>${sk===3?'':`<rect width="100" height="140" filter="url(#${id}s)"/>`}`;
+  o+=`<defs><filter id="${id}s" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${R(.07,.12).toFixed(3)} ${R(.06,.1).toFixed(3)}" numOctaves="4" seed="${(r()*200|0)+1}"/><feColorMatrix values="0 0 0 0 ${dust.split(' ')[0]} 0 0 0 0 ${dust.split(' ')[5]} 0 0 0 0 ${dust.split(' ')[10]} 0 0 0 ${n1(R(2.2,2.8))} ${R(sk===1||sk===5?-1.8:-1.62,sk===1||sk===5?-1.66:-1.42).toFixed(2)}"/></filter><filter id="${id}g" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="${(r()*90|0)+1}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></defs>${sk===3?'':`<rect width="100" height="140" filter="url(#${id}s)"/>`}`;
   const claw=col=>{const n=3+(r()*2|0),a=R(.95,1.45),sg=r()<.5?1:-1,dx=Math.cos(a)*sg,dy=Math.sin(a),nx=-dy,ny=dx,x0=R(22,68),y0=R(22,62),len=R(46,84),gap=R(4.5,7),cur=R(-13,13);let q='';
     for(let k=0;k<n;k++){const sx=x0+nx*gap*(k-n/2)+R(-1.5,1.5),sy=y0+ny*gap*(k-n/2)+R(-3,3),l=len*R(.72,1.05),ex=sx+dx*l,ey=sy+dy*l,mx=(sx+ex)/2+nx*cur,my=(sy+ey)/2+ny*cur,w=R(.9,1.7);
       q+=`<path d="M${n1(sx)} ${n1(sy)}Q${n1(mx)} ${n1(my)} ${n1(ex)} ${n1(ey)}" stroke="${col}" stroke-width="${w.toFixed(2)}" opacity=".85"/><path d="M${n1(sx+dx*l*.18)} ${n1(sy+dy*l*.18)}Q${n1(mx)} ${n1(my)} ${n1(sx+dx*l*.8)} ${n1(sy+dy*l*.8)}" stroke="${col}" stroke-width="${(w*1.7).toFixed(2)}" opacity=".6"/><path d="M${n1(sx+.7)} ${n1(sy+.7)}Q${n1(mx+.7)} ${n1(my+.7)} ${n1(ex+.5)} ${n1(ey+.5)}" stroke="#000" stroke-width=".5" opacity=".5"/>`}
@@ -433,14 +435,7 @@ function wearInner(c,sk){
       +(r()<.38?claw('#b5ab94'):'');
   }
   else if(sk===4)o+=spill(1+(r()*2|0),'#5a3410',.1,.2)+burn(true)+(r()<.45?burn(false):'')+stain(1+(r()*2|0),'#1a0e05',.22)+(r()<.4?ring():'')+(r()<.4?crease():'')+(r()<.1?claw('#f6f0de'):'');
-  else if(sk===5){
-    /* lab cards: serial number, registration marks, an inspection stamp, pen notes, coffee */
-    const ser=`${String.fromCharCode(65+(r()*26|0))}${String.fromCharCode(65+(r()*26|0))}-${1000+(r()*9000|0)}`,sx=R(52,70),sy=R(88,118),sa=R(-28,28),ink='#173a4a';
-    o+=`<g fill="none" stroke="${ink}" stroke-width=".5" opacity=".7"><path d="M94 4v6M91 7h6M6 130v6M3 133h6"/><circle cx="94" cy="7" r="1.800"/><circle cx="6" cy="133" r="1.800"/><path d="M24 136h52M24 134.500v3M76 134.500v3M50 135v2"/></g><text x="50" y="133.300" text-anchor="middle" font-family="monospace" font-size="4" fill="${ink}" opacity=".8">№ ${ser}</text>`
-      +(r()<.6?`<g transform="rotate(${n1(sa)} ${n1(sx)} ${n1(sy)})" fill="none" stroke="#b3401f" opacity="${R(.35,.6).toFixed(2)}" filter="url(#${id}g)"><circle cx="${n1(sx)}" cy="${n1(sy)}" r="11" stroke-width="1.300"/><circle cx="${n1(sx)}" cy="${n1(sy)}" r="8.500" stroke-width=".5"/><path d="M${n1(sx-6)} ${n1(sy)}h12" stroke-width="1.600"/></g>`:'')
-      +(r()<.5?`<path d="M${n1(R(60,80))} ${n1(R(20,40))}q4 6 7 -1t6 2 5 -3" fill="none" stroke="#1c2f6b" stroke-width=".8" opacity=".7"/>`:'')
-      +spill(1+(r()*2|0),'#6b5a34',.08,.18)+(r()<.55?ring():'')+(r()<.5?crease():'')+scr(1+(r()*3|0),.3,.4)+(r()<.3?ding():'');
-  }
+  else if(sk===5)o+=spill(1+(r()*3|0),'#7a5a2c',.08,.2)+stain(1+(r()*2|0),'#6b4416',.16)+(r()<.55?crease():'')+scr(2+(r()*3|0),.3,.5)+(r()<.3?ring():'')+(r()<.5?ding():'');
   else if(sk===7)o+=spill(1+(r()*3|0),'#3a240c',.12,.26)+stain(1+(r()*2|0),'#1a120a',.24)+crease()+(r()<.6?crease():'')+scr(3+(r()*4|0),.25,.6)+(r()<.35?ring():'')+(r()<.6?ding():'')+(r()<.12?claw('#efe2c0'):'');
   else o+=spill(2+(r()*3|0),'#6b5a34',.1,.22)+stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.45?blood():'')+tearPolys(c).map(t=>`<path d="M${t}Z" fill="none" stroke="#fffdf2" stroke-width="1.700" opacity=".85" stroke-linejoin="round"/>`).join('');
   return o;
@@ -480,7 +475,8 @@ const tearPath=(c,sk)=>'M-9-9H109V149H-9Z'+(sk===3?burnPolys(c):tearPolys(c)).ma
 const wearSheet=document.createElement('style');document.head.appendChild(wearSheet);const wearDone={};
 function wearCls(c,sk){
   const k='w'+sk+c;
-  if(!wearDone[k]){wearDone[k]=1;if(sk===6||sk===3)try{const mk=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none"><path fill-rule="evenodd" d="${tearPath(c,sk)}"/></svg>`)}") 0 0/100% 100% no-repeat`;wearSheet.sheet.insertRule(`.card.${k}{-webkit-mask:${mk};mask:${mk}}`,wearSheet.sheet.cssRules.length);
+  if(!wearDone[k]){wearDone[k]=1;if(sk===5&&c!=='JK')try{wearSheet.sheet.insertRule(`.card.${k} .art{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140">${labArt(c)}</svg>`)}") center/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}
+    if(sk===6||sk===3)try{const mk=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none"><path fill-rule="evenodd" d="${tearPath(c,sk)}"/></svg>`)}") 0 0/100% 100% no-repeat`;wearSheet.sheet.insertRule(`.card.${k}{-webkit-mask:${mk};mask:${mk}}`,wearSheet.sheet.cssRules.length);
       if(sk===3)wearSheet.sheet.insertRule(`.card.${k}::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;mix-blend-mode:overlay;background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${shineInner(c)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}
     try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
   return k;
@@ -985,7 +981,7 @@ const SUITS=[
  {H:'M50 94C30 70 14 52 14 32 14 18 23 8 33 8c8 0 14 6 17 16 3-10 9-16 17-16 10 0 19 10 19 24 0 20-16 38-36 62z',D:'M50 2c5 22 14 36 30 48-16 12-25 26-30 48-5-22-14-36-30-48C36 38 45 24 50 2z',S:'M50 2c5 24 34 40 34 62 0 11-8 18-17 18-7 0-12-4-15-10 0 9 3 15 8 19 3 2 6 3 9 3v2H31v-2c3 0 6-1 9-3 5-4 8-10 8-19-3 6-8 10-15 10-9 0-17-7-17-18C16 42 45 26 50 2z',C:'M50 4a17 17 0 0 1 14 27 17 17 0 1 1-11 31c0 12 3 20 10 26 2 2 5 3 8 4v4H29v-4c3-1 6-2 8-4 7-6 10-14 10-26a17 17 0 1 1-11-31A17 17 0 0 1 50 4z'},
  {e:1,H:'M50 90C20 64 6 47 6 29 6 15 17 7 28 7c10 0 18 6 22 16 4-10 12-16 22-16 11 0 22 8 22 22 0 18-14 35-44 61zM50 72C34 58 24 47 24 34c0-7 5-11 10-11 7 0 12 5 16 13 4-8 9-13 16-13 5 0 10 4 10 11 0 13-10 24-26 38z',D:'M50 4c8 18 22 35 38 46-16 11-30 28-38 46-8-18-22-35-38-46 16-11 30-28 38-46zM50 26c5 9 11 17 19 24-8 7-14 15-19 24-5-9-11-17-19-24 8-7 14-15 19-24z',S:'M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4zM50 26c6 12 24 22 24 36 0 6-4 9-9 9-6 0-10-4-15-12-5 8-9 12-15 12-5 0-9-3-9-9 0-14 18-24 24-36z',C:'M50 5a20 20 0 0 1 17 30 20 20 0 1 1-13 33c1 11 6 21 14 28H32c8-7 13-17 14-28a20 20 0 1 1-13-33A20 20 0 0 1 50 5zM50 16a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM30 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM70 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18z'},
  {H:'M50 88C16 66 4 50 4 30 4 14 16 6 28 6c12 0 19 7 22 14 3-7 10-14 22-14 12 0 24 8 24 24 0 20-12 36-46 58z',D:'M50 5q6 6 40 45-34 39-40 45-6-6-40-45 34-39 40-45z',S:'M50 4C58 22 96 38 96 62c0 14-11 22-24 22-7 0-13-3-17-8l11 18H34l11-18c-4 5-10 8-17 8C15 84 4 76 4 62 4 38 42 22 50 4z',C:'M50 4a22 22 0 0 1 20 31 22 22 0 1 1-14 36l10 25H34l10-25a22 22 0 1 1-14-36A22 22 0 0 1 50 4z'},
- {sci:1},
+ {H:'M50 90C20 64 6 47 6 29 6 15 17 7 28 7c10 0 18 6 22 16 4-10 12-16 22-16 11 0 22 8 22 22 0 18-14 35-44 61z',D:'M50 4c8 18 22 35 38 46-16 11-30 28-38 46-8-18-22-35-38-46 16-11 30-28 38-46z',S:'M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4z',C:'M50 5a20 20 0 0 1 17 30 20 20 0 1 1-13 33c1 11 6 21 14 28H32c8-7 13-17 14-28a20 20 0 1 1-13-33A20 20 0 0 1 50 5z'},
  {H:'M49 89C24 68 7 50 8 31 9 16 19 8 29 9c9 1 16 7 20 17 5-11 13-17 23-16 11 1 20 10 19 23-1 18-16 34-42 56z',D:'M51 5c7 17 20 33 37 44-15 12-29 28-37 46-9-17-22-34-39-45 16-11 30-27 39-45z',S:'M49 5c8 18 41 36 42 58 0 13-10 21-21 20-8 0-13-4-17-9 2 9 6 17 15 22l-35 1c8-5 12-13 13-23-3 6-9 10-17 10C18 84 8 76 9 63 10 41 42 24 49 5z',C:'M51 6c11 1 19 9 19 20 0 4-1 7-3 10 12-2 23 6 23 18 0 11-9 20-20 19-6 0-11-2-15-6 1 11 6 21 13 28l-36 1c8-7 13-17 14-29-4 4-9 6-15 6C20 73 11 64 11 53c0-12 11-20 22-18-2-3-3-6-3-10C30 14 40 5 51 6z'},
  {ink:{H:'M22 34l13-11M24 46l20-17M60 30l10-9',D:'M40 42l14-20M42 58l18-24',S:'M32 60l16-24M42 68l16-22',C:'M43 23l10-9M22 54l11-9M62 54l11-9'}}
 ];
@@ -1114,7 +1110,43 @@ function courtHalf(r,c,sk=0){
 <path d="M81.500 70.500q4.500-3 9 0v5q-4.500 3-9 0z" fill="var(--sk)" ${L} stroke-width=".900"/><path d="M83 72.500h6M83 74.300h6" ${L} stroke-width=".4"/>`;
   return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${sk}${st(c)}" x="6.5" y="6.5" width="16" height="16" fill="currentColor"/>`;
 }
+/* deck 5 art: one painted picture per card — researchers on the court cards, a rack with as many test tubes as the card's value on number cards */
+function labArt(c){
+  const r=rk(c),ac=red(c)?'#b5503a':'#3d5560',dk='#3a2e22',dk2='#4a3d30',coat='#f3eede',sh='#a08c66',arm='#d5cab0',skin='#d2a57f',gl='#dfe9e6';
+  const shoes='<path d="M36 121h12v3.500H35zM53 121h12l1 3.500H53z" fill="#231a12"/>',legs=`<path d="M41 92 39 122h8l3-28z" fill="${dk2}"/><path d="M52 94 55 122h8l-3-30z" fill="${dk}"/>${shoes}`;
+  let g='',cap='ОБРАЗЦЫ';
+  if(r==='K'){cap='ПРОФЕССОР';g=`${legs}<path d="M38 45q13-5 26 0l8 50q-21 6-42 0z" fill="${coat}"/><path d="M38 45l-8 50q7 2 13 2l3-40z" fill="${sh}" opacity=".8"/><path d="M50 47 48.500 97h3.500z" fill="#8f8266" opacity=".7"/><path d="M46 45l4.500 10 4.500-10z" fill="${ac}"/>
+<path d="M38 46q-6 4-7 22l1 12h5l2-14z" fill="${arm}"/><circle cx="34" cy="81" r="2.600" fill="${skin}"/>
+<path d="M62 46q8 2 10-6l2-12 5 1-2 15q-6 8-13 6z" fill="${arm}"/><circle cx="76" cy="27" r="2.600" fill="${skin}"/>
+<path d="M74 6h4v6l6 10q1 3-2 3H70q-3 0-2-3l6-10z" fill="${gl}" opacity=".9"/><path d="M71 19h10l2 3.500q.600 1.500-1 1.500H70q-1.600 0-1-1.500z" fill="${ac}" opacity=".85"/>
+<path d="M46.500 40h7v6h-7z" fill="#b98c68"/><ellipse cx="50" cy="35" rx="6.300" ry="7.300" fill="${skin}"/><path d="M44 37q1 8.500 6 10 5-1.500 6-10-2 3.500-6 3.500t-6-3.500z" fill="#cfc9bb"/><path d="M43.600 34q-1.600-5 1.600-8.500l1 3.500zM56.400 34q1.600-5-1.600-8.500l-1 3.500z" fill="#cfc9bb"/><path d="M45 34h4M51 34h4" stroke="#231a12" stroke-width="1.700"/>`}
+  else if(r==='Q'){cap='ИССЛЕДОВАТЕЛЬ';g=`<path d="M44 96 43 122h6l2-26z" fill="${dk2}"/><path d="M52 96 54 122h6l-2-26z" fill="${dk}"/><path d="M40 121h10v3.500H39zM53 121h9l1 3.500H53z" fill="#231a12"/>
+<path d="M40 46q10-4 20 0l7 52q-17 5-34 0z" fill="${coat}"/><path d="M60 46l7 52q-5 1.500-10 2l-2-44z" fill="${sh}" opacity=".8"/><path d="M38.500 68q11.500 3 23 0l.500 3.500q-12 3-24 0z" fill="#8f8266"/><path d="M46.500 46l3.500 8 3.500-8z" fill="${ac}"/>
+<path d="M40 47q-8 6-8 14l7 8 3-3-4-6 4-8z" fill="${arm}"/><circle cx="40" cy="68" r="2.400" fill="${skin}"/>
+<path d="M60 47q7 4 9 10l2-12 4.500 1-2 16q-6 4-11-2z" fill="${arm}"/><circle cx="73.500" cy="44" r="2.400" fill="${skin}"/>
+<path d="M71.500 24h4v18a2 2 0 0 1-4 0z" fill="${gl}" opacity=".9"/><path d="M71.500 33h4v9a2 2 0 0 1-4 0z" fill="${ac}" opacity=".85"/>
+<path d="M47 41h6v6h-6z" fill="#b98c68"/><ellipse cx="50" cy="36" rx="5.800" ry="6.800" fill="${skin}"/><path d="M43.800 38q-2-11.500 6.200-12 8.200.5 6.200 12-1-6.500-6.200-7-5.200.5-6.200 7z" fill="#5a3a22"/><circle cx="50" cy="25" r="3.700" fill="#5a3a22"/><path d="M45.500 36h3.500M51 36h3.500" stroke="#231a12" stroke-width="1.400"/>`}
+  else if(r==='J'){cap='ЛАБОРАНТ';g=`<path d="M42 92 40 122h7l3-28z" fill="${dk2}"/><path d="M52 93 55 122h7l-3-29z" fill="${dk}"/>${shoes}
+<path d="M39 46q11-4 22 0l6 46q-17 5-34 0z" fill="${coat}"/><path d="M39 46l-6 46q6 2 12 2.500l2-42z" fill="${sh}" opacity=".8"/><path d="M47 46l3 7 3-7z" fill="${ac}"/>
+<path d="M42 50h3.500v15H42zM48 46h4.500v19H48zM55.500 52H59v13h-3.500z" fill="${gl}" opacity=".9"/><path d="M42 57h3.500v8H42zM48 54h4.500v11H48zM55.500 58H59v7h-3.500z" fill="${ac}" opacity=".85"/>
+<path d="M35 64h30v14H35z" fill="#8a6a44"/><path d="M35 64h30v3.500H35z" fill="#6b4e2e"/><path d="M35 71h30" stroke="#5a4226" stroke-width=".8"/>
+<path d="M39 47q-7 5-7 17l4 7h6l-3-7 2-10z" fill="${arm}"/><path d="M61 47q7 5 7 17l-4 7h-6l3-7-2-10z" fill="${arm}"/><circle cx="38" cy="72" r="2.400" fill="${skin}"/><circle cx="62" cy="72" r="2.400" fill="${skin}"/>
+<path d="M47 41h6v6h-6z" fill="#b98c68"/><ellipse cx="50" cy="36" rx="5.900" ry="6.900" fill="${skin}"/><path d="M44 36q-1-9.500 6-9.500t6 9.500q-2-4.500-6-5-4 .5-6 5z" fill="#2b2622"/><path d="M44 34.300h12v3.700q-3 1.600-6 0-3 1.600-6 0z" fill="#9fc4c0" opacity=".9"/>`}
+  else if(r==='A'){cap='АТОМ';g=`<path transform="translate(26 40) scale(.48)" d="${SUITS[5][st(c)]}" fill="${ac}"/><g fill="none" stroke="${dk}" stroke-width="1.300" opacity=".75"><ellipse cx="50" cy="64" rx="34" ry="12"/><ellipse cx="50" cy="64" rx="34" ry="12" transform="rotate(60 50 64)"/><ellipse cx="50" cy="64" rx="34" ry="12" transform="rotate(120 50 64)"/></g><circle cx="84" cy="64" r="2.600" fill="${dk}"/><circle cx="33" cy="34.500" r="2.600" fill="${dk}"/><circle cx="33" cy="93.500" r="2.600" fill="${dk}"/>`}
+  else{
+    const n=nv(c),rows=n>5?[Math.ceil(n/2),Math.floor(n/2)]:[n];
+    rows.forEach((m,ri)=>{const back=rows.length>1&&ri===0,y=back?44:rows.length>1?62:54,w=(m-1)*10,x0=50-w/2,sc=back?.9:1;
+      g+=`<path d="M${x0-6} ${y+22}h${w+12}v3.500H${x0-6}z" fill="#6b4e2e"/>`;
+      for(let k=0;k<m;k++){const x=x0+k*10-2.500,lv=6+((k*7+n*3+ri*5)%9);g+=`<path d="M${x} ${y}h5v${30*sc}a2.500 2.500 0 0 1-5 0z" fill="${gl}" opacity=".9"/><path d="M${x} ${y+lv}h5v${30*sc-lv}a2.500 2.500 0 0 1-5 0z" fill="${ac}" opacity=".85"/><path d="M${x-.800} ${y}h6.600" stroke="${dk}" stroke-width=".900" opacity=".6"/>`}
+      g+=`<path d="M${x0-7} ${y+34*sc}h${w+14}v6H${x0-7}z" fill="#8a6a44"/><path d="M${x0-5} ${y+25.500}v${34*sc-25.500}M${x0+w+5} ${y+25.500}v${34*sc-25.500}" stroke="#6b4e2e" stroke-width="2.500"/>`});
+  }
+  const fig='KQJ'.includes(r),mist=fig?'<ellipse cx="40" cy="121" rx="24" ry="8" fill="#efe8d3"/><ellipse cx="62" cy="123" rx="22" ry="7" fill="#efe8d3"/><ellipse cx="50" cy="114" rx="14" ry="5" fill="#efe8d3" opacity=".7"/>':'<ellipse cx="50" cy="108" rx="34" ry="7" fill="#efe8d3" opacity=".8"/>';
+  let sp='';const q=rng(h32('art:'+c));for(let k=0;k<14;k++)sp+=`<circle cx="${(18+q()*64).toFixed(1)}" cy="${(96+q()*30).toFixed(1)}" r="${(.3+q()*.8).toFixed(2)}" fill="${dk}" opacity="${(.15+q()*.35).toFixed(2)}"/>`;
+  return `<defs><filter id="lw" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="${1+h32(c)%60}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.400" result="d"/><feGaussianBlur in="d" stdDeviation=".320" result="b"/><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3" result="g"/><feColorMatrix in="g" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.100 .340" result="m"/><feComposite in="b" in2="m" operator="in"/></filter><filter id="lm" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="15"/><feGaussianBlur stdDeviation="2.300"/></filter></defs>
+<g filter="url(#lm)"><ellipse cx="50" cy="${fig?64:70}" rx="${fig?27:36}" ry="${fig?44:26}" fill="#8a6f44" opacity=".34"/><ellipse cx="${fig?58:44}" cy="${fig?80:76}" rx="20" ry="26" fill="#6b5433" opacity=".22"/></g><g filter="url(#lw)" ${fig?'transform="translate(50 70) scale(1.270) translate(-50 -67)"':'transform="translate(50 70) scale(1.120) translate(-50 -70)"'}>${g}</g><g filter="url(#lm)">${mist}</g>${sp}<text x="50" y="${fig?132:126}" text-anchor="middle" font-family="Oswald,'Arial Narrow',Arial,sans-serif" font-size="5" font-weight="600" letter-spacing="1.700" fill="#4a4036" opacity=".85">${cap}</text>`;
+}
 function faceHtml(c,sk=0){
+  if(sk===5&&c!=='JK'){const r=rk(c);return `<span class="art"></span><span class="ix">${r}${sv(c,sk)}</span><span class="ix ix2">${r}${sv(c,sk)}</span>`}
   if(c==='JK')return '<span class="ix">★</span><span class="court jkr"><b>✪</b><em>JOKER</em></span>';
   const r=rk(c),ix=`<span class="ix">${r}${sv(c,sk)}</span><span class="ix ix2">${r}${sv(c,sk)}</span>`;
   if('JQK'.includes(r)){const h=courtHalf(r,c,sk);return ix+`<span class="court"><svg viewBox="0 0 100 190" preserveAspectRatio="none"><rect x="1" y="1" width="98" height="188" fill="var(--pp)" fill-opacity=".55" stroke="var(--ln)" stroke-width="1.5"/><g>${h}</g><g transform="rotate(180 50 95)">${h}</g><path d="M1 95h98" stroke="var(--ln)" stroke-width="1.5"/></svg><b>${r}</b></span>`}
@@ -1308,17 +1340,18 @@ const GL=(function(){
     ['#e4e6d6','#b5bca2','#27302a','#8f3024','#a8281c','#1f3f7a','#d6a32c','#efd3ac','#27302a','#f4eedd'],
     ['#2c2519','#0a0805','#e2bd6a','#ec7a5e','#5a1f14','#1b150b','#e2bd6a','#2c2415','#e2bd6a','#15110b'],
     ['#e6d29c','#aa8a50','#2a1a0e','#8c2a12','#a8281c','#1f3f7a','#d6a32c','#efd3ac','#2a1a0e','#f4eedd'],
-    ['#eaf1ec','#c6d3ca','#173a4a','#b3401f','#eef2ee','#2f6f6c','#8a9aa0','#efd3ac','#173a4a','#f2f6f2'],
+    ['#f1e9d2','#d6c8a4','#3a2e22','#b5503a','#eef2ee','#2f6f6c','#8a9aa0','#efd3ac','#3a2e22','#f2f6f2'],
     ['#f6f3e6','#eeead8','#1c2f6b','#c22f25','#c22f25','#1c2f6b','#d6a32c','#efd3ac','#1c2f6b','#f6f3e6'],
     ['#dfcb9c','#ae9360','#2a1c10','#8a2a14','#b08a4e','#5d6140','#b08a4e','#d9b48a','#2a1c10','#dcc79a']];
   const BK=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
   const X='xmlns="http://www.w3.org/2000/svg"';
   const defs=sk=>suitDefs(sk);
-  const FONT=["Georgia,'Times New Roman',serif","'Arial Narrow',Arial,sans-serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","'Courier New',monospace","'Comic Sans MS','Marker Felt',cursive","Georgia,'Times New Roman',serif"];
+  const FONT=["Georgia,'Times New Roman',serif","'Arial Narrow',Arial,sans-serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif","'Comic Sans MS','Marker Felt',cursive","Georgia,'Times New Roman',serif"];
   function faceSVG(c,sk){
     const S=SK[sk],isR=red(c),col=c==='JK'?S[2]:isR?S[3]:S[2];let body='';
     const ix=r=>`<g><text x="12" y="20" text-anchor="middle" font-family="${FONT[sk]}" font-weight="700" font-size="${r==='10'?17:20}" fill="${col}">${r}</text>${c==='JK'?'':`<use href="#s${sk}${st(c)}" x="5.5" y="23" width="13" height="13" fill="${col}"/>`}</g>`;
-    if(c==='JK')body=ix('★')+`<rect x="22" y="14" width="56" height="112" fill="none" stroke="${col}" stroke-width="1.5"/><text x="50" y="76" text-anchor="middle" font-size="46" fill="${col}">✪</text><text x="50" y="98" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="12" letter-spacing="1" fill="${col}">JOKER</text>`;
+    if(sk===5&&c!=='JK'){const i1=ix(rk(c));body=labArt(c)+i1+`<g transform="rotate(180 50 70)">${i1}</g>`}
+    else if(c==='JK')body=ix('★')+`<rect x="22" y="14" width="56" height="112" fill="none" stroke="${col}" stroke-width="1.5"/><text x="50" y="76" text-anchor="middle" font-size="46" fill="${col}">✪</text><text x="50" y="98" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="12" letter-spacing="1" fill="${col}">JOKER</text>`;
     else{
       const r=rk(c),i1=ix(r);body=i1+`<g transform="rotate(180 50 70)">${i1}</g>`;
       if('JQK'.includes(r)){
@@ -1330,7 +1363,7 @@ const GL=(function(){
         body+=PIPS[n].map(([x,y])=>{const px=21+x*.58,py=15.4+y*1.092;return `<use href="#s${sk}${st(c)}" x="${(px-w/2).toFixed(1)}" y="${(py-w/2).toFixed(1)}" width="${w}" height="${w}" ${sk===6?`fill="none" stroke="${col}" stroke-width="7"`:`fill="${col}"`} ${y>50?`transform="rotate(180 ${px.toFixed(1)} ${py.toFixed(1)})"`:''}/>`}).join('');
       }
     }
-    const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?`<g stroke="#173a4a" opacity=".22">${Array.from({length:19},(_,q)=>`<path d="M0 ${7*q+7}h100" stroke-width="${q%5===4?.5:.2}"/>`).join('')}${Array.from({length:13},(_,q)=>`<path d="M${7*q+8} 0v140" stroke-width="${q%5===4?.5:.2}"/>`).join('')}</g><rect x="2.500" y="2.500" width="19" height="35" fill="#f2f6f2" fill-opacity=".7" stroke="#173a4a" stroke-width=".6"/>`:sk===6?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
+    const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?'':sk===6?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
     return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs(sk)}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>${sk===6||sk===3?`<clipPath id="tc"><path clip-rule="evenodd" d="${tearPath(c,sk)}"/></clipPath>`:''}<g style="color:${col}" ${sk===6||sk===3?'clip-path="url(#tc)"':''}><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/>${sk===3?`<g style="mix-blend-mode:overlay">${shineInner(c)}</g>`:''}</g></svg>`;
   }
   const backSVG=b=>backArt(b);
