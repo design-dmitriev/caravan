@@ -957,12 +957,48 @@ const SUITS=[
  {H:'M49 89C24 68 7 50 8 31 9 16 19 8 29 9c9 1 16 7 20 17 5-11 13-17 23-16 11 1 20 10 19 23-1 18-16 34-42 56z',D:'M51 5c7 17 20 33 37 44-15 12-29 28-37 46-9-17-22-34-39-45 16-11 30-27 39-45z',S:'M49 5c8 18 41 36 42 58 0 13-10 21-21 20-8 0-13-4-17-9 2 9 6 17 15 22l-35 1c8-5 12-13 13-23-3 6-9 10-17 10C18 84 8 76 9 63 10 41 42 24 49 5z',C:'M51 6c11 1 19 9 19 20 0 4-1 7-3 10 12-2 23 6 23 18 0 11-9 20-20 19-6 0-11-2-15-6 1 11 6 21 13 28l-36 1c8-7 13-17 14-29-4 4-9 6-15 6C20 73 11 64 11 53c0-12 11-20 22-18-2-3-3-6-3-10C30 14 40 5 51 6z'}
 ];
 /* lab deck: each suit as a little diagram — outline, nucleus, an orbit and axis ticks */
-const suitInner=(sk,x)=>{const T=SUITS[sk];if(T.sci)return `<path d="${SUITS[0][x]}" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><ellipse cx="50" cy="${x==='H'?44:x==='S'?56:50}" rx="27" ry="9" fill="none" stroke="currentColor" stroke-width="2.500" transform="rotate(-24 50 50)"/><circle cx="50" cy="${x==='H'?44:x==='S'?56:50}" r="7" fill="currentColor"/><path d="M50 0v9M50 91v9M0 50h9M91 50h9" stroke="currentColor" stroke-width="2.500"/>`;return `<path ${T.e?'fill-rule="evenodd" ':''}d="${T[x]}"/>`};
+const suitInner=(sk,x)=>{const T=SUITS[sk];if(T.sci)return `<path d="${SUITS[1][x]}" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><circle cx="50" cy="${x==='C'?47:x==='S'?50:52}" r="6.500" fill="currentColor"/>`;return `<path ${T.e?'fill-rule="evenodd" ':''}d="${T[x]}"/>`};
 const suitDefs=sk=>['S','H','D','C'].map(x=>`<symbol id="s${sk}${x}" viewBox="0 0 100 100">${suitInner(sk,x)}</symbol>`).join('');
 document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${SUITS.map((_,k)=>suitDefs(k)).join('')}</defs></svg>`);
 const sv=(c,sk=0)=>`<svg viewBox="0 0 100 100"><use href="#s${sk}${st(c)}"/></svg>`;
 /* original court figures in the traditional mirrored style; colors come from the deck skin */
+function sciHalf(r,c,sk){
+  const L='stroke="var(--ln)"',SK='fill="var(--sk)"',CO='#eef2ee',GL='fill="#bfe3e0" fill-opacity=".6"';
+  let h=`<path d="M4 95 12 66q16-10 38-9 22-1 38 9l8 29z" fill="${CO}" ${L} stroke-width="1.5"/>
+<path d="M16 72l5 23M84 72l-5 23" ${L} stroke-width=".5" opacity=".5"/>
+<path d="M36 58 50 82 64 58 58 55 50 68 42 55z" fill="#dbe4de" ${L} stroke-width="1"/>
+<path d="M43 56 50 69 57 56z" fill="#a9cfcb" ${L} stroke-width=".8"/><path d="M48.600 60.500h2.800l1.400 11.500-2.800 4.500-2.800-4.500z" fill="currentColor"/>
+<circle cx="50" cy="86" r="1.100" fill="none" ${L} stroke-width=".7"/><circle cx="50" cy="91.500" r="1.100" fill="none" ${L} stroke-width=".7"/>
+<path d="M21 76h11v13H21z" fill="#fff" ${L} stroke-width=".7"/><path d="M26.500 76v-3.500" ${L} stroke-width="1.200"/><circle cx="26.500" cy="80.500" r="2" ${SK} ${L} stroke-width=".4"/><path d="M23 85h7M23 87h4.500" ${L} stroke-width=".5"/>
+<path d="M44 42h12v12q-6 4-12 0z" ${SK} ${L} stroke-width="1"/>
+<path d="M37.500 30q-2.500 1-2 4.500t3 3.500M62.500 30q2.500 1 2 4.500t-3 3.500" ${SK} ${L} stroke-width=".9"/>
+<ellipse cx="50" cy="32" rx="12" ry="14" ${SK} ${L} stroke-width="1.5"/>
+<path d="M41.800 26.300q3.300-2 6.600 0M51.600 26.300q3.300-2 6.600 0" ${L} stroke-width="1.300" fill="none"/>
+<circle cx="45.100" cy="31" r="1" fill="var(--ln)"/><circle cx="54.900" cy="31" r="1" fill="var(--ln)"/>
+<path d="M50 31v5.800q-1.500.9-2.800.2" ${L} stroke-width="1" fill="none"/>`;
+  const specs=`<circle cx="45.100" cy="31" r="4.300" ${GL} ${L} stroke-width="1.100"/><circle cx="54.900" cy="31" r="4.300" ${GL} ${L} stroke-width="1.100"/><path d="M49.400 31h1.200M37.800 30.500h3M59.200 30.500h3" ${L} stroke-width="1.100"/>`;
+  const sleeve=`<path d="M68 64q11 0 15 8l-5 7q-6-7-13-7z" fill="${CO}" ${L} stroke-width="1.100"/>`,hand=y=>`<path d="M80.500 ${y}q4.500-3 9 0v5q-4.500 3-9 0z" ${SK} ${L} stroke-width=".9"/>`;
+  if(r==='K')h+=`<path d="M37.600 33q-4-10 2.400-17.500l2.200 4q-3.200 6-1.600 13zM62.400 33q4-10-2.400-17.500l-2.200 4q3.200 6 1.600 13z" fill="#c9cfd0" ${L} stroke-width=".9"/>
+<path d="M44 21.500h12M45.500 24h9" ${L} stroke-width=".4" opacity=".6"/>
+<path d="M39.300 38q1 12.500 10.700 15.500 9.700-3 10.700-15.500-3 6.500-10.700 6.500T39.300 38z" fill="#c9cfd0" ${L} stroke-width=".9"/>
+<path d="M44.300 40.300q2.900-1.900 5.700 0 2.800-1.900 5.700 0-2.900 2.100-5.700.6-2.800 1.500-5.700-.6z" fill="#aab2b4" ${L} stroke-width=".4"/>${specs}${sleeve}
+<path d="M82 38h6v11l8 16q1.200 4.500-3 4.500H77q-4.200 0-3-4.500l8-16z" fill="#e8f3f1" fill-opacity=".75" ${L} stroke-width="1.100"/><path d="M80.800 38h8.400" ${L} stroke-width="1.700"/>
+<path d="M78.600 60h12.800l3.200 6.300q.8 2-1.500 2H76.900q-2.300 0-1.500-2z" fill="currentColor" opacity=".55"/><circle cx="83" cy="57" r="1" fill="none" ${L} stroke-width=".5"/><circle cx="86.500" cy="54" r=".7" fill="none" ${L} stroke-width=".5"/>${hand(71.500)}`;
+  else if(r==='Q')h+=`<circle cx="50" cy="13.500" r="6.300" fill="#5a3a22" ${L} stroke-width="1"/><path d="M46 12q4-3 8 0" ${L} stroke-width=".4" opacity=".6" fill="none"/>
+<path d="M37.800 35q-4.500-17.500 12.200-18.500 16.700 1 12.200 18.500-2-9.500-12.200-10.500-10.200 1-12.200 10.500z" fill="#5a3a22" ${L} stroke-width="1"/>
+<path d="M46.300 40.500q1.800-1.400 3.700-.2 1.900-1.200 3.700.2-3.700 3-7.400 0z" fill="#b3401f" ${L} stroke-width=".4"/>${specs}
+<circle cx="36.300" cy="39" r="1.200" fill="#a9cfcb" ${L} stroke-width=".4"/><circle cx="63.700" cy="39" r="1.200" fill="#a9cfcb" ${L} stroke-width=".4"/>${sleeve}
+<path d="M82.500 36h5v29a2.500 2.500 0 0 1-5 0z" fill="#e8f3f1" fill-opacity=".75" ${L} stroke-width="1"/><path d="M81.500 36h7" ${L} stroke-width="1.500"/>
+<path d="M83.100 50h3.800v15a1.900 1.900 0 0 1-3.800 0z" fill="currentColor" opacity=".55"/><circle cx="85" cy="46" r=".8" fill="none" ${L} stroke-width=".5"/>${hand(68)}`;
+  else h+=`<path d="M38 31q-2.500-16 12-16t12 16q-3-8.500-12-9.500-9 1-12 9.500z" fill="#2b2622" ${L} stroke-width="1"/>
+<path d="M46.500 41q3.500 1.500 7 0" ${L} stroke-width="1.200" fill="none"/>
+<path d="M38.300 27.300h23.400v7.200q-5.800 3-11.700 0-5.900 3-11.700 0z" ${GL} ${L} stroke-width="1.200"/><path d="M36 29.500h2.300M61.700 29.500H64" ${L} stroke-width="2"/><path d="M41 29.300l3-1.300M52.500 29.300l3-1.300" stroke="#fff" stroke-width=".7"/>${sleeve}
+<rect x="75.500" y="48" width="17" height="24" rx="1" fill="#d9c9a0" ${L} stroke-width="1"/><rect x="77.500" y="51" width="13" height="19" fill="#fff" ${L} stroke-width=".5"/><rect x="80.500" y="46.300" width="7" height="4" rx="1" fill="#8a9aa0" ${L} stroke-width=".6"/>
+<path d="M79 55h10M79 58.500h10M79 62h6.500" ${L} stroke-width=".5"/><path d="M79 66l2 2 4-4" stroke="currentColor" stroke-width="1" fill="none"/>${hand(72)}`;
+  return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${sk}${st(c)}" x="6.500" y="6.500" width="15" height="15" fill="currentColor"/>`;
+}
 function courtHalf(r,c,sk=0){
+  if(sk===5)return sciHalf(r,c,sk);
   const L='stroke="var(--ln)"',G='stroke="var(--gd)"';
   let h=`<path d="M4 95 12 64q18-12 38-8 20-4 38 8l8 31z" fill="var(--c1)" ${L} stroke-width="1.5"/>
 <path d="M50 56 37 95h26z" fill="var(--c2)" ${L} stroke-width="1.2"/>
@@ -1012,8 +1048,6 @@ function courtHalf(r,c,sk=0){
 <path d="M86 12v68" stroke="var(--ln)" stroke-width="3.200"/><path d="M86 14v64" stroke="#7a4a22" stroke-width="1.600"/>
 <path d="M86 14q-14 2-12 17l12-4z" fill="var(--pp)" ${L} stroke-width="1.300"/><path d="M84.500 16.500q-9 2-8.500 11" ${L} stroke-width=".4" fill="none"/><path d="M86 5l4.200 9.500h-8.400z" fill="var(--pp)" ${L} stroke-width="1"/>
 <path d="M81.500 70.500q4.500-3 9 0v5q-4.500 3-9 0z" fill="var(--sk)" ${L} stroke-width=".900"/><path d="M83 72.500h6M83 74.300h6" ${L} stroke-width=".4"/>`;
-  /* lab deck only: goggles and an atom badge turn the court into researchers */
-  h+=`<g class="sci"><path d="M37.500 31h25" ${L} stroke-width="1.300"/><circle cx="45.100" cy="31" r="4.300" fill="#bfe3e0" fill-opacity=".6" ${L} stroke-width="1.300"/><circle cx="54.900" cy="31" r="4.300" fill="#bfe3e0" fill-opacity=".6" ${L} stroke-width="1.300"/><path d="M43.200 29.300l2.200-1.400M53 29.300l2.200-1.400" stroke="#fff" stroke-width=".7"/><circle cx="50" cy="80" r="6.500" fill="var(--pp)" ${L} stroke-width=".8"/><g fill="none" ${L} stroke-width=".7"><ellipse cx="50" cy="80" rx="5.400" ry="2"/><ellipse cx="50" cy="80" rx="5.400" ry="2" transform="rotate(60 50 80)"/><ellipse cx="50" cy="80" rx="5.400" ry="2" transform="rotate(120 50 80)"/></g><circle cx="50" cy="80" r="1" fill="var(--ln)"/><path d="M27 70h9M27 73.500h6" ${L} stroke-width=".9"/></g>`;
   return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${sk}${st(c)}" x="6.5" y="6.5" width="16" height="16" fill="currentColor"/>`;
 }
 function faceHtml(c,sk=0){
