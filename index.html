@@ -295,6 +295,11 @@ input.vol::-moz-range-thumb{width:30px;height:30px}
   .hc.hot{transition:transform .09s linear;z-index:2}
   .hc.sel{transform:translateY(-16px) translateZ(46px) rotate(calc(var(--r)*1deg)) rotateY(var(--hy,0deg)) rotateX(var(--hx,0deg))}
 }
+
+/* ---- long caravans on the classic table: tighter overlap first, then smaller cards, so the whole stack stays in view ---- */
+.slot{flex:0 0 min(var(--strip),var(--fit,999px));min-height:0}
+.slot:last-child{flex:0 0 calc(var(--ch)*var(--cs,1))}
+.slot .card{width:calc(var(--cw)*var(--cs,1))}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -920,6 +925,7 @@ function render(){
   if(overlay==='records')h+=`<div class="over"><div><h2>Таблица рекордов</h2>${recordsHtml()}<button class="btn" data-act="closeOverlay">Закрыть</button><button class="btn ghost" data-act="clearStats">Очистить таблицу</button></div></div>`;
   if(overlay==='sound')h+=`<div class="over"><div><h2>Звук</h2><div class="volrow"><span>Громкость</span><b id="volv">${muted?'выкл':Math.round(vol*100)+'%'}</b></div><input class="vol" type="range" min="0" max="100" step="5" value="${Math.round(vol*100)}" data-vol aria-label="Громкость"><div class="volq">${[0,25,50,75,100].map(v=>`<button class="btn ghost sm" data-act="volSet" data-v="${v}">${v}</button>`).join('')}</div><button class="btn ghost" data-act="muteT">${muted?'Включить звук':'Выключить звук'}</button><button class="btn" data-act="closeOverlay">Готово</button></div></div>`;
   if(h!==lastHtml){lastHtml=h;app.innerHTML=h}
+  fitCars();
   GL.sync();
 }
 let lastHtml=null;
@@ -1447,6 +1453,25 @@ async function load3d(){
   if(window.THREE&&GL.init()){use3d=want3d();lastHtml=null;render()}
 }
 addEventListener('resize',()=>{const w=GL.ready&&want3d();if(w!==use3d){use3d=w;lastHtml=null}render()});
+function fitCars(){
+  if(use3d)return;
+  const tb=app.querySelector('.table');if(!tb)return;const tr=tb.getBoundingClientRect();
+  for(const car of app.querySelectorAll('.car')){
+    car.style.removeProperty('--fit');car.style.removeProperty('--cs');car.style.removeProperty('padding-top');
+    const n=car.children.length;if(!n)continue;
+    /* the far end of the opponent's lane runs past the top of the screen: keep cards out of that part */
+    const cr=car.getBoundingClientRect(),hid=cr.height>0?Math.max(0,tr.top+5-cr.top)/cr.height*car.clientHeight*1.5:0;
+    if(hid>1)car.style.paddingTop=(3+hid).toFixed(0)+'px';
+    if(n<2)continue;
+    const h=car.lastElementChild.firstElementChild.offsetHeight,H=car.clientHeight-6-hid,s0=car.firstElementChild.offsetHeight;
+    if(!h||h+(n-1)*s0<=H+1)continue;
+    const fit=(H-h)/(n-1);
+    if(fit>=12){car.style.setProperty('--fit',fit.toFixed(1)+'px');continue}
+    let cs=Math.min(1,(H-(n-1)*11)/h),f=11;
+    if(cs<.6){cs=.6;f=Math.max(3,(H-h*.6)/(n-1))}
+    car.style.setProperty('--cs',cs.toFixed(3));car.style.setProperty('--fit',f.toFixed(1)+'px');
+  }
+}
 let drag=null,swallow=false;
 function clearMarks(){app.querySelectorAll('.tgt,.hov').forEach(x=>x.classList.remove('tgt','hov'))}
 function dropTarget(x,y){
