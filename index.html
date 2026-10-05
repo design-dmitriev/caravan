@@ -278,6 +278,10 @@ input.vol::-moz-range-thumb{width:30px;height:30px}
 .card .sci{display:none}
 .card.sk5 .sci{display:inline}
 .bk6{background:var(--bk6,none) center/100% 100% no-repeat,#f3efdf}
+.bk7{background:var(--bk7,none) center/100% 100% no-repeat,#cdb583}
+/* deck 7: ink illustrations on wrapping paper */
+.card.sk7{--ink:#2a1c10;--blood:#8a2a14;--sk:#d9b48a;--ln:#2a1c10;--pp:#dcc79a;background:var(--grain,none),linear-gradient(150deg,#dfcb9c 0,#cdb583 55%,#ae9360 100%);border-radius:5px 7px 4px 8px/7px 4px 8px 5px}
+.card.sk7 .ix{font-size:24cqw}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -337,11 +341,19 @@ let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
 let tblSel=1;
-const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c','#f3efdf'];
+const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c','#f3efdf','#cdb583'];
 const h32=t=>{let h=2166136261;for(const ch of t)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0};
 const rng=seed=>{let a=seed||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
 /* six original back designs, one per deck */
 function backArt(b){
+  if(b===7){let rose='';for(let k=0;k<8;k++){const a=k*Math.PI/4,l=k%2?9:16;rose+=`M50 70L${(50+l*Math.cos(a)).toFixed(1)} ${(70+l*Math.sin(a)).toFixed(1)}`}
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><filter id="mw" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="19" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="52"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .05 0 0 0 2.400 -1.450"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="100" height="140" fill="#cdb583"/><g filter="url(#mw)" fill="none" stroke="#6b4a26" stroke-width=".5" opacity=".6">${Array.from({length:9},(_,q)=>`<ellipse cx="${30+q*3}" cy="${44+q*2}" rx="${8+q*7}" ry="${6+q*6}"/>`).join('')}${Array.from({length:6},(_,q)=>`<ellipse cx="74" cy="112" rx="${5+q*6}" ry="${4+q*4.500}"/>`).join('')}</g>
+<path d="M14 120q14-22 26-30t18-26 22-34" fill="none" stroke="#8a2a14" stroke-width="1.300" stroke-dasharray="3 2.500"/><g stroke="#8a2a14" stroke-width="1.400"><path d="M12 118l4 4M16 118l-4 4M78 28l4 4M82 28l-4 4"/></g><circle cx="40" cy="90" r="1.500" fill="#2a1c10"/><circle cx="58" cy="64" r="1.500" fill="#2a1c10"/>
+<circle cx="50" cy="70" r="18" fill="#cdb583" stroke="#2a1c10" stroke-width="1.200"/><circle cx="50" cy="70" r="15" fill="none" stroke="#2a1c10" stroke-width=".4" stroke-dasharray="1 1.500"/><path d="${rose}" stroke="#2a1c10" stroke-width="1.600" stroke-linecap="round"/><path d="M50 54l3 13h-6z" fill="#8a2a14"/><circle cx="50" cy="70" r="2" fill="#2a1c10"/>
+<rect x="6" y="6" width="88" height="128" fill="none" stroke="#2a1c10" stroke-width="1.300"/><rect x="8.500" y="8.500" width="83" height="123" fill="none" stroke="#2a1c10" stroke-width=".4"/>
+<path d="M0 47h100M0 93h100M33 0v140M67 0v140" stroke="#fff" stroke-width=".6" opacity=".35"/><path d="M0 47.800h100M0 93.800h100M33.800 0v140M67.800 0v140" stroke="#3a240c" stroke-width=".4" opacity=".35"/>
+<rect width="100" height="140" filter="url(#bd)"/><rect width="100" height="140" fill="none" stroke="#3a240c" stroke-width="7" opacity=".4" filter="url(#bb)"/></svg>`}
   if(b===6){let hatch='';for(let k=0;k<26;k++)hatch+=`M${12+k*3} 16l${-6+((k*7)%5)} ${106+((k*13)%7)}`;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><filter id="hw" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.500"/></filter><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="33"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .05 0 0 0 2.400 -1.500"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
 <rect width="100" height="140" fill="#f3efdf"/><g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/>
@@ -411,6 +423,7 @@ function wearInner(c,sk){
       +(r()<.5?`<path d="M${n1(R(60,80))} ${n1(R(20,40))}q4 6 7 -1t6 2 5 -3" fill="none" stroke="#1c2f6b" stroke-width=".8" opacity=".7"/>`:'')
       +spill(1+(r()*2|0),'#6b5a34',.08,.18)+(r()<.55?ring():'')+(r()<.5?crease():'')+scr(1+(r()*3|0),.3,.4)+(r()<.3?ding():'');
   }
+  else if(sk===7)o+=spill(1+(r()*3|0),'#3a240c',.12,.26)+stain(1+(r()*2|0),'#1a120a',.24)+crease()+(r()<.6?crease():'')+scr(3+(r()*4|0),.25,.6)+(r()<.35?ring():'')+(r()<.6?ding():'')+(r()<.12?claw('#efe2c0'):'');
   else o+=spill(2+(r()*3|0),'#6b5a34',.1,.22)+stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.45?blood():'')+tearPolys(c).map(t=>`<path d="M${t}Z" fill="none" stroke="#fffdf2" stroke-width="1.700" opacity=".85" stroke-linejoin="round"/>`).join('');
   return o;
 }
@@ -454,12 +467,12 @@ function wearCls(c,sk){
     try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
   return k;
 }
-const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом','Ручные'];
-let backSel=typeof LS.get('caravan_back2')==='number'?LS.get('caravan_back2')%7:6,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
+const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом','Ручные','Пустошь'];
+let backSel=typeof LS.get('caravan_back2')==='number'?LS.get('caravan_back2')%8:6,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
 const getNames=()=>LS.get('caravan_names')||{};
 const myName=()=>String(getNames().me||'').trim().slice(0,16);
 const pname=i=>{const n=game&&game.nm&&game.nm['p'+i];if(n)return n;if(local)return 'Игрок '+(i+1);return i===meIdx()?'Вы':(game&&names[game.pl['p'+i]])||'Соперник'};
-const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','лабораторные','нарисованные от руки, рваные'];
+const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','лабораторные','нарисованные от руки, рваные','иллюстрации тушью'];
 const skOf=i=>((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length;
 const bkOf=i=>'bk'+(((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length);
 
@@ -954,10 +967,11 @@ const SUITS=[
  {e:1,H:'M50 90C20 64 6 47 6 29 6 15 17 7 28 7c10 0 18 6 22 16 4-10 12-16 22-16 11 0 22 8 22 22 0 18-14 35-44 61zM50 72C34 58 24 47 24 34c0-7 5-11 10-11 7 0 12 5 16 13 4-8 9-13 16-13 5 0 10 4 10 11 0 13-10 24-26 38z',D:'M50 4c8 18 22 35 38 46-16 11-30 28-38 46-8-18-22-35-38-46 16-11 30-28 38-46zM50 26c5 9 11 17 19 24-8 7-14 15-19 24-5-9-11-17-19-24 8-7 14-15 19-24z',S:'M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4zM50 26c6 12 24 22 24 36 0 6-4 9-9 9-6 0-10-4-15-12-5 8-9 12-15 12-5 0-9-3-9-9 0-14 18-24 24-36z',C:'M50 5a20 20 0 0 1 17 30 20 20 0 1 1-13 33c1 11 6 21 14 28H32c8-7 13-17 14-28a20 20 0 1 1-13-33A20 20 0 0 1 50 5zM50 16a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM30 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM70 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18z'},
  {H:'M50 88C16 66 4 50 4 30 4 14 16 6 28 6c12 0 19 7 22 14 3-7 10-14 22-14 12 0 24 8 24 24 0 20-12 36-46 58z',D:'M50 5q6 6 40 45-34 39-40 45-6-6-40-45 34-39 40-45z',S:'M50 4C58 22 96 38 96 62c0 14-11 22-24 22-7 0-13-3-17-8l11 18H34l11-18c-4 5-10 8-17 8C15 84 4 76 4 62 4 38 42 22 50 4z',C:'M50 4a22 22 0 0 1 20 31 22 22 0 1 1-14 36l10 25H34l10-25a22 22 0 1 1-14-36A22 22 0 0 1 50 4z'},
  {sci:1},
- {H:'M49 89C24 68 7 50 8 31 9 16 19 8 29 9c9 1 16 7 20 17 5-11 13-17 23-16 11 1 20 10 19 23-1 18-16 34-42 56z',D:'M51 5c7 17 20 33 37 44-15 12-29 28-37 46-9-17-22-34-39-45 16-11 30-27 39-45z',S:'M49 5c8 18 41 36 42 58 0 13-10 21-21 20-8 0-13-4-17-9 2 9 6 17 15 22l-35 1c8-5 12-13 13-23-3 6-9 10-17 10C18 84 8 76 9 63 10 41 42 24 49 5z',C:'M51 6c11 1 19 9 19 20 0 4-1 7-3 10 12-2 23 6 23 18 0 11-9 20-20 19-6 0-11-2-15-6 1 11 6 21 13 28l-36 1c8-7 13-17 14-29-4 4-9 6-15 6C20 73 11 64 11 53c0-12 11-20 22-18-2-3-3-6-3-10C30 14 40 5 51 6z'}
+ {H:'M49 89C24 68 7 50 8 31 9 16 19 8 29 9c9 1 16 7 20 17 5-11 13-17 23-16 11 1 20 10 19 23-1 18-16 34-42 56z',D:'M51 5c7 17 20 33 37 44-15 12-29 28-37 46-9-17-22-34-39-45 16-11 30-27 39-45z',S:'M49 5c8 18 41 36 42 58 0 13-10 21-21 20-8 0-13-4-17-9 2 9 6 17 15 22l-35 1c8-5 12-13 13-23-3 6-9 10-17 10C18 84 8 76 9 63 10 41 42 24 49 5z',C:'M51 6c11 1 19 9 19 20 0 4-1 7-3 10 12-2 23 6 23 18 0 11-9 20-20 19-6 0-11-2-15-6 1 11 6 21 13 28l-36 1c8-7 13-17 14-29-4 4-9 6-15 6C20 73 11 64 11 53c0-12 11-20 22-18-2-3-3-6-3-10C30 14 40 5 51 6z'},
+ {ink:{H:'M22 34l13-11M24 46l20-17M60 30l10-9',D:'M40 42l14-20M42 58l18-24',S:'M32 60l16-24M42 68l16-22',C:'M43 23l10-9M22 54l11-9M62 54l11-9'}}
 ];
 /* lab deck: each suit as a little diagram — outline, nucleus, an orbit and axis ticks */
-const suitInner=(sk,x)=>{const T=SUITS[sk];if(T.sci)return `<path d="${SUITS[1][x]}" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><circle cx="50" cy="${x==='C'?47:x==='S'?50:52}" r="6.500" fill="currentColor"/>`;return `<path ${T.e?'fill-rule="evenodd" ':''}d="${T[x]}"/>`};
+const suitInner=(sk,x)=>{const T=SUITS[sk];if(T.ink)return `<path d="${SUITS[0][x]}" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="${T.ink[x]}" fill="none" stroke="#dcc79a" stroke-width="4" stroke-linecap="round"/>`;if(T.sci)return `<path d="${SUITS[1][x]}" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><circle cx="50" cy="${x==='C'?47:x==='S'?50:52}" r="6.500" fill="currentColor"/>`;return `<path ${T.e?'fill-rule="evenodd" ':''}d="${T[x]}"/>`};
 const suitDefs=sk=>['S','H','D','C'].map(x=>`<symbol id="s${sk}${x}" viewBox="0 0 100 100">${suitInner(sk,x)}</symbol>`).join('');
 document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${SUITS.map((_,k)=>suitDefs(k)).join('')}</defs></svg>`);
 const sv=(c,sk=0)=>`<svg viewBox="0 0 100 100"><use href="#s${sk}${st(c)}"/></svg>`;
@@ -997,8 +1011,39 @@ function sciHalf(r,c,sk){
 <path d="M79 55h10M79 58.500h10M79 62h6.500" ${L} stroke-width=".5"/><path d="M79 66l2 2 4-4" stroke="currentColor" stroke-width="1" fill="none"/>${hand(72)}`;
   return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${sk}${st(c)}" x="6.500" y="6.500" width="15" height="15" fill="currentColor"/>`;
 }
+function wasteHalf(r,c,sk){
+  const L='stroke="var(--ln)"',SK='fill="var(--sk)"',OC='#b08a4e',RU='#8a4a22',OL='#5d6140',BO='#e2d6b5';
+  const hatch=(x,y,n,dx,dy,len)=>{let q='';for(let k=0;k<n;k++)q+=`M${x+k*dx} ${y+k*dy}l${len} ${len*1.3}`;return `<path d="${q}" ${L} stroke-width=".55" opacity=".7" fill="none"/>`};
+  let h=`<path d="M4 95 11 66q17-11 39-10 22-1 39 10l7 29z" fill="${r==='Q'?BO:r==='J'?OL:OC}" ${L} stroke-width="2"/>${hatch(10,70,7,3,1,6)}${hatch(72,68,6,3,1.500,6)}
+<path d="M44 42h12v12q-6 4-12 0z" ${SK} ${L} stroke-width="1.300"/>
+<ellipse cx="50" cy="32" rx="12" ry="14" ${SK} ${L} stroke-width="2"/>${hatch(56,24,4,1.800,2,2.500)}
+<path d="M50 31v5.800q-1.500.9-2.800.2" ${L} stroke-width="1.200" fill="none"/>`;
+  const eyes=`<path d="M41.800 27q3.300-2 6.600 0M51.600 27q3.300-2 6.600 0" ${L} stroke-width="1.600" fill="none"/><path d="M43 31h4M53 31h4" ${L} stroke-width="1.700"/>`;
+  const arm=col=>`<path d="M67 64q12 0 16 8l-5 8q-6-8-14-8z" fill="${col}" ${L} stroke-width="1.500"/>`,hand=y=>`<path d="M80.500 ${y}q4.500-3 9 0v5q-4.500 3-9 0z" ${SK} ${L} stroke-width="1.100"/>`;
+  if(r==='K')h+=`${eyes}<path d="M38 56 50 78 62 56 57 53 50 64 43 53z" fill="${RU}" ${L} stroke-width="1.300"/>
+<path d="M18 66 74 95h10L26 63z" fill="#3a2a1a" ${L} stroke-width="1"/><rect x="40" y="76" width="9" height="7" rx="1" fill="${OC}" ${L} stroke-width=".9" transform="rotate(27 44 80)"/><rect x="58" y="85" width="9" height="7" rx="1" fill="${OC}" ${L} stroke-width=".9" transform="rotate(27 62 89)"/>
+<path d="M39 37q1 14 11 17 10-3 11-17-3 7-11 7t-11-7z" fill="#b9b3a4" ${L} stroke-width="1.300"/><path d="M43 46l2 5M47.500 47.500l1 5.500M52.500 47.500l-1 5.500M57 46l-2 5" ${L} stroke-width=".5"/>
+<path d="M44 40.300q3-2 6 0 3-2 6 0-3 2.200-6 .7-3 1.500-6-.7z" fill="#8f897b" ${L} stroke-width=".5"/>
+<ellipse cx="50" cy="20.500" rx="25" ry="5.500" fill="#6b4a26" ${L} stroke-width="1.800"/><path d="M36 20q0-13 14-13t14 13z" fill="#7d5a30" ${L} stroke-width="1.800"/><path d="M36.300 17.500h27.400" stroke="${RU}" stroke-width="3"/><path d="M40 12q5-3 10-3" ${L} stroke-width=".5" fill="none"/>${arm(OC)}
+<rect x="75" y="46" width="18" height="23" rx="1" fill="#5a3a22" ${L} stroke-width="1.300"/><rect x="77" y="48" width="14" height="19" fill="${BO}" ${L} stroke-width=".5"/><path d="M79 52h10M79 55.500h10M79 59h10M79 62.500h6" ${L} stroke-width=".5"/><path d="M84 48v19" stroke="${RU}" stroke-width=".6"/>${hand(69.500)}`;
+  else if(r==='Q')h+=`${eyes}<path d="M39 57 50 76 61 57 56 54 50 63 44 54z" fill="${OL}" ${L} stroke-width="1.300"/>
+<path d="M20 76h12v12H20z" fill="${OL}" ${L} stroke-width="1"/><path d="M26 78.500v7M22.500 82h7" stroke="${BO}" stroke-width="2.200"/>
+<path d="M37.500 36q-4.500-19 12.500-20 17 1 12.500 20-1.500-10-12.500-11.500Q39 26 37.500 36z" fill="${RU}" ${L} stroke-width="1.600"/><path d="M61.500 33q7 3 5 12l-4-3q1-4-2-6z" fill="${RU}" ${L} stroke-width="1.200"/><path d="M42 20q8-3 16 0" ${L} stroke-width=".5" fill="none"/>
+<path d="M36 40q-5 9-2 20l4-4q-2-7 1-13z" fill="#3a2a1a" ${L} stroke-width="1.100"/><path d="M35 46l3 1M34.500 50l3 1M35 54l2.500 1" ${L} stroke-width=".5"/>
+<path d="M46.300 41q1.800-1.300 3.700-.2 1.900-1.100 3.700.2-3.700 2.800-7.400 0z" fill="#8a2a14" ${L} stroke-width=".4"/>
+<path d="M40 53q10 7 20 0" fill="none" ${L} stroke-width="1.100"/><circle cx="45" cy="56" r="3" fill="#8f897b" fill-opacity=".5" ${L} stroke-width="1"/><circle cx="55" cy="56" r="3" fill="#8f897b" fill-opacity=".5" ${L} stroke-width="1"/>${arm(BO)}
+<path d="M83.500 34h3.500v24h-3.500z" fill="#e9f0ee" fill-opacity=".8" ${L} stroke-width="1"/><path d="M83.500 44h3.500v14h-3.500z" fill="currentColor" opacity=".5"/><path d="M85.200 34v-8M82 26h6.500M81.500 58h7.500M85.200 58v9" ${L} stroke-width="1.300"/><path d="M83.500 38h1.500M83.500 41h1.500M83.500 47h1.500M83.500 50h1.500" ${L} stroke-width=".4"/>${hand(64)}`;
+  else h+=`<path d="M15 6 40 60l5-2L20 4z" fill="#4a4a48" ${L} stroke-width="1.100"/><path d="M36 50 46 71l8-3-9-21z" fill="#5a3a22" ${L} stroke-width="1.100"/>
+<path d="M12 66q-2-9 8-10l12 4-6 12z" fill="#2b2622" ${L} stroke-width="1.300"/><path d="M14 61l14 6M13 65l12 6M17 58l14 6" stroke="#8f897b" stroke-width=".6"/>
+<path d="M36 22q0-14 14-14t14 14l4 2H32z" fill="#3a2a1a" ${L} stroke-width="1.600"/><path d="M35.500 22h29" stroke="${RU}" stroke-width="2.200"/>
+<circle cx="45.100" cy="30.500" r="4.800" fill="#8f897b" fill-opacity=".55" ${L} stroke-width="1.700"/><circle cx="54.900" cy="30.500" r="4.800" fill="#8f897b" fill-opacity=".55" ${L} stroke-width="1.700"/><path d="M37.500 30h2.800M59.700 30h2.800M49.900 30.500h.4" ${L} stroke-width="1.800"/><path d="M42.500 29l2.500-1.600M52.300 29l2.500-1.600" stroke="${BO}" stroke-width=".8"/>
+<path d="M37.500 37q12.500 5 25 0l2 14q-14.500 9-29 0z" fill="${RU}" ${L} stroke-width="1.600"/><path d="M40 42q10 3 20 0M39 47q11 4 22 0" ${L} stroke-width=".5" fill="none"/><path d="M38 52l-4 14 6-2 2-9z" fill="${RU}" ${L} stroke-width="1.200"/>${arm(OL)}
+<path d="M76 72h16v9H76z" fill="#5a3a22" ${L} stroke-width="1.100"/><path d="M79 72v9M83 72v9M87 72v9" ${L} stroke-width=".5"/><circle cx="79" cy="70.500" r="1.300" fill="#b08a4e" ${L} stroke-width=".4"/><circle cx="83" cy="70.500" r="1.300" fill="#b08a4e" ${L} stroke-width=".4"/><circle cx="87" cy="70.500" r="1.300" fill="#b08a4e" ${L} stroke-width=".4"/>`;
+  return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".7"/><use href="#s${sk}${st(c)}" x="6.500" y="6.500" width="15" height="15" fill="currentColor"/>`;
+}
 function courtHalf(r,c,sk=0){
   if(sk===5)return sciHalf(r,c,sk);
+  if(sk===7)return wasteHalf(r,c,sk);
   const L='stroke="var(--ln)"',G='stroke="var(--gd)"';
   let h=`<path d="M4 95 12 64q18-12 38-8 20-4 38 8l8 31z" fill="var(--c1)" ${L} stroke-width="1.5"/>
 <path d="M50 56 37 95h26z" fill="var(--c2)" ${L} stroke-width="1.2"/>
@@ -1060,7 +1105,7 @@ function faceHtml(c,sk=0){
 (function(){
   const u=x=>`url("data:image/svg+xml,${encodeURIComponent(x)}")`,R=document.documentElement.style,X='xmlns="http://www.w3.org/2000/svg"';
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-  for(let b=0;b<7;b++)R.setProperty('--bk'+b,u(backArt(b)));
+  for(let b=0;b<8;b++)R.setProperty('--bk'+b,u(backArt(b)));
   R.setProperty('--grain',u(`<svg ${X} width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .55 -.14"/></filter><rect width="140" height="140" filter="url(#n)"/></svg>`));
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
@@ -1245,11 +1290,12 @@ const GL=(function(){
     ['#2c2519','#0a0805','#e2bd6a','#ec7a5e','#5a1f14','#1b150b','#e2bd6a','#2c2415','#e2bd6a','#15110b'],
     ['#e6d29c','#aa8a50','#2a1a0e','#8c2a12','#a8281c','#1f3f7a','#d6a32c','#efd3ac','#2a1a0e','#f4eedd'],
     ['#eaf1ec','#c6d3ca','#173a4a','#b3401f','#eef2ee','#2f6f6c','#8a9aa0','#efd3ac','#173a4a','#f2f6f2'],
-    ['#f6f3e6','#eeead8','#1c2f6b','#c22f25','#c22f25','#1c2f6b','#d6a32c','#efd3ac','#1c2f6b','#f6f3e6']];
+    ['#f6f3e6','#eeead8','#1c2f6b','#c22f25','#c22f25','#1c2f6b','#d6a32c','#efd3ac','#1c2f6b','#f6f3e6'],
+    ['#dfcb9c','#ae9360','#2a1c10','#8a2a14','#b08a4e','#5d6140','#b08a4e','#d9b48a','#2a1c10','#dcc79a']];
   const BK=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
   const X='xmlns="http://www.w3.org/2000/svg"';
   const defs=sk=>suitDefs(sk);
-  const FONT=["Georgia,'Times New Roman',serif","'Arial Narrow',Arial,sans-serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","'Courier New',monospace","'Comic Sans MS','Marker Felt',cursive"];
+  const FONT=["Georgia,'Times New Roman',serif","'Arial Narrow',Arial,sans-serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","'Courier New',monospace","'Comic Sans MS','Marker Felt',cursive","Georgia,'Times New Roman',serif"];
   function faceSVG(c,sk){
     const S=SK[sk],isR=red(c),col=c==='JK'?S[2]:isR?S[3]:S[2];let body='';
     const ix=r=>`<g><text x="12" y="20" text-anchor="middle" font-family="${FONT[sk]}" font-weight="700" font-size="${r==='10'?17:20}" fill="${col}">${r}</text>${c==='JK'?'':`<use href="#s${sk}${st(c)}" x="5.5" y="23" width="13" height="13" fill="${col}"/>`}</g>`;
