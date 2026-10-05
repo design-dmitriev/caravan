@@ -131,15 +131,15 @@ th:first-child,td:first-child{text-align:left;overflow-wrap:anywhere}
 .card.sk3::after{background:linear-gradient(125deg,rgba(255,235,180,.2) 0 24%,transparent 25%)}
 .card.sk4{--ink:#2a1a0e;--blood:#8c2a12;background:var(--grain,none),linear-gradient(150deg,#e6d29c 0,#d2b77e 55%,#aa8a50 100%);border-radius:6px 4px 8px 3px}
 .card.sk4::after{background:var(--burn,none) 0 0/100% 100% no-repeat}
-.card.sk5{--ink:#1c2f6b;--blood:#c22f25;font-family:"Permanent Marker","Comic Sans MS",cursive;font-weight:400;border:2px solid #1c2f6b;border-radius:13px 5px 15px 6px/6px 14px 5px 13px;
+.card.sk6{--ink:#1c2f6b;--blood:#c22f25;font-family:"Permanent Marker","Comic Sans MS",cursive;font-weight:400;border:2px solid #1c2f6b;border-radius:13px 5px 15px 6px/6px 14px 5px 13px;
   background:linear-gradient(90deg,transparent 0 11%,rgba(200,60,50,.45) 11% 12.5%,transparent 12.5%),repeating-linear-gradient(transparent 0 8px,rgba(60,110,170,.3) 8px 9px),#f6f3e6;box-shadow:var(--drop)}
-.card.sk5 .ix{rotate:-4deg}
-.card.sk5 .pips svg,.card.sk5 .ix svg{fill:none;stroke:currentColor;stroke-width:7;stroke-linejoin:round}
-.card.sk5 .pips svg:nth-child(odd){rotate:-11deg}
-.card.sk5 .pips svg:nth-child(even){rotate:8deg}
-.card.sk5 .court{left:21%;right:21%;border:2px solid currentColor;border-radius:9px 4px 11px 5px/5px 10px 4px 9px;rotate:1.5deg;display:grid;place-items:center}
-.card.sk5 .court svg{display:none}
-.card.sk5 .court b{display:block;font-size:32px;font-size:56cqw;line-height:1}
+.card.sk6 .ix{rotate:-4deg}
+.card.sk6 .pips svg,.card.sk6 .ix svg{fill:none;stroke:currentColor;stroke-width:7;stroke-linejoin:round}
+.card.sk6 .pips svg:nth-child(odd){rotate:-11deg}
+.card.sk6 .pips svg:nth-child(even){rotate:8deg}
+.card.sk6 .court{left:21%;right:21%;border:2px solid currentColor;border-radius:9px 4px 11px 5px/5px 10px 4px 9px;rotate:1.5deg;display:grid;place-items:center}
+.card.sk6 .court svg{display:none}
+.card.sk6 .court b{display:block;font-size:32px;font-size:56cqw;line-height:1}
 .preview{display:flex;gap:10px;align-items:center}
 .preview .card{--cw:64px;width:64px}
 .card.tgt{outline:2.5px solid var(--amber);outline-offset:0}
@@ -267,6 +267,17 @@ input.vol::-webkit-slider-thumb{width:34px;height:34px}
 input.vol::-moz-range-thumb{width:30px;height:30px}
 .volq{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .volq .btn{width:auto;padding:12px 0;font-size:15px}
+/* deck 5: laboratory cards on graph paper */
+.card.sk5{--ink:#173a4a;--blood:#b3401f;--c1:#eef2ee;--c2:#2f6f6c;--gd:#8a9aa0;--pp:#f2f6f2;font-family:"PT Mono",ui-monospace,Menlo,Consolas,monospace;font-weight:400;border-radius:4px;
+  background:repeating-linear-gradient(0deg,rgba(23,58,74,.2) 0 1px,transparent 1px 25%),repeating-linear-gradient(90deg,rgba(23,58,74,.2) 0 1px,transparent 1px 25%),repeating-linear-gradient(0deg,rgba(23,58,74,.09) 0 1px,transparent 1px 5%),repeating-linear-gradient(90deg,rgba(23,58,74,.09) 0 1px,transparent 1px 5%),var(--grain,none),linear-gradient(150deg,#eaf1ec 0,#dbe6de 55%,#c6d3ca 100%)}
+.card.sk5:not(.red){--c1:#2f6f6c;--c2:#eef2ee}
+.card.sk5 .ix{font-size:21cqw;font-weight:700;border:1px solid currentColor;padding:2% 3% 3%;background:rgba(242,246,242,.7);letter-spacing:-.06em}
+.card.sk5 .ix:not(.ix2){top:3%;left:4%}
+.card.sk5 .ix2{bottom:3%;right:4%}
+.card.sk5 .court{border:1px solid currentColor}
+.card .sci{display:none}
+.card.sk5 .sci{display:inline}
+.bk6{background:var(--bk6,none) center/100% 100% no-repeat,#f3efdf}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -326,11 +337,17 @@ let local=false,privs=[null,null],viewer=0,handoff=false;
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const TABLES=['Серый выгоревший','Тёмный орех','Облезлая краска','Обугленный','Рыжая сосна','Узкие доски'];
 let tblSel=1;
-const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
+const BKC=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c','#f3efdf'];
 const h32=t=>{let h=2166136261;for(const ch of t)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0};
 const rng=seed=>{let a=seed||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
 /* six original back designs, one per deck */
 function backArt(b){
+  if(b===6){let hatch='';for(let k=0;k<26;k++)hatch+=`M${12+k*3} 16l${-6+((k*7)%5)} ${106+((k*13)%7)}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="588" viewBox="0 0 100 140"><defs><filter id="hw" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.500"/></filter><filter id="bd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .07" numOctaves="4" seed="33"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .05 0 0 0 2.400 -1.500"/></filter><filter id="bb"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="100" height="140" fill="#f3efdf"/><g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/>
+<g filter="url(#hw)" fill="none" stroke="#1c2f6b" stroke-linecap="round" stroke-linejoin="round"><path d="${hatch}" stroke-width=".7" opacity=".55"/><path d="M8 9Q50 6 92 8 95 70 92 131 50 134 8 132 5 70 8 9z" stroke-width="2.200"/><path d="M12 13Q50 11 88 13 90 70 88 127 50 129 12 127 10 70 12 13z" stroke-width=".9"/>
+<circle cx="50" cy="70" r="19" fill="#f3efdf" stroke-width="1.800"/><path d="M50 70c0-3 5-3 5 1s-8 5-9-1 8-11 13-3-5 17-16 10-7-22 5-23" stroke-width="1.300"/><path d="M50 40l2.500 6.500 7 .5-5.500 4.300 2 6.700-6-4-6 4 2-6.700-5.500-4.300 7-.5zM50 88l2.500 6.500 7 .5-5.500 4.300 2 6.700-6-4-6 4 2-6.700-5.500-4.300 7-.5z" stroke-width="1.100"/><path d="M20 22l6 6M26 22l-6 6M74 22l6 6M80 22l-6 6M20 112l6 6M26 112l-6 6M74 112l6 6M80 112l-6 6" stroke-width="1.300"/></g>
+<rect width="100" height="140" filter="url(#bd)"/><rect width="100" height="140" fill="none" stroke="#4a300e" stroke-width="7" opacity=".3" filter="url(#bb)"/></svg>`}
   const c=BKC[b],p=b===3?'#c9a24b':'#e9dfc2',S=`stroke="${p}"`,F=`fill="${p}"`;
   const pat=[`<path d="M0 0h7M0 0v7" ${S} stroke-opacity=".34" stroke-width=".7"/><circle cx="3.5" cy="3.5" r=".8" ${F} fill-opacity=".3"/>`,
     `<path d="M0 2.500h7M0 6h7" ${S} stroke-opacity=".26" stroke-width=".6"/>`,
@@ -386,6 +403,14 @@ function wearInner(c,sk){
       +(r()<.38?claw('#b5ab94'):'');
   }
   else if(sk===4)o+=spill(1+(r()*2|0),'#5a3410',.1,.2)+burn(true)+(r()<.45?burn(false):'')+stain(1+(r()*2|0),'#1a0e05',.22)+(r()<.4?ring():'')+(r()<.4?crease():'')+(r()<.1?claw('#f6f0de'):'');
+  else if(sk===5){
+    /* lab cards: serial number, registration marks, an inspection stamp, pen notes, coffee */
+    const ser=`${String.fromCharCode(65+(r()*26|0))}${String.fromCharCode(65+(r()*26|0))}-${1000+(r()*9000|0)}`,sx=R(52,70),sy=R(88,118),sa=R(-28,28),ink='#173a4a';
+    o+=`<g fill="none" stroke="${ink}" stroke-width=".5" opacity=".7"><path d="M94 4v6M91 7h6M6 130v6M3 133h6"/><circle cx="94" cy="7" r="1.800"/><circle cx="6" cy="133" r="1.800"/><path d="M24 136h52M24 134.500v3M76 134.500v3M50 135v2"/></g><text x="50" y="133.300" text-anchor="middle" font-family="monospace" font-size="4" fill="${ink}" opacity=".8">№ ${ser}</text>`
+      +(r()<.6?`<g transform="rotate(${n1(sa)} ${n1(sx)} ${n1(sy)})" fill="none" stroke="#b3401f" opacity="${R(.35,.6).toFixed(2)}" filter="url(#${id}g)"><circle cx="${n1(sx)}" cy="${n1(sy)}" r="11" stroke-width="1.300"/><circle cx="${n1(sx)}" cy="${n1(sy)}" r="8.500" stroke-width=".5"/><path d="M${n1(sx-6)} ${n1(sy)}h12" stroke-width="1.600"/></g>`:'')
+      +(r()<.5?`<path d="M${n1(R(60,80))} ${n1(R(20,40))}q4 6 7 -1t6 2 5 -3" fill="none" stroke="#1c2f6b" stroke-width=".8" opacity=".7"/>`:'')
+      +spill(1+(r()*2|0),'#6b5a34',.08,.18)+(r()<.55?ring():'')+(r()<.5?crease():'')+scr(1+(r()*3|0),.3,.4)+(r()<.3?ding():'');
+  }
   else o+=spill(2+(r()*3|0),'#6b5a34',.1,.22)+stain(1+(r()*2|0),'#1c2f6b',.13)+(r()<.5?ring():'')+(r()<.6?crease():'')+(r()<.45?blood():'')+tearPolys(c).map(t=>`<path d="M${t}Z" fill="none" stroke="#fffdf2" stroke-width="1.700" opacity=".85" stroke-linejoin="round"/>`).join('');
   return o;
 }
@@ -424,17 +449,17 @@ const tearPath=(c,sk)=>'M-9-9H109V149H-9Z'+(sk===3?burnPolys(c):tearPolys(c)).ma
 const wearSheet=document.createElement('style');document.head.appendChild(wearSheet);const wearDone={};
 function wearCls(c,sk){
   const k='w'+sk+c;
-  if(!wearDone[k]){wearDone[k]=1;if(sk===5||sk===3)try{const mk=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none"><path fill-rule="evenodd" d="${tearPath(c,sk)}"/></svg>`)}") 0 0/100% 100% no-repeat`;wearSheet.sheet.insertRule(`.card.${k}{-webkit-mask:${mk};mask:${mk}}`,wearSheet.sheet.cssRules.length);
+  if(!wearDone[k]){wearDone[k]=1;if(sk===6||sk===3)try{const mk=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none"><path fill-rule="evenodd" d="${tearPath(c,sk)}"/></svg>`)}") 0 0/100% 100% no-repeat`;wearSheet.sheet.insertRule(`.card.${k}{-webkit-mask:${mk};mask:${mk}}`,wearSheet.sheet.cssRules.length);
       if(sk===3)wearSheet.sheet.insertRule(`.card.${k}::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;mix-blend-mode:overlay;background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${shineInner(c)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}
     try{wearSheet.sheet.insertRule(`.card.${k}::after{background:url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" preserveAspectRatio="none">${wearInner(c,sk)}</svg>`)}") 0 0/100% 100% no-repeat}`,wearSheet.sheet.cssRules.length)}catch(e){}}
   return k;
 }
-const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом'];
-let backSel=LS.get('caravan_back')|0,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
+const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом','Ручные'];
+let backSel=typeof LS.get('caravan_back2')==='number'?LS.get('caravan_back2')%7:6,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
 const getNames=()=>LS.get('caravan_names')||{};
 const myName=()=>String(getNames().me||'').trim().slice(0,16);
 const pname=i=>{const n=game&&game.nm&&game.nm['p'+i];if(n)return n;if(local)return 'Игрок '+(i+1);return i===meIdx()?'Вы':(game&&names[game.pl['p'+i]])||'Соперник'};
-const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','нарисованные от руки'];
+const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','лабораторные','нарисованные от руки, рваные'];
 const skOf=i=>((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length;
 const bkOf=i=>'bk'+(((game&&game.bk&&game.bk['p'+i])|0)%BACKS.length);
 
@@ -726,7 +751,7 @@ async function chooseDeck(kind){
   if(kind==='full')deck=fullDeck();
   else if(kind==='rand'){const n=rnd[0]+Math.floor(Math.random()*(rnd[1]-rnd[0]+1)),pool=fullDeck().concat(fullDeck());do{deck=shuffle(pool).slice(0,n)}while(deck.filter(isNum).length<n*.45)}
   else{deck=[];for(const c in builder)for(let i=0;i<builder[c];i++)deck.push(c)}
-  shuffle(deck);SFX.shuffle();LS.set('caravan_back',backSel);
+  shuffle(deck);SFX.shuffle();LS.set('caravan_back2',backSel);
   const hand=deck.splice(0,8),pk='p'+meIdx();
   if(local||p2p){game.bk=game.bk||{p0:0,p1:0};game.bk[pk]=backSel}
   if(local){
@@ -892,7 +917,7 @@ function gameView(){
   if(!game.ready[pk]){
     if(builder)return builderView();
     return `<div class="page"><h2>${esc(pname(me))}: колода</h2>
-    <div class="box"><span>Колода: <b>${BACKS[backSel]}</b>, ${BACK_NOTE[backSel]}</span><div class="preview"><div class="card back bk${backSel}" style="aspect-ratio:5/7"></div>${['7S','KH','QS','JD'].map(c=>`<div class="card sk${backSel} ${wearCls(c,backSel)} ${red(c)?'red':''}">${faceHtml(c)}</div>`).join('')}</div><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
+    <div class="box"><span>Колода: <b>${BACKS[backSel]}</b>, ${BACK_NOTE[backSel]}</span><div class="preview"><div class="card back bk${backSel}" style="aspect-ratio:5/7"></div>${['7S','KH','QS','JD'].map(c=>`<div class="card sk${backSel} ${wearCls(c,backSel)} ${red(c)?'red':''}">${faceHtml(c,backSel)}</div>`).join('')}</div><div class="swatches">${BACKS.map((n,i)=>`<button class="swatch back bk${i} ${i===backSel?'on':''}" data-act="back" data-b="${i}" aria-label="${n}"></button>`).join('')}</div></div>
     <button class="btn" data-act="deck" data-kind="full">Полная колода, 54 карты</button>
     <div class="box"><div class="rng"><label>от <b id="ra">${rnd[0]}</b><input type="range" min="30" max="108" value="${rnd[0]}" data-rng="0"></label><label>до <b id="rb">${rnd[1]}</b><input type="range" min="30" max="108" value="${rnd[1]}" data-rng="1"></label></div>
     <button class="btn" data-act="deck" data-kind="rand">Случайная колода</button><p class="sub" style="font-size:12px">Число карт выпадет случайно в этих пределах. По правилам в колоде не меньше 30 карт, набирать можно из двух комплектов.</p></div>
@@ -918,9 +943,23 @@ const chip=c=>`<button class="chip n${builder[c]||0} ${red(c)?'red':''}" data-ac
 let lastLens=null,fresh={},freshT;
 const mini=x=>`<b class="${red(x)?'red':''}">${x==='JK'?'★':rk(x)==='Q'?'Q'+SU[st(x)]:rk(x)}</b>`;
 const PIPS={1:[[50,50]],2:[[50,12],[50,88]],3:[[50,12],[50,50],[50,88]],4:[[25,12],[75,12],[25,88],[75,88]],5:[[25,12],[75,12],[50,50],[25,88],[75,88]],6:[[25,12],[75,12],[25,50],[75,50],[25,88],[75,88]],7:[[25,12],[75,12],[50,31],[25,50],[75,50],[25,88],[75,88]],8:[[25,12],[75,12],[50,31],[25,50],[75,50],[50,69],[25,88],[75,88]],9:[[25,12],[75,12],[25,37],[75,37],[50,50],[25,63],[75,63],[25,88],[75,88]],10:[[25,12],[75,12],[50,25],[25,37],[75,37],[25,63],[75,63],[50,75],[25,88],[75,88]]};
-const sv=(c,cls='')=>`<svg class="${cls}" viewBox="0 0 100 100"><use href="#s${st(c)}"/></svg>`;
+/* every deck has its own drawing of the four suits */
+const SUITS=[
+ {H:'M50 90C20 64 6 47 6 29 6 15 17 7 28 7c10 0 18 6 22 16 4-10 12-16 22-16 11 0 22 8 22 22 0 18-14 35-44 61z',D:'M50 4c8 18 22 35 38 46-16 11-30 28-38 46-8-18-22-35-38-46 16-11 30-28 38-46z',S:'M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4z',C:'M50 5a20 20 0 0 1 17 30 20 20 0 1 1-13 33c1 11 6 21 14 28H32c8-7 13-17 14-28a20 20 0 1 1-13-33A20 20 0 0 1 50 5z'},
+ {H:'M50 92 8 44A24 24 0 0 1 50 22 24 24 0 0 1 92 44z',D:'M50 4 88 50 50 96 12 50z',S:'M50 6 92 56A22 22 0 0 1 56 70L64 96H36L44 70A22 22 0 0 1 8 56z',C:'M50 6a19 19 0 0 1 16 29 19 19 0 1 1-10 30L64 96H36l8-31a19 19 0 1 1-10-30A19 19 0 0 1 50 6z'},
+ {H:'M50 94C30 70 14 52 14 32 14 18 23 8 33 8c8 0 14 6 17 16 3-10 9-16 17-16 10 0 19 10 19 24 0 20-16 38-36 62z',D:'M50 2c5 22 14 36 30 48-16 12-25 26-30 48-5-22-14-36-30-48C36 38 45 24 50 2z',S:'M50 2c5 24 34 40 34 62 0 11-8 18-17 18-7 0-12-4-15-10 0 9 3 15 8 19 3 2 6 3 9 3v2H31v-2c3 0 6-1 9-3 5-4 8-10 8-19-3 6-8 10-15 10-9 0-17-7-17-18C16 42 45 26 50 2z',C:'M50 4a17 17 0 0 1 14 27 17 17 0 1 1-11 31c0 12 3 20 10 26 2 2 5 3 8 4v4H29v-4c3-1 6-2 8-4 7-6 10-14 10-26a17 17 0 1 1-11-31A17 17 0 0 1 50 4z'},
+ {e:1,H:'M50 90C20 64 6 47 6 29 6 15 17 7 28 7c10 0 18 6 22 16 4-10 12-16 22-16 11 0 22 8 22 22 0 18-14 35-44 61zM50 72C34 58 24 47 24 34c0-7 5-11 10-11 7 0 12 5 16 13 4-8 9-13 16-13 5 0 10 4 10 11 0 13-10 24-26 38z',D:'M50 4c8 18 22 35 38 46-16 11-30 28-38 46-8-18-22-35-38-46 16-11 30-28 38-46zM50 26c5 9 11 17 19 24-8 7-14 15-19 24-5-9-11-17-19-24 8-7 14-15 19-24z',S:'M50 4c7 19 42 36 42 59 0 13-10 21-21 21-8 0-14-4-17-10 1 10 6 18 14 22H32c8-4 13-12 14-22-3 6-9 10-17 10C18 84 8 76 8 63 8 40 43 23 50 4zM50 26c6 12 24 22 24 36 0 6-4 9-9 9-6 0-10-4-15-12-5 8-9 12-15 12-5 0-9-3-9-9 0-14 18-24 24-36z',C:'M50 5a20 20 0 0 1 17 30 20 20 0 1 1-13 33c1 11 6 21 14 28H32c8-7 13-17 14-28a20 20 0 1 1-13-33A20 20 0 0 1 50 5zM50 16a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM30 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM70 45a9 9 0 1 0 0 18 9 9 0 0 0 0-18z'},
+ {H:'M50 88C16 66 4 50 4 30 4 14 16 6 28 6c12 0 19 7 22 14 3-7 10-14 22-14 12 0 24 8 24 24 0 20-12 36-46 58z',D:'M50 5q6 6 40 45-34 39-40 45-6-6-40-45 34-39 40-45z',S:'M50 4C58 22 96 38 96 62c0 14-11 22-24 22-7 0-13-3-17-8l11 18H34l11-18c-4 5-10 8-17 8C15 84 4 76 4 62 4 38 42 22 50 4z',C:'M50 4a22 22 0 0 1 20 31 22 22 0 1 1-14 36l10 25H34l10-25a22 22 0 1 1-14-36A22 22 0 0 1 50 4z'},
+ {sci:1},
+ {H:'M49 89C24 68 7 50 8 31 9 16 19 8 29 9c9 1 16 7 20 17 5-11 13-17 23-16 11 1 20 10 19 23-1 18-16 34-42 56z',D:'M51 5c7 17 20 33 37 44-15 12-29 28-37 46-9-17-22-34-39-45 16-11 30-27 39-45z',S:'M49 5c8 18 41 36 42 58 0 13-10 21-21 20-8 0-13-4-17-9 2 9 6 17 15 22l-35 1c8-5 12-13 13-23-3 6-9 10-17 10C18 84 8 76 9 63 10 41 42 24 49 5z',C:'M51 6c11 1 19 9 19 20 0 4-1 7-3 10 12-2 23 6 23 18 0 11-9 20-20 19-6 0-11-2-15-6 1 11 6 21 13 28l-36 1c8-7 13-17 14-29-4 4-9 6-15 6C20 73 11 64 11 53c0-12 11-20 22-18-2-3-3-6-3-10C30 14 40 5 51 6z'}
+];
+/* lab deck: each suit as a little diagram — outline, nucleus, an orbit and axis ticks */
+const suitInner=(sk,x)=>{const T=SUITS[sk];if(T.sci)return `<path d="${SUITS[0][x]}" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><ellipse cx="50" cy="${x==='H'?44:x==='S'?56:50}" rx="27" ry="9" fill="none" stroke="currentColor" stroke-width="2.500" transform="rotate(-24 50 50)"/><circle cx="50" cy="${x==='H'?44:x==='S'?56:50}" r="7" fill="currentColor"/><path d="M50 0v9M50 91v9M0 50h9M91 50h9" stroke="currentColor" stroke-width="2.500"/>`;return `<path ${T.e?'fill-rule="evenodd" ':''}d="${T[x]}"/>`};
+const suitDefs=sk=>['S','H','D','C'].map(x=>`<symbol id="s${sk}${x}" viewBox="0 0 100 100">${suitInner(sk,x)}</symbol>`).join('');
+document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${SUITS.map((_,k)=>suitDefs(k)).join('')}</defs></svg>`);
+const sv=(c,sk=0)=>`<svg viewBox="0 0 100 100"><use href="#s${sk}${st(c)}"/></svg>`;
 /* original court figures in the traditional mirrored style; colors come from the deck skin */
-function courtHalf(r,c){
+function courtHalf(r,c,sk=0){
   const L='stroke="var(--ln)"',G='stroke="var(--gd)"';
   let h=`<path d="M4 95 12 64q18-12 38-8 20-4 38 8l8 31z" fill="var(--c1)" ${L} stroke-width="1.5"/>
 <path d="M50 56 37 95h26z" fill="var(--c2)" ${L} stroke-width="1.2"/>
@@ -970,19 +1009,21 @@ function courtHalf(r,c){
 <path d="M86 12v68" stroke="var(--ln)" stroke-width="3.200"/><path d="M86 14v64" stroke="#7a4a22" stroke-width="1.600"/>
 <path d="M86 14q-14 2-12 17l12-4z" fill="var(--pp)" ${L} stroke-width="1.300"/><path d="M84.500 16.500q-9 2-8.500 11" ${L} stroke-width=".4" fill="none"/><path d="M86 5l4.200 9.500h-8.400z" fill="var(--pp)" ${L} stroke-width="1"/>
 <path d="M81.500 70.500q4.500-3 9 0v5q-4.500 3-9 0z" fill="var(--sk)" ${L} stroke-width=".900"/><path d="M83 72.500h6M83 74.300h6" ${L} stroke-width=".4"/>`;
-  return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${st(c)}" x="6.5" y="6.5" width="16" height="16" fill="currentColor"/>`;
+  /* lab deck only: goggles and an atom badge turn the court into researchers */
+  h+=`<g class="sci"><path d="M37.500 31h25" ${L} stroke-width="1.300"/><circle cx="45.100" cy="31" r="4.300" fill="#bfe3e0" fill-opacity=".6" ${L} stroke-width="1.300"/><circle cx="54.900" cy="31" r="4.300" fill="#bfe3e0" fill-opacity=".6" ${L} stroke-width="1.300"/><path d="M43.200 29.300l2.200-1.400M53 29.300l2.200-1.400" stroke="#fff" stroke-width=".7"/><circle cx="50" cy="80" r="6.500" fill="var(--pp)" ${L} stroke-width=".8"/><g fill="none" ${L} stroke-width=".7"><ellipse cx="50" cy="80" rx="5.400" ry="2"/><ellipse cx="50" cy="80" rx="5.400" ry="2" transform="rotate(60 50 80)"/><ellipse cx="50" cy="80" rx="5.400" ry="2" transform="rotate(120 50 80)"/></g><circle cx="50" cy="80" r="1" fill="var(--ln)"/><path d="M27 70h9M27 73.500h6" ${L} stroke-width=".9"/></g>`;
+  return h+`<rect x="4.5" y="4.5" width="91" height="181" fill="none" ${L} stroke-width=".5"/><use href="#s${sk}${st(c)}" x="6.5" y="6.5" width="16" height="16" fill="currentColor"/>`;
 }
-function faceHtml(c){
+function faceHtml(c,sk=0){
   if(c==='JK')return '<span class="ix">★</span><span class="court jkr"><b>✪</b><em>JOKER</em></span>';
-  const r=rk(c),ix=`<span class="ix">${r}${sv(c)}</span><span class="ix ix2">${r}${sv(c)}</span>`;
-  if('JQK'.includes(r)){const h=courtHalf(r,c);return ix+`<span class="court"><svg viewBox="0 0 100 190" preserveAspectRatio="none"><rect x="1" y="1" width="98" height="188" fill="var(--pp)" fill-opacity=".55" stroke="var(--ln)" stroke-width="1.5"/><g>${h}</g><g transform="rotate(180 50 95)">${h}</g><path d="M1 95h98" stroke="var(--ln)" stroke-width="1.5"/></svg><b>${r}</b></span>`}
-  const n=nv(c);return ix+`<span class="pips ${n===1?'ace':''}">${PIPS[n].map(([x,y])=>`<svg class="${y>50?'fl':''}" style="left:${x}%;top:${y}%" viewBox="0 0 100 100"><use href="#s${st(c)}"/></svg>`).join('')}</span>`;
+  const r=rk(c),ix=`<span class="ix">${r}${sv(c,sk)}</span><span class="ix ix2">${r}${sv(c,sk)}</span>`;
+  if('JQK'.includes(r)){const h=courtHalf(r,c,sk);return ix+`<span class="court"><svg viewBox="0 0 100 190" preserveAspectRatio="none"><rect x="1" y="1" width="98" height="188" fill="var(--pp)" fill-opacity=".55" stroke="var(--ln)" stroke-width="1.5"/><g>${h}</g><g transform="rotate(180 50 95)">${h}</g><path d="M1 95h98" stroke="var(--ln)" stroke-width="1.5"/></svg><b>${r}</b></span>`}
+  const n=nv(c);return ix+`<span class="pips ${n===1?'ace':''}">${PIPS[n].map(([x,y])=>`<svg class="${y>50?'fl':''}" style="left:${x}%;top:${y}%" viewBox="0 0 100 100"><use href="#s${sk}${st(c)}"/></svg>`).join('')}</span>`;
 }
 /* paper wear, generated once as SVG backgrounds */
 (function(){
   const u=x=>`url("data:image/svg+xml,${encodeURIComponent(x)}")`,R=document.documentElement.style,X='xmlns="http://www.w3.org/2000/svg"';
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-  for(let b=0;b<6;b++)R.setProperty('--bk'+b,u(backArt(b)));
+  for(let b=0;b<7;b++)R.setProperty('--bk'+b,u(backArt(b)));
   R.setProperty('--grain',u(`<svg ${X} width="140" height="140"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .55 -.14"/></filter><rect width="140" height="140" filter="url(#n)"/></svg>`));
   const warp=(sd,sc,fr)=>`<filter id="f" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="${fr}" numOctaves="3" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${sc}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
   R.setProperty('--stain',u(`<svg ${X} viewBox="0 0 100 140" preserveAspectRatio="none">${warp(7,26,.03).replace('</filter>','<feGaussianBlur stdDeviation="3.5"/></filter>')}<g filter="url(#f)" fill="#6b4416"><ellipse cx="14" cy="124" rx="22" ry="16" opacity=".13"/><ellipse cx="90" cy="14" rx="15" ry="11" opacity=".1"/><circle cx="66" cy="92" r="14" fill="none" stroke="#6b4416" stroke-width="1.6" opacity=".2"/></g></svg>`));
@@ -1120,7 +1161,7 @@ function board(me){
     const zone=turn&&((mode==='disband'&&isMine&&n)||(c&&isNum(c)&&mode!=='disband'&&legalNum(c,k)));
     const cards=car.cards.map((t,i)=>{
       const tg=turn&&c&&!isNum(c)&&mode!=='disband'&&legalFace(c,k,i);
-      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${wearCls(t.c,skOf(k/3|0))} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i};${shadow(k,i,n,isMine)}">${faceHtml(t.c)}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
+      return `<div class="slot "><div class="card sk${skOf(k/3|0)} ${wearCls(t.c,skOf(k/3|0))} ${red(t.c)?'red':''} ${tg?'tgt':''}" data-ci="${i}" style="--z:${i};${shadow(k,i,n,isMine)}">${faceHtml(t.c,skOf(k/3|0))}<span class="fx">${t.f.map(mini).join('')}</span></div></div>`;
     }).join('');
     return `<div class="car ${isMine?'mine':'opp'} ${n?'':'empty'} ${zone?'tgt':''}" data-car="${k}">${cards}</div>`;
   };
@@ -1137,7 +1178,7 @@ function board(me){
   let msg=game.winner>=0?'Игра окончена':p2p&&!netUp()?'Нет связи с сервером…':!turn?'Ход соперника':mode==='disband'?'Нажмите на свой караван, чтобы распустить':open?(noNums?'Нет числовых карт — сбросьте одну':'Начало: положите числовую карту на пустой караван'):c?(isNum(c)?'Выберите свой караван':'Выберите карту на столе'):'Ваш ход: тяните карту на стол';
   const last=game.last?`${game.last.by===me?'Вы':esc(pname(op))}: ${esc(game.last.t)}`:'';
   const hl=priv.hand.length,mid=(hl-1)/2;
-  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${wearCls(x,skOf(me))} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x)}</button>`).join('');
+  const hand=priv.hand.map((x,i)=>`<button class="card hc sk${skOf(me)} ${wearCls(x,skOf(me))} ${red(x)?'red':''} ${x==='JK'?'jk':''} ${sel===i?'sel':''}" style="--r:${((i-mid)*2.5).toFixed(1)};--y:${(Math.abs(i-mid)**1.6*1.1).toFixed(1)};" data-h="${i}" aria-label="${lab(x)}">${faceHtml(x,skOf(me))}</button>`).join('');
   const oh=game.hc[ok],omid=(oh-1)/2;
   const ohand=Array.from({length:oh},(_,i)=>`<i class="back ${bkOf(op)}"></i>`).join('');
   const canDiscard=turn&&sel!=null&&(!open||noNums);
@@ -1166,33 +1207,35 @@ const GL=(function(){
     ['#e4e6d6','#b5bca2','#27302a','#8f3024','#a8281c','#1f3f7a','#d6a32c','#efd3ac','#27302a','#f4eedd'],
     ['#2c2519','#0a0805','#e2bd6a','#ec7a5e','#5a1f14','#1b150b','#e2bd6a','#2c2415','#e2bd6a','#15110b'],
     ['#e6d29c','#aa8a50','#2a1a0e','#8c2a12','#a8281c','#1f3f7a','#d6a32c','#efd3ac','#2a1a0e','#f4eedd'],
+    ['#eaf1ec','#c6d3ca','#173a4a','#b3401f','#eef2ee','#2f6f6c','#8a9aa0','#efd3ac','#173a4a','#f2f6f2'],
     ['#f6f3e6','#eeead8','#1c2f6b','#c22f25','#c22f25','#1c2f6b','#d6a32c','#efd3ac','#1c2f6b','#f6f3e6']];
   const BK=['#7c2318','#1f3f66','#24553d','#17130c','#a8702c','#1d5a5c'];
   const X='xmlns="http://www.w3.org/2000/svg"';
-  const defs=()=>['S','H','D','C'].map(x=>`<symbol id="s${x}" viewBox="0 0 100 100">${document.getElementById('s'+x).innerHTML}</symbol>`).join('');
+  const defs=sk=>suitDefs(sk);
+  const FONT=["Georgia,'Times New Roman',serif","'Arial Narrow',Arial,sans-serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","Georgia,'Times New Roman',serif","'Courier New',monospace","'Comic Sans MS','Marker Felt',cursive"];
   function faceSVG(c,sk){
     const S=SK[sk],isR=red(c),col=c==='JK'?S[2]:isR?S[3]:S[2];let body='';
-    const ix=r=>`<g><text x="12" y="20" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="${r==='10'?17:20}" fill="${col}">${r}</text>${c==='JK'?'':`<use href="#s${st(c)}" x="5.5" y="23" width="13" height="13" fill="${col}"/>`}</g>`;
+    const ix=r=>`<g><text x="12" y="20" text-anchor="middle" font-family="${FONT[sk]}" font-weight="700" font-size="${r==='10'?17:20}" fill="${col}">${r}</text>${c==='JK'?'':`<use href="#s${sk}${st(c)}" x="5.5" y="23" width="13" height="13" fill="${col}"/>`}</g>`;
     if(c==='JK')body=ix('★')+`<rect x="22" y="14" width="56" height="112" fill="none" stroke="${col}" stroke-width="1.5"/><text x="50" y="76" text-anchor="middle" font-size="46" fill="${col}">✪</text><text x="50" y="98" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="12" letter-spacing="1" fill="${col}">JOKER</text>`;
     else{
       const r=rk(c),i1=ix(r);body=i1+`<g transform="rotate(180 50 70)">${i1}</g>`;
       if('JQK'.includes(r)){
         const m={'var(--c1)':isR?S[4]:S[5],'var(--c2)':isR?S[5]:S[4],'var(--gd)':S[6],'var(--sk)':S[7],'var(--ln)':S[8],'var(--pp)':S[9],'currentColor':col};
-        let h=courtHalf(r,c);for(const k in m)h=h.split(k).join(m[k]);
+        let h=courtHalf(r,c,sk);for(const k in m)h=h.split(k).join(m[k]);h=h.split('class="sci"').join(sk===5?'':'display="none"');
         body+=`<svg x="24" y="11" width="64" height="118" viewBox="0 0 100 190" preserveAspectRatio="none"><rect x="1" y="1" width="98" height="188" fill="${S[9]}" fill-opacity=".55" stroke="${S[8]}" stroke-width="1.5"/><g>${h}</g><g transform="rotate(180 50 95)">${h}</g><path d="M1 95h98" stroke="${S[8]}" stroke-width="1.5"/></svg>`;
       }else{
         const n=nv(c),w=n===1?50:20;
-        body+=PIPS[n].map(([x,y])=>{const px=21+x*.58,py=15.4+y*1.092;return `<use href="#s${st(c)}" x="${(px-w/2).toFixed(1)}" y="${(py-w/2).toFixed(1)}" width="${w}" height="${w}" ${sk===5?`fill="none" stroke="${col}" stroke-width="7"`:`fill="${col}"`} ${y>50?`transform="rotate(180 ${px.toFixed(1)} ${py.toFixed(1)})"`:''}/>`}).join('');
+        body+=PIPS[n].map(([x,y])=>{const px=21+x*.58,py=15.4+y*1.092;return `<use href="#s${sk}${st(c)}" x="${(px-w/2).toFixed(1)}" y="${(py-w/2).toFixed(1)}" width="${w}" height="${w}" ${sk===6?`fill="none" stroke="${col}" stroke-width="7"`:`fill="${col}"`} ${y>50?`transform="rotate(180 ${px.toFixed(1)} ${py.toFixed(1)})"`:''}/>`}).join('');
       }
     }
-    const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
-    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs()}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>${sk===5||sk===3?`<clipPath id="tc"><path clip-rule="evenodd" d="${tearPath(c,sk)}"/></clipPath>`:''}<g ${sk===5||sk===3?'clip-path="url(#tc)"':''}><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/>${sk===3?`<g style="mix-blend-mode:overlay">${shineInner(c)}</g>`:''}</g></svg>`;
+    const over=(sk===3?'<rect x="3" y="3" width="94" height="134" fill="none" stroke="#e2bd6a" stroke-width="1"/>':sk===5?`<g stroke="#173a4a" opacity=".22">${Array.from({length:19},(_,q)=>`<path d="M0 ${7*q+7}h100" stroke-width="${q%5===4?.5:.2}"/>`).join('')}${Array.from({length:13},(_,q)=>`<path d="M${7*q+8} 0v140" stroke-width="${q%5===4?.5:.2}"/>`).join('')}</g><rect x="2.500" y="2.500" width="19" height="35" fill="#f2f6f2" fill-opacity=".7" stroke="#173a4a" stroke-width=".6"/>`:sk===6?`<g stroke="#3c6eaa" stroke-width=".5" opacity=".35">${Array.from({length:14},(_,q)=>`<path d="M0 ${9+q*9.4}h100"/>`).join('')}</g><path d="M12 0v140" stroke="#c83c32" stroke-width=".8" opacity=".5"/><rect x="1.5" y="1.5" width="97" height="137" rx="5" fill="none" stroke="#1c2f6b" stroke-width="2.4"/>`:'')+wearInner(c,sk);
+    return `<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs>${defs(sk)}<linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S[0]}"/><stop offset="1" stop-color="${S[1]}"/></linearGradient><filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .5 -.12"/></filter><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter><filter id="wp" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter></defs><filter id="ink" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 .22" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>${sk===6||sk===3?`<clipPath id="tc"><path clip-rule="evenodd" d="${tearPath(c,sk)}"/></clipPath>`:''}<g style="color:${col}" ${sk===6||sk===3?'clip-path="url(#tc)"':''}><rect width="100" height="140" fill="url(#pg)"/>${sk===1||sk===3?'':'<rect width="100" height="140" filter="url(#gr)"/>'}<g ${sk===1?'':'filter="url(#ink)"'}>${body}</g>${over}<rect width="100" height="140" fill="none" stroke="${sk===3?'#000':'#4a300e'}" stroke-width="6" opacity="${sk===1?.14:.34}" filter="url(#bl)"/>${sk===3?`<g style="mix-blend-mode:overlay">${shineInner(c)}</g>`:''}</g></svg>`;
   }
   const backSVG=b=>backArt(b);
   const backSVGold=b=>`<svg ${X} width="420" height="588" viewBox="0 0 100 140"><defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v7M0 0h7" stroke="#000" stroke-opacity=".3" stroke-width="1.2"/></pattern></defs><rect width="100" height="140" fill="${BK[b]}"/><rect width="100" height="140" fill="url(#h)"/><rect x="4" y="4" width="92" height="132" fill="none" stroke="#e4d6ae" stroke-width="3"/><circle cx="50" cy="70" r="14" fill="none" stroke="#e4d6ae" stroke-width="2.5" opacity=".8"/></svg>`;
   function mat(key,svg){
     if(mats[key])return mats[key];
-    const torn=key[0]==='5'||key[0]==='3',m=mats[key]=new T.MeshStandardMaterial({color:0xddd2b4,roughness:.78,metalness:0,side:T.DoubleSide,alphaTest:torn?.5:0}),img=new Image();
+    const torn=key[0]==='6'||key[0]==='3',m=mats[key]=new T.MeshStandardMaterial({color:0xddd2b4,roughness:.78,metalness:0,side:T.DoubleSide,alphaTest:torn?.5:0}),img=new Image();
     if(torn)m.userData.dm=new T.MeshDepthMaterial({depthPacking:T.RGBADepthPacking,alphaTest:.5});
     img.onload=()=>{const t=new T.Texture(img);t.encoding=T.sRGBEncoding;t.anisotropy=ren.capabilities.getMaxAnisotropy();t.needsUpdate=true;m.map=t;m.color.set(0xffffff);m.needsUpdate=true;if(m.userData.dm){m.userData.dm.map=t;m.userData.dm.needsUpdate=true}draw()};
     img.src='data:image/svg+xml,'+encodeURIComponent(svg);return m;
