@@ -287,6 +287,14 @@ input.vol::-moz-range-thumb{width:30px;height:30px}
 /* deck 7: ink illustrations on wrapping paper */
 .card.sk7{--ink:#2a1c10;--blood:#8a2a14;--sk:#d9b48a;--ln:#2a1c10;--pp:#dcc79a;background:var(--grain,none),linear-gradient(150deg,#dfcb9c 0,#cdb583 55%,#ae9360 100%);border-radius:5px 7px 4px 8px/7px 4px 8px 5px}
 .card.sk7 .ix{font-size:24cqw}
+
+/* ---- desktop mouse: cards in the hand lean away from the pointer and spring back ---- */
+.hc *{pointer-events:none}
+@media (hover:hover) and (pointer:fine){
+  .hc{transform-origin:var(--ox,50%) var(--oy,50%);transform:translateY(calc(var(--y)*1px + var(--ly,0px))) translateX(var(--nx,0px)) translateZ(var(--lz,0px)) rotate(calc(var(--r)*1deg)) rotateY(calc(var(--r)*-2.2deg + var(--hy,0deg))) rotateX(calc(10deg + var(--hx,0deg)));transition:transform .38s cubic-bezier(.2,1.7,.35,1)}
+  .hc.hot{transition:transform .09s linear;z-index:2}
+  .hc.sel{transform:translateY(-16px) translateZ(46px) rotate(calc(var(--r)*1deg)) rotateY(var(--hy,0deg)) rotateX(var(--hx,0deg))}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -1392,7 +1400,7 @@ const GL=(function(){
       ren.setSize(r.width,H);cam.aspect=r.width/r.height;const d=Math.max(1,1.62/cam.aspect);cam.position.set(0,11.4*d,7.3*d);cam.lookAt(0,0,.35);cam.setViewOffset(r.width,r.height,0,0,r.width,H);cam.updateProjectionMatrix()}
     cv.style.display=fx.style.display='block';
     const me=meIdx(),op=1-me,turn=myTurn(),c=sel!=null?priv.hand[sel]:null,cars=game.cars,lens=cars.map(x=>x.cards.length);
-    for(const g of cards)root.remove(g);cards=[];
+    for(const g of cards)root.remove(g);cards=[];hov=null;
     for(let k=0;k<6;k++){
       const mine=(k/3|0)===me,car=cars[k],n=car.cards.length,sk=skOf(k/3|0),lane=k%3;
       zoneMarks[k].position.set(LX[lane],.012,zc(mine));
@@ -1419,8 +1427,16 @@ const GL=(function(){
     const lane=LX.findIndex(v=>Math.abs(p.x-v)<1.55);if(lane<0||Math.abs(p.z)<.55||Math.abs(p.z)>5.6)return null;
     const me=meIdx();return{k:(p.z>0?me:1-me)*3+lane,ci:null};
   }
+  let hov=null;
+  function hover(x,y){
+    if(!ok||cv.style.display==='none')return;let g=null,hit=null;
+    if(x>=0){const r=cv.getBoundingClientRect();ray.setFromCamera({x:(x-r.left)/r.width*2-1,y:-((y-r.top)/r.height)*2+1},cam);hit=ray.intersectObjects(root.children,true).find(h=>h.object.userData&&h.object.userData.k!==undefined);g=hit?hit.object.parent:null}
+    if(hov&&hov!==g&&hov.userData.base){hov.position.y=hov.userData.base;hov.rotation.x=hov.rotation.z=0}
+    if(g&&!anims.some(a=>a.g===g)){if(!g.userData.base)g.userData.base=g.position.y;const dx=Math.max(-.5,Math.min(.5,hit.point.x-g.position.x)),dz=Math.max(-.7,Math.min(.7,hit.point.z-g.position.z));g.position.y=g.userData.base+.13;g.rotation.z=-dx*.34;g.rotation.x=dz*.24}
+    if(g||hov)draw();hov=g;
+  }
   function screenOf(k,i){const me=meIdx(),mine=(k/3|0)===me,n=game.cars[k].cards.length,L=i==null?{x:LX[k%3],y:0,z:zc(mine)}:layout(k,i,n,mine),v=new T.Vector3(L.x,L.y,L.z-(i==null?0:.55)).project(cam),r=cv.getBoundingClientRect();return[r.left+(v.x+1)/2*r.width,r.top+(1-v.y)/2*r.height]}
-  return{init,sync,pick,screenOf,get ready(){return ok}};
+  return{init,sync,pick,hover,screenOf,get ready(){return ok}};
 })();
 async function load3d(){
   if(!want3d())return;
@@ -1547,6 +1563,22 @@ app.addEventListener('pointerover',e=>{
   if(k===hovKey||now-hovT<90)return;hovKey=k;hovT=now;SFX.hover();
 });
 app.addEventListener('change',e=>{if(e.target.dataset.vol!==undefined){unlock();SFX.place();lastHtml=null;render()}});
+let hotEl=null,hovRaf=0;
+function coolCard(c){
+  if(!c)return;c.classList.remove('hot');for(const v of ['--hy','--hx','--lz','--ly','--ox','--oy'])c.style.removeProperty(v);
+  for(const n of [c.previousElementSibling,c.nextElementSibling])if(n&&n.style){n.style.removeProperty('--nx');n.style.removeProperty('--hy')}
+}
+app.addEventListener('pointermove',e=>{
+  if(e.pointerType!=='mouse'||(drag&&drag.on))return;
+  if(use3d){const onTable=!!e.target.closest('.t3d'),x=onTable?e.clientX:-1,y=e.clientY;if(!hovRaf)hovRaf=requestAnimationFrame(()=>{hovRaf=0;GL.hover(x,y)})}
+  const c=e.target.closest('.hc');
+  if(hotEl&&hotEl!==c){coolCard(hotEl);hotEl=null}
+  if(!c)return;
+  hotEl=c;const px=Math.max(-1,Math.min(1,(e.offsetX/c.offsetWidth-.5)*2)),py=Math.max(-1,Math.min(1,(e.offsetY/c.offsetHeight-.5)*2)),st2=c.style;
+  c.classList.add('hot');st2.setProperty('--hy',(px*16).toFixed(1)+'deg');st2.setProperty('--hx',(-py*13).toFixed(1)+'deg');st2.setProperty('--lz','34px');st2.setProperty('--ly','-10px');st2.setProperty('--ox',(50-px*34).toFixed(0)+'%');st2.setProperty('--oy',(50-py*34).toFixed(0)+'%');
+  [c.previousElementSibling,c.nextElementSibling].forEach((n,i)=>{if(n&&n.classList&&n.classList.contains('hc')){n.style.setProperty('--nx',(i?9:-9)+'px');n.style.setProperty('--hy',(i?-7:7)+'deg')}});
+});
+app.addEventListener('pointerleave',()=>{coolCard(hotEl);hotEl=null;if(use3d)GL.hover(-1,-1)});
 load3d();
 init();
 </script>
