@@ -671,6 +671,9 @@ function onMsg(m){
   if(now!==before){saveP2P();if(!busy)render()}
 }
 
+const store={get(){try{return localStorage.getItem('caravan_code')}catch(e){return null}},set(v){try{v?localStorage.setItem('caravan_code',v):localStorage.removeItem('caravan_code')}catch(e){}}};
+let toastT;function toast(m){const t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3500)}
+function fail(e){toast(e&&e.code==='invalid_argument'?'Нет прав на запись. Владелец страницы должен дать вам доступ редактора.':'Не получилось сохранить ход. Попробуйте ещё раз.')}
 const gameRef=()=>db.doc('games/'+code);
 const privRef=()=>db.doc('data/users/'+uid+'/g_'+code);
 const deckRef=()=>db.doc('data/users/'+uid+'/deck');
@@ -816,7 +819,7 @@ const mine=k=>(k/3|0)===meIdx();
 const opening=()=>game.op['p'+meIdx()]<3;
 const myTurn=()=>game.turn===meIdx()&&game.winner<0&&!busy&&(!p2p||netUp());
 const legalNum=(c,k)=>mine(k)&&(opening()?!game.cars[k].cards.length:canPlayNum(c,game.cars[k]));
-const legalFace=(c,k,ci)=>!opening()&&(rk(c)!=='Q'||ci===game.cars[k].cards.length-1);
+const legalFace=(c,k,ci)=>!opening();
 
 function tapTable(k,ci){
   if(!myTurn())return;
@@ -832,7 +835,7 @@ function tapTable(k,ci){
     return commit(cars,hand,deck,lab(c)+' → караван '+(k%3+1),{opening:opening()});
   }
   if(ci==null)return;
-  if(!legalFace(c,k,ci))return SFX.miss(),toast(opening()?'Картинки — после начальной раскладки':'Дама кладётся только на последнюю карту каравана');
+  if(!legalFace(c,k,ci))return SFX.miss(),toast('Картинки — после начальной раскладки');
   hand.splice(sel,1);
   const t=cars[k].cards[ci];let text=lab(c)+' на '+lab(t.c);
   if(rk(c)==='J')cars[k].cards.splice(ci,1);
@@ -875,7 +878,7 @@ const RULES=`<ul>
 <li>Туз = 1, 2–10 по номиналу. Вторая карта задаёт направление (вверх или вниз). Дальше карта должна идти по направлению или совпадать по масти с последней. Одинаковое значение подряд нельзя.</li>
 <li>Король — удваивает карту, на которую положен (свою или чужую).</li>
 <li>Валет — убирает карту вместе с её картинками.</li>
-<li>Дама — на последнюю карту каравана: меняет направление и масть.</li>
+<li>Дама — кладётся на любую числовую карту. Если это последняя карта каравана, меняет его направление и текущую масть.</li>
 <li>Джокер на туза — убирает со стола все остальные числовые карты этой масти. Джокер на 2–10 — убирает все остальные карты этого значения.</li>
 <li>Если на вашем ходу нет ни карт в руке, ни колоды — вы проиграли.</li></ul>`;
 
