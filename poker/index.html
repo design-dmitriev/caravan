@@ -134,6 +134,68 @@ summary{cursor:pointer;font-family:Oswald,"Arial Narrow",sans-serif;text-transfo
 @media (min-width:760px) and (min-height:640px){:root{--bc:64px;--mc:92px}.btn.ic{width:40px;height:40px}.seat{width:120px}.seat .sc{--sw:38px}.seat .sc.big{--sw:46px}.seat .nm{font-size:15px}.fw{--in:64px 110px 44px}.acts,.me,.wait{max-width:720px;width:100%;margin:0 auto}}
 @media (max-height:740px){:root{--mc:min(16vw,64px)}.me{padding:6px 14px 4px}}
 @media (max-height:620px){:root{--bc:min(10vw,44px);--mc:60px}.fw{--in:40px 48px 24px}}
+/* ---- app shell: Pip-Boy style menus, bottom tabs, sheets ---- */
+.home{flex:1;display:flex;flex-direction:column;min-height:0;width:100%;max-width:560px;margin:0 auto}
+.hbar{display:flex;align-items:flex-end;gap:12px;padding:20px 16px 12px}
+.brand{min-width:0}
+.brand b{font:600 clamp(34px,11vw,46px)/1 Oswald,"Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em;display:block}
+.brand span{display:block;color:var(--dim);font-size:13px;margin-top:6px}
+.pchip{margin-left:auto;flex:none;max-width:42%;min-height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;box-shadow:inset 0 0 0 1.5px var(--line);color:var(--amber);font:500 14px/1 Oswald,"Arial Narrow",sans-serif;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pchip svg{flex:none}
+.pchip.empty{color:var(--dim)}
+.menu{flex:1;min-height:0;overflow-y:auto;border-top:2px solid var(--amber);box-shadow:0 -6px 0 -4px var(--amber);margin-top:2px;padding-bottom:16px;-webkit-overflow-scrolling:touch}
+.mgroup{padding-top:6px}
+.mgroup>h3{margin:0;padding:14px 16px 6px;font:400 12px/1.2 "PT Mono",ui-monospace,monospace;color:var(--dim);letter-spacing:0;text-transform:none}
+.mrow,.pchip{text-transform:none!important;letter-spacing:normal}
+.mrow{display:flex;align-items:center;gap:14px;width:100%;min-height:62px;padding:10px 16px;text-align:left;color:var(--amber);border-bottom:1px solid var(--line);text-decoration:none;position:relative}
+.mrow .tx{flex:1;min-width:0}
+.mrow b{font:600 19px/1.15 Oswald,"Arial Narrow",sans-serif;letter-spacing:.03em;display:block;text-transform:none}
+.mrow small{display:block;font:400 13px/1.35 "PT Mono",ui-monospace,monospace;color:var(--dim);margin-top:2px}
+.mrow::after{content:"";flex:none;width:9px;height:9px;border:solid currentColor;border-width:2px 2px 0 0;transform:rotate(45deg);opacity:.6;margin-right:4px}
+.mrow.sel{background:rgba(255,182,66,.12);box-shadow:inset 4px 0 0 var(--amber)}
+.mrow:hover,.mrow:focus-visible,.mrow:active{background:var(--amber);color:var(--bg);text-shadow:none;outline:0;box-shadow:none}
+.mrow:hover small,.mrow:focus-visible small,.mrow:active small{color:rgba(18,14,8,.72)}
+.mnote{padding:12px 16px;color:var(--dim);font-size:13px}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--amber);background:var(--panel);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar>*{min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:500 12px/1 Oswald,"Arial Narrow",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;text-shadow:none}
+.tabbar svg{width:22px;height:22px}
+.tabbar .on{color:var(--amber);box-shadow:inset 0 3px 0 var(--amber);text-shadow:0 0 6px rgba(255,182,66,.45)}
+.tabbar>*:focus-visible{outline:2px solid var(--amber);outline-offset:-4px}
+.field{display:grid;gap:6px}
+.field>span{font-size:12px;color:var(--dim)}
+.sheet-rows{display:grid;margin:0 -20px}
+.sheet-rows .mrow{min-height:54px;padding:8px 20px}
+.sheet-rows .mrow:first-child{border-top:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+@media (min-width:900px){
+  .home{max-width:600px;border-left:1px solid var(--line);border-right:1px solid var(--line);background:rgba(23,18,10,.55)}
+  .tabbar{grid-template-columns:repeat(3,1fr)}
+}
+/* sheets: dialogs slide up from the bottom on phones */
+@media (max-width:699px){
+  .over{align-items:flex-end;padding:0;background:rgba(5,4,2,.72)}
+  .over>div{max-width:none!important;width:100%;border:0!important;border-top:2px solid var(--amber)!important;max-height:88dvh!important;padding:8px 20px calc(18px + env(safe-area-inset-bottom,0px))!important}
+  .over.enter>div{animation:sheetUp .22s ease-out}
+  .over>div::before{content:"";display:block;width:44px;height:4px;background:var(--line);margin:2px auto 6px}
+}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.over>div{animation:none!important}}
+.hcol{flex:1;display:flex;flex-direction:column;min-height:0}
+.hero{flex:none;display:flex;justify-content:center;align-items:flex-end;height:170px;padding-top:14px;overflow:hidden}
+.fan{position:relative;width:100%;height:100%;pointer-events:none}
+.fan .pc{position:absolute;left:50%;bottom:-22px;--w:86px;margin-left:-43px;transform-origin:50% 140%;transform:rotate(calc(var(--i)*11deg)) translateY(calc(var(--i)*var(--i)*3px));box-shadow:0 8px 18px rgba(0,0,0,.6)}
+@media (max-height:740px){.hero{display:none}}
+@media (min-width:900px){
+  .home{max-width:1180px;flex-direction:row;border:0;background:none}
+  .hero{height:auto;flex:1;align-items:center;padding:40px}
+  .fan{height:min(62vh,520px)}
+  .fan .pc{--w:min(13vw,190px);margin-left:calc(min(13vw,190px)*-.5);bottom:18%;transform:rotate(calc(var(--i)*12deg)) translateY(calc(var(--i)*var(--i)*6px))}
+  .hcol{flex:none;width:480px;border-left:1px solid var(--line);border-right:1px solid var(--line);background:rgba(23,18,10,.55)}
+}
+@media (max-width:699px){.over>div h2{text-align:left}}
+.home{flex-direction:column}
+.jbox{padding:16px;display:grid;gap:12px}
+.btn.stick{position:sticky;bottom:0;box-shadow:0 -14px 14px var(--panel),0 34px 0 14px var(--panel)}
 </style>
 </head>
 <body>
@@ -294,7 +356,7 @@ const CARAVAN_URL=ON_GH?'../':'https://design-dmitriev.github.io/caravan/';
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3500)}
 
 const me={id:LS.get('poker_id')||rid(),name:LS.get('poker_name')||''};LS.set('poker_id',me.id);
-let joinCode=null,S=null,P=null,host=false,net=null,mine=null,view='lobby',ov=null,hostSeen=0,offset=0,pending=false,raiseTo=0,dragging=false,lastHtml='',muted=!!LS.get('poker_mute');
+let shownOv=null,joinCode=null,S=null,P=null,host=false,net=null,mine=null,view='lobby',ov=null,hostSeen=0,offset=0,pending=false,raiseTo=0,dragging=false,lastHtml='',muted=!!LS.get('poker_mute');
 const seen={};
 
 /* ---------- sound: tiny synthesized clicks ---------- */
@@ -523,16 +585,22 @@ function minRaiseTo(){const p=S.seats.find(x=>x.id===me.id);return S.curBet+S.mi
 const POS={1:[[50,100]],2:[[50,100],[50,0]],3:[[50,100],[2,18],[98,18]],4:[[50,100],[0,28],[50,0],[100,28]],5:[[50,100],[0,76],[12,4],[88,4],[100,76]],6:[[50,100],[0,78],[0,22],[50,0],[100,22],[100,78]]};
 const secs=()=>S&&S.deadline?Math.max(0,Math.ceil((S.deadline-(Date.now()-offset))/1000)):0;
 
+const ICON={
+  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="5" width="11" height="15" rx="1.5" transform="rotate(-8 9 12)"/><rect x="9.5" y="4" width="11" height="15" rx="1.5" transform="rotate(8 15 11)"/></svg>',
+  chip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></svg>',
+  user:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg>',
+  menu:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'};
+const tabbar=()=>`<nav class="tabbar" aria-label="Разделы"><a href="${CARAVAN_URL}">${ICON.cards}Караван</a><a href="#" class="on" aria-current="page" data-act="noop">${ICON.chip}Покер</a><button class="${ov==='settings'?'on':''}" data-act="settings">${ICON.gear}Настройки</button></nav>`;
+const fanHtml=()=>`<aside class="hero" aria-hidden="true"><div class="fan">${['Ah','Kh','Qh','Jh','Th'].map((c,i)=>card(c).replace('class="pc','style="--i:'+(i-2)+'" class="pc')).join('')}</div></aside>`;
+const hbar=()=>`<header class="hbar"><div class="brand"><b>Покер</b><span>Техасский холдем на 2–6 игроков</span></div><button class="pchip ${me.name.trim()?'':'empty'}" data-act="settings" aria-label="Имя и настройки">${ICON.user}<span>${me.name.trim()?esc(me.name):'Ваше имя'}</span></button></header>`;
 function lobbyView(){
   const last=LS.get('poker_last');
-  return `<div class="page">
-  <nav class="gsw" aria-label="Игры"><a href="${CARAVAN_URL}">Караван</a><span class="on">Покер</span></nav>
-  <div><h1>Покер</h1><p class="sub">Техасский холдем без лимита. От двух до шести игроков, каждый со своего телефона.</p></div>
-  <div class="sec"><input type="text" maxlength="16" data-nm placeholder="Ваше имя" value="${esc(me.name)}" autocomplete="off">
-  <button class="btn" data-act="create">Создать стол и получить ссылку</button>
-  ${last&&last.code?`<button class="btn ghost" data-act="resume" data-code="${esc(last.code)}">Вернуться за стол ${esc(last.code)}</button>`:''}
-  <p class="sub">Отправьте ссылку друзьям: кто откроет — сядет за стол. Аккаунты не нужны. У каждого ${START} фишек, блайнды ${BL[0]}/${BL[1]}.</p></div>
-  <details><summary>Правила и комбинации</summary><div class="rules">${RULES}</div></details></div>`;
+  return `<div class="home">${fanHtml()}<div class="hcol">${hbar()}<main class="menu">
+  ${last&&last.code?`<section class="mgroup"><h3>Незаконченные</h3><button class="mrow sel" data-act="resume" data-code="${esc(last.code)}"><span class="tx"><b>Вернуться за стол ${esc(last.code)}</b><small>Фишки и место сохранились</small></span></button></section>`:''}
+  <section class="mgroup"><h3>Новая игра</h3><button class="mrow ${last&&last.code?'':'sel'}" data-act="newTable"><span class="tx"><b>Создать стол</b><small>Получите ссылку и позовите друзей</small></span></button></section>
+  <section class="mgroup"><h3>Справка</h3><button class="mrow" data-act="rules"><span class="tx"><b>Правила и комбинации</b><small>От роял-флеша до старшей карты</small></span></button></section>
+  </main>${tabbar()}</div></div>`;
 }
 const RULES=`<ul>
 <li>Каждому раздают по две закрытые карты. На стол по очереди выкладываются пять общих: флоп (3), тёрн (1), ривер (1).</li>
@@ -546,12 +614,11 @@ const RULES=`<ul>
 <p class="sub" style="font-size:12px">Карты раздаёт телефон того, кто создал стол. Ваши карты шифруются так, что их видите только вы и раздающий.</p>`;
 
 function joinView(){
-  return `<div class="page">
-  <nav class="gsw"><a href="${CARAVAN_URL}">Караван</a><span class="on">Покер</span></nav>
-  <div><h1>Покер</h1><p class="sub">Вас позвали за стол <b>${esc(joinCode)}</b>. Техасский холдем, ${START} фишек на старте.</p></div>
-  <div class="sec"><input type="text" maxlength="16" data-nm placeholder="Ваше имя" value="${esc(me.name)}" autocomplete="off">
+  return `<div class="home">${fanHtml()}<div class="hcol">${hbar()}<main class="menu"><div class="jbox">
+  <p class="sub">Вас позвали за стол <b>${esc(joinCode)}</b>. У каждого ${START} фишек, блайнды ${BL[0]}/${BL[1]}.</p>
+  <label class="field"><span>Ваше имя</span><input type="text" maxlength="16" data-nm placeholder="Как вас назвать" value="${esc(me.name)}" autocomplete="off"></label>
   <button class="btn" data-act="join">Сесть за стол</button><button class="btn ghost" data-act="toLobby">Не сейчас</button></div>
-  <details><summary>Правила и комбинации</summary><div class="rules">${RULES}</div></details></div>`;
+  <section class="mgroup"><h3>Справка</h3><button class="mrow" data-act="rules"><span class="tx"><b>Правила и комбинации</b><small>Если играете впервые</small></span></button></section></main>${tabbar()}</div></div>`;
 }
 function waitView(){
   const mi=S.seats.findIndex(p=>p.id===me.id),n=S.seats.length,ready=S.seats.filter(p=>p.stack>0&&!p.out).length;
@@ -639,15 +706,20 @@ function tableView(){
   const sub=S.phase==='wait'?'перерыв':`раздача ${S.hand} · ${({preflop:'до флопа',flop:'флоп',turn:'тёрн',river:'ривер',show:'итоги'})[S.phase]}`;
   const note=netNote();
   return `<div class="tv"><div class="top"><span class="net ${netUp()?'ok':''}" title="${netUp()?'На связи':'Нет связи'}"></span><div class="who"><b>Стол ${esc(S.code)}</b><span>${sub} · блайнды ${BL[0]}/${BL[1]}</span></div>
-    <button class="btn ghost ic" data-act="share" aria-label="Пригласить">+</button><button class="btn ghost ic" data-act="log" aria-label="Журнал">≡</button><button class="btn ghost ic ${muted?'mute':''}" data-act="mute" aria-label="Звук" style="${muted?'opacity:.45':''}">♪</button><button class="btn ghost ic" data-act="rules" aria-label="Правила">?</button><button class="btn ghost ic" data-act="leave" aria-label="Выйти">✕</button></div>
+    <button class="btn ghost sm" data-act="share">Пригласить</button><button class="btn ghost ic" data-act="menu" aria-label="Меню">${ICON.menu}</button></div>
     ${note?`<div style="padding:6px 12px;font-size:12px">${note}</div>`:''}
     <div class="fw"><div class="felt"></div><div class="ring">${seats}</div>
       <div class="mid"><div class="pot">${S.phase==='show'?'Итоги':'Банк '+pot}</div><div class="board">${slots}</div>${S.phase==='show'?resultBanner('onfelt'):''}</div></div>
     ${my}${acts}</div>`;
 }
 function overlay(){
+  if(ov==='settings')return `<div class="over" data-act="close"><div data-stop><h2>Настройки</h2><label class="field"><span>Ваше имя</span><input type="text" maxlength="16" data-nm placeholder="Как вас назвать" value="${esc(me.name)}" autocomplete="off"></label><button class="btn ghost" data-act="mute">${muted?'Включить звук':'Выключить звук'}</button><button class="btn" data-act="close">Готово</button></div></div>`;
+  if(ov==='newTable')return `<div class="over" data-act="close"><div data-stop><h2>Новый стол</h2><p class="sub">Вы получите ссылку. Кто её откроет, сядет за стол. Карты раздаёт ваш телефон, поэтому не закрывайте игру, пока стол открыт.</p><label class="field"><span>Ваше имя</span><input type="text" maxlength="16" data-nm placeholder="Как вас назвать" value="${esc(me.name)}" autocomplete="off"></label><button class="btn" data-act="create">Создать стол и получить ссылку</button><button class="btn ghost" data-act="close">Отмена</button></div></div>`;
+  if(ov==='rules'&&!S)return `<div class="over" data-act="close"><div data-stop><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn stick" data-act="close">Понятно</button></div></div>`;
+  if(!S)return'';
+  if(ov==='menu')return `<div class="over" data-act="close"><div data-stop><h2>Меню</h2><div class="sheet-rows"><button class="mrow" data-act="share"><span class="tx"><b>Пригласить</b><small>Свободных мест: ${6-S.seats.length}</small></span></button><button class="mrow" data-act="log"><span class="tx"><b>Журнал стола</b><small>Все ходы и итоги раздач</small></span></button><button class="mrow" data-act="rules"><span class="tx"><b>Правила и комбинации</b></span></button><button class="mrow" data-act="mute"><span class="tx"><b>Звук</b><small>${muted?'выключен':'включён'}</small></span></button><button class="mrow" data-act="leave"><span class="tx"><b>${host?'Закрыть стол':'Выйти из-за стола'}</b></span></button></div><button class="btn ghost" data-act="close">Закрыть</button></div></div>`;
   if(ov==='log')return `<div class="over" data-act="close"><div data-stop><h2>Журнал стола</h2><div class="log">${S.log.slice().reverse().map(l=>`<div class="${l.startsWith('—')?'hd':''}">${esc(l)}</div>`).join('')}</div><button class="btn" data-act="close">Закрыть</button></div></div>`;
-  if(ov==='rules')return `<div class="over" data-act="close"><div data-stop><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn" data-act="close">Понятно</button></div></div>`;
+  if(ov==='rules')return `<div class="over" data-act="close"><div data-stop><h2>Правила</h2><div class="rules">${RULES}</div><button class="btn stick" data-act="close">Понятно</button></div></div>`;
   if(ov==='share')return `<div class="over" data-act="close"><div data-stop><h2>Пригласить за стол</h2><p class="sub">Свободных мест: ${6-S.seats.length}. Новый игрок сядет со следующей раздачи.</p><div class="linkbox"><input type="text" readonly value="${esc(roomUrl())}" data-sel><button class="btn sm" data-act="copy">Копировать</button></div><button class="btn" data-act="close">Готово</button></div></div>`;
   if(ov==='leave')return `<div class="over" data-act="close"><div data-stop><h2>${host?'Закрыть стол?':'Выйти из-за стола?'}</h2><p class="sub">${host?'Карты раздаёт ваш телефон: если вы уйдёте, игра остановится у всех.':'Ваши карты в текущей раздаче уйдут в фолд.'}</p><button class="btn" data-act="leaveYes">${host?'Закрыть стол':'Выйти'}</button><button class="btn ghost" data-act="close">Остаться</button></div></div>`;
   return'';
@@ -656,7 +728,7 @@ function render(){
   if(dragging)return;
   const app=document.getElementById('app');
   let h=view==='lobby'?lobbyView():view==='join'?joinView():tableView();
-  if(S&&view==='table')h+=overlay();
+  let o=overlay();if(o&&ov!==shownOv)o=o.replace('class="over"','class="over enter"');shownOv=o?ov:null;h+=o;
   if(h===lastHtml)return;lastHtml=h;
   const fx=document.activeElement&&document.activeElement.matches('input[data-nm]');
   app.innerHTML=h;
@@ -671,19 +743,20 @@ document.addEventListener('click',async e=>{
   const a=el.dataset.act;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)()}catch(x){}
   switch(a){
-    case'create':if(!me.name.trim())return toast('Введите имя'),document.querySelector('[data-nm]')?.focus();return openTable(newCode(),true);
+    case'create':ov=null;if(!me.name.trim())return toast('Введите имя'),document.querySelector('[data-nm]')?.focus();return openTable(newCode(),true);
     case'resume':return openTable(el.dataset.code,false);
     case'join':if(!me.name.trim())return toast('Введите имя'),document.querySelector('[data-nm]')?.focus();return openTable(joinCode,false);
     case'toLobby':view='lobby';joinCode=null;try{history.replaceState(null,'',location.pathname)}catch(x){}return render();
     case'leave':ov='leave';return render();
     case'leaveYes':ov=null;return leaveTable(false);
     case'close':ov=null;return render();
-    case'log':case'rules':ov=a;return render();
+    case'log':case'rules':case'menu':case'settings':case'newTable':ov=a;return render();
+    case'noop':e.preventDefault();return;
     case'share':
       if(navigator.share&&matchMedia('(pointer:coarse)').matches){try{await navigator.share({title:'Покер',text:'Садись за стол',url:roomUrl()});return}catch(x){}}
       ov='share';return render();
     case'copy':try{await navigator.clipboard.writeText(roomUrl());toast('Ссылка скопирована')}catch(x){const i=document.querySelector('[data-sel]');i&&i.select();toast('Выделите и скопируйте ссылку')}return;
-    case'mute':muted=!muted;LS.set('poker_mute',muted);return render();
+    case'mute':muted=!muted;LS.set('poker_mute',muted);lastHtml='';return render();
     case'start':return send({a:'start'});
     case'fold':case'check':case'call':ov=null;return send({a,n:S.hand});
     case'rz':ov='raise';return render();
