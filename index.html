@@ -585,7 +585,7 @@ function wearCls(c,sk){
 }
 const BACKS=['Рубин','Патруль','Изумруд','Чёрное золото','Закат','Атом','Ручные','Пустошь'];
 let backSel=typeof LS.get('caravan_back2')==='number'?LS.get('caravan_back2')%8:6,rnd=LS.get('caravan_rnd')||[30,54],muted=LS.get('caravan_mute')===true;
-const getNames=()=>LS.get('caravan_names')||{};
+const getNames=()=>{const n=LS.get('caravan_names')||{},sh=LS.get('dd_name');if(typeof sh==='string')n.me=sh;return n};
 const myName=()=>String(getNames().me||'').trim().slice(0,16);
 const pname=i=>{const n=game&&game.nm&&game.nm['p'+i];if(n)return n;if(local)return 'Игрок '+(i+1);return i===meIdx()?'Вы':(game&&names[game.pl['p'+i]])||'Соперник'};
 const BACK_NOTE=['потёртые','глянцевые','поцарапанные','чёрные с золотом','подгорелые','лабораторные','нарисованные от руки, рваные','иллюстрации тушью'];
@@ -1802,7 +1802,7 @@ app.addEventListener('click',e=>{
 app.addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset.vol!==undefined){vol=t.value/100;LS.set('caravan_vol',vol);if(vol>0&&muted){muted=false;LS.set('caravan_mute',false)}applyVol();const v=document.getElementById('volv');if(v)v.textContent=Math.round(vol*100)+'%';return}
-  if(t.dataset.nm){const n=getNames();n[t.dataset.nm]=t.value;LS.set('caravan_names',n)}
+  if(t.dataset.nm){const n=getNames();n[t.dataset.nm]=t.value;LS.set('caravan_names',n);if(t.dataset.nm==='me')LS.set('dd_name',t.value)}
   else if(t.dataset.rng){
     const i=+t.dataset.rng;rnd[i]=+t.value;
     if(rnd[0]>rnd[1])rnd[1-i]=rnd[i];

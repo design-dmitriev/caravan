@@ -355,7 +355,7 @@ const ON_GH=/github\.io$/.test(location.hostname);
 const CARAVAN_URL=ON_GH?'../':'https://design-dmitriev.github.io/caravan/';
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3500)}
 
-const me={id:LS.get('poker_id')||rid(),name:LS.get('poker_name')||''};LS.set('poker_id',me.id);
+const me={id:LS.get('poker_id')||rid(),name:(()=>{const s=LS.get('dd_name');if(typeof s==='string')return s;return LS.get('poker_name')||(LS.get('caravan_names')||{}).me||''})()};LS.set('poker_id',me.id);
 let shownOv=null,joinCode=null,S=null,P=null,host=false,net=null,mine=null,view='lobby',ov=null,hostSeen=0,offset=0,pending=false,raiseTo=0,dragging=false,lastHtml='',muted=!!LS.get('poker_mute');
 const seen={};
 
@@ -766,7 +766,7 @@ document.addEventListener('click',async e=>{
   }
 });
 document.addEventListener('input',e=>{
-  if(e.target.matches('[data-nm]')){me.name=e.target.value;LS.set('poker_name',me.name)}
+  if(e.target.matches('[data-nm]')){me.name=e.target.value;LS.set('poker_name',me.name);LS.set('dd_name',me.name)}
   if(e.target.matches('[data-range]')){raiseTo=+e.target.value;const p=S.seats.find(x=>x.id===me.id),max=p.bet+p.stack;const b=document.querySelector('[data-rv]');if(b)b.textContent=raiseTo+(raiseTo>=max?' · ва-банк':'');const btn=document.querySelector('[data-act=raise]');if(btn)btn.textContent=(raiseTo>=max?'Ва-банк':(S.curBet?'Рейз':'Ставка'))+' '+raiseTo}
 });
 document.addEventListener('pointerdown',e=>{if(e.target.matches('[data-range]'))dragging=true});
